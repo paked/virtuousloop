@@ -1,0 +1,16 @@
+page-pdf:
+  image: bentdocker/gitlab-pages-xetex-pandoc
+  artifacts:
+    paths:
+      - ./feedback/
+      - ./files/
+      - ./scripts/
+  tags:
+    - Pages
+  stage: build
+  script:
+    - mkdir -p ./feedback/; mkdir -p ./feedback/out/; mkdir -p ./feedback/pdf/; 
+    - time bash ./scripts/01_create_feedback.sh
+  allow_failure: true
+
+
