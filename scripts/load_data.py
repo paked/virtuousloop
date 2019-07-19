@@ -18,6 +18,10 @@ def load_data():
     # print message to console - starting!
     f.pnt_notice(c.msg['console_start'],os.path.basename(__file__))
 
+    for key, value in c.d.items():
+        if not os.path.exists(value):
+            os.makedirs(value)
+
     # print message to console
     f.pnt_info(c.msg["console_loading"])
 
