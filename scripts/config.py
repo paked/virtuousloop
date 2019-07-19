@@ -10,7 +10,7 @@
 
 
 d = {
-    "feedback_dir": "./feedback/"
+    "feedback_dir": "./feedback/",
     "out": "./feedback/out/",
     "pdf": "./feedback/pdf/",
     "graphs": "./feedback/graphs/",
