@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# python ./scripts/11_load_data.py
+# python ./scripts/feedback_marks.py
 #
 #
 # chris.browne@anu.edu.au - all care and no responsibility :)
@@ -19,7 +19,7 @@ import pypandoc
 from weasyprint import HTML
 
 
-def marks_feedback():
+def feedback_marks():
     
     # check that config exists
     conf=f.config_exists()

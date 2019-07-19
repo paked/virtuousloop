@@ -12,12 +12,10 @@ import glob
 from pathlib import Path
 import config as c
 import functions as f
-import pdfkit
 
 def load_data():
 
     # print message to console - starting!
-    pdfkit.from_url('http://google.com', 'out.pdf')
     f.pnt_notice(c.msg['console_start'],os.path.basename(__file__))
 
     # print message to console

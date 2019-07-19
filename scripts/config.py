@@ -6,6 +6,7 @@
 # ===========================================================
 
 '''is a module that stores values for the scripts'''
+# NOTE: there should be no need to adjust any of the values in this file
 
 
 d = {

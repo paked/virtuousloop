@@ -18,8 +18,27 @@ import time
 import matplotlib.pyplot as plt
 from weasyprint import HTML as weasy
 
+# ===========================================================
+# Organised into:
+#   * warnings
+#   * print colours
+#   * load files
+#   * print messages
+#   * dataframe manipulations
+#   * filesystem helpers
+#   * console helpers
+#   * print charts
+# ===========================================================
+
+# ===========================================================
+#  warnings
+# ===========================================================
 
 warnings.filterwarnings("ignore", 'This pattern has match groups')
+
+# ===========================================================
+#  print colors
+# ===========================================================
 
 def pnt_info(text):
     print(bcolors.INFO + text + bcolors.ENDC)
@@ -35,6 +54,10 @@ def pnt_fail(text):
 
 def pnt_notice(text,file):
     print(bcolors.NOTICE + text + file + bcolors.ENDC)
+
+# ===========================================================
+#  load files
+# ===========================================================
 
 def load_csv(file):
     try:
@@ -70,6 +93,10 @@ def load_tsv(file):
         # lowercase all headers for simplification
         c.df[file].columns = map(str.lower, c.df[file].columns)
         return c.df[file]
+
+# ===========================================================
+#  print messages
+# ===========================================================
 
 def print_results_header(field, row, m_row, out):
     ## print the header for all fields
@@ -180,6 +207,9 @@ def print_results_rubric(out, m_row, record):
 
     print("![](" + this_rubric_pdf + ")", file=out)
 
+# ===========================================================
+#  dataframe manipulations
+# ===========================================================
 
 def filter_row(dataframe, column, key):
     return c.df[dataframe][c.df[dataframe][column].str.contains(key)]
@@ -210,6 +240,10 @@ def col_to_lower(dataframe, column):
     if column in c.df[dataframe].columns:
         c.df[dataframe][column] = c.df[dataframe][column].str.lower()
 
+# ===========================================================
+#  pandoc helpers
+# ===========================================================
+
 def pandoc_header(out, record): 
     conf = config_exists()
 
@@ -224,6 +258,9 @@ def pandoc_header(out, record):
     print("# " + conf['assignment']['assignment_title'] + " Feedback{-}\n\n", file=out)
     print("# " + record + "{-}\n\n", file=out)
 
+# ===========================================================
+#  filesystem helpers
+# ===========================================================
 
 def config_exists():
     #pnt_notice(c.msg['console_app_config_check'],os.path.basename(__file__))
@@ -233,6 +270,10 @@ def config_exists():
         f.pnt_fail(c.msg['console_app_config_fail'])
     else:
         return yaml.safe_load(config)
+
+# ===========================================================
+#  console helpers
+# ===========================================================
 
 def progress_bar (iteration, upper, suffix, prefix = '', decimals = 1, length = 50, fill = '█'):
     """
@@ -253,6 +294,10 @@ def progress_bar (iteration, upper, suffix, prefix = '', decimals = 1, length = 
     # print new line on complete
     if iteration == upper: 
         print()
+
+# ===========================================================
+#  print chart 
+# ===========================================================
 
 def make_crit_list(crit):
     crit_levels=load_tsv('crit_levels')

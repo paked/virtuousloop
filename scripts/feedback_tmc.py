@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-# python ./scripts/11_load_data.py
+# python ./scripts/feedback_tmc.py
 #
 #
 # chris.browne@anu.edu.au - all care and no responsibility :)
 # ===========================================================
 
-'''turns the marks spreadsheet into pdf feedback'''
+'''turns the data_tmc csv into pdf feedback'''
 
 import os
 import csv
@@ -24,12 +24,16 @@ import matplotlib.pyplot as plt
 plt.rcParams.update({'figure.max_open_warning': 0})
 
 
-
-
-def team_member_contribution():
+def feedback_tmc():
     
     #check that config exists
     conf=f.config_exists()
+
+    # print message to console - starting!
+    f.pnt_notice(c.msg['console_start'],os.path.basename(__file__))
+
+    # print message to console
+    f.pnt_info(c.msg["console_loading"])
     
     # load data and create list of teams
     teams=f.load_tsv('data_tmc')
@@ -93,6 +97,7 @@ def team_member_contribution():
         with open(this_out, 'w') as out:
 
             f.pandoc_header(out, team)
+
             print("Peer evaluation of contribution by team members\n\n", file=out)
             print("*" + str(shape[1]) + "*" + " out of *" + str(shape[0]) + "* team members submitted reviews.\n\n", file=out)
             print('![](./feedback/tmc/' + team + '_anon.pdf)\n\n', file=out)
@@ -138,4 +143,7 @@ def team_member_contribution():
         pdoc_args = ['--template=./includes/pdf/anu_cecs.latex']
         # convert to pdf
         output = pypandoc.convert_file(this_out, to='pdf', format='md', outputfile=this_pdf, extra_args=pdoc_args)
+
+        # print message to console - complete!
+        f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))
 
