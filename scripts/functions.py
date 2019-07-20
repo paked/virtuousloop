@@ -94,6 +94,11 @@ def load_tsv(file):
         c.df[file].columns = map(str.lower, c.df[file].columns)
         return c.df[file]
 
+def make_directories(folder):
+    for key, value in folder.items():
+        if not os.path.exists(value):
+            os.makedirs(value)
+
 # ===========================================================
 #  print messages
 # ===========================================================
