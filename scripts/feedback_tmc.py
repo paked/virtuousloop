@@ -142,7 +142,7 @@ def feedback_tmc():
         # use the anu_cecs.latex template
         pdoc_args = ['--template=./includes/pdf/anu_cecs.latex', '--pdf-engine=xelatex']
         # convert to pdf
-        output = pypandoc.convert_file(this_out, to='pdf', format='md', outputfile=this_pdf, extra_args=pdoc_args)
+        output = pypandoc.convert_file(this_out, to='md', format='md', outputfile=this_out, extra_args=pdoc_args)
 
         # print message to console - complete!
         f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))
