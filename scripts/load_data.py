@@ -19,8 +19,8 @@ def load_data():
     f.pnt_notice(c.msg['console_start'],os.path.basename(__file__))
 
     # load directories
-    f.make_directories('c.d'):
-    f.make_directories('c.tmc'):
+    f.make_directories('c.d')
+    f.make_directories('c.tmc')
 
     # print message to console
     f.pnt_info(c.msg["console_loading"])
