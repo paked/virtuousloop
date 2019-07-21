@@ -107,7 +107,7 @@ def feedback_tmc():
                 if ( str(df_row['teamcomments']) == "nan"):
                     print("### Team member {-}\n\nNo comments\n\n", file=out)
                 else:
-                    print("### Team member {-}\n\n" + str(df_row['teamcomments']) + "\n\n", file=out)
+                    print("### Team member {-}\n\n" + str(df_row['teamcomments']) + "\n\n", file=out).encode('utf-8')
 
         # use the anu_cecs.latex template
         pdoc_args = ['--template=./includes/pdf/anu_cecs.latex']
@@ -128,7 +128,7 @@ def feedback_tmc():
                 if ( str(df_row['teamcomments']) == "nan"):
                     print("### " + df_row['username'] + "Team member {-}\n\nNo comments\n\n", file=out)
                 else:
-                    print("### Team member {-}\n\n" + str(df_row['teamcomments']) + "\n\n", file=out)
+                    print("### Team member {-}\n\n" + str(df_row['teamcomments']) + "\n\n", file=out).encode('utf-8')
             
             header=conf['pdf_messages']['tmc_confidential']
             print("## " + header + "{-}\n\n", file=out)
@@ -136,7 +136,7 @@ def feedback_tmc():
                 if ( str(df_row['confidentialcomments']) == "nan"):
                     print("### " + df_row['username'] + "Team member {-}\n\nNo comments\n\n", file=out)
                 else:
-                    print("### " + df_row['username'] + "Team member{-}\n\n" + str(df_row['confidentialcomments']) + "\n\n", file=out)
+                    print("### " + df_row['username'] + "Team member{-}\n\n" + str(df_row['confidentialcomments']) + "\n\n", file=out).encode('utf-8')
             
 
         # use the anu_cecs.latex template
