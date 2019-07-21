@@ -106,7 +106,7 @@ def make_directories(folder):
             os.makedirs(value)
 
 def remove_non_ascii(text):
-    return unidecode(unicode(text, encoding = "utf-8"))
+    return unidecode(str(text, encoding = "utf-8"))
 
 # ===========================================================
 #  print messages
