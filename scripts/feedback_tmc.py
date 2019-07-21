@@ -105,7 +105,7 @@ def feedback_tmc():
             print("## " + header + "{-}\n\n", file=out)
             for i, df_row in this_data.iterrows():
                 # try encoding utf8
-                this_comment=print(df_row['teamcomments']).encode('utf-8')
+                this_comment=print(df_row['teamcomments']).encode('utf-8').strip()
                 if ( str(df_row['teamcomments']) == "nan"):
                     print("### Team member {-}\n\nNo comments\n\n", file=out)
                 else:
@@ -129,7 +129,7 @@ def feedback_tmc():
 
             for i, df_row in this_data.iterrows():
                 # try encoding utf8
-                this_comment=print(df_row['teamcomments']).encode('utf-8')
+                this_comment=print(df_row['teamcomments']).encode('utf-8').strip()
                 if ( this_comment == "nan"):
                     print("###" + df_row['username'] + "Team member {-}\n\nNo comments\n\n", file=out)
                 else:
@@ -139,7 +139,7 @@ def feedback_tmc():
             print("## " + header + "{-}\n\n", file=out)
             for i, df_row in this_data.iterrows():
                 # try encoding utf8
-                this_comment=print(df_row['confidentialcomments']).encode('utf-8')
+                this_comment=print(df_row['confidentialcomments']).encode('utf-8').strip()
                 if ( this_comment == "nan"):
                     print("### " + df_row['username'] + "Team member {-}\n\nNo comments\n\n", file=out)
                 else:
