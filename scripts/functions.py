@@ -17,6 +17,7 @@ import sys
 import time
 import matplotlib.pyplot as plt
 from weasyprint import HTML as weasy
+from unidecode import unidecode
 
 import locale
 def getpreferredencoding(do_setlocale = True):
@@ -103,6 +104,9 @@ def make_directories(folder):
     for key, value in folder.items():
         if not os.path.exists(value):
             os.makedirs(value)
+
+def remove_non_ascii(text):
+    return unidecode(unicode(text, encoding = "utf-8"))
 
 # ===========================================================
 #  print messages
