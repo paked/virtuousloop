@@ -18,6 +18,11 @@ import time
 import matplotlib.pyplot as plt
 from weasyprint import HTML as weasy
 
+import locale
+def getpreferredencoding(do_setlocale = True):
+   return "utf-8"
+locale.getpreferredencoding = getpreferredencoding
+
 # ===========================================================
 # Organised into:
 #   * warnings
