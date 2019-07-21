@@ -124,19 +124,22 @@ def feedback_tmc():
             print('![](./feedback/tmc/' + team + '_anon.pdf)\n\n', file=out)
             header=conf['pdf_messages']['tmc_title']
             print("## " + header + "{-}\n\n", file=out)
+
             for i, df_row in this_data.iterrows():
-                if ( str(df_row['teamcomments']) == "nan"):
-                    print("### " + df_row['username'] + "Team member {-}\n\nNo comments\n\n", file=out)
+                this_comment=print(df_row['teamcomments']).encode('utf-8')
+                if ( this_comment == "nan"):
+                    print("### Team member {-}\n\nNo comments\n\n", file=out)
                 else:
-                    print("### Team member {-}\n\n" + str(df_row['teamcomments']) + "\n\n", file=out).encode('utf-8')
+                    print("### Team member {-}\n\n" + this_comment + "\n\n", file=out)
             
             header=conf['pdf_messages']['tmc_confidential']
             print("## " + header + "{-}\n\n", file=out)
             for i, df_row in this_data.iterrows():
-                if ( str(df_row['confidentialcomments']) == "nan"):
+                this_comment=print(df_row['confidentialcomments']).encode('utf-8')
+                if ( this_comment == "nan"):
                     print("### " + df_row['username'] + "Team member {-}\n\nNo comments\n\n", file=out)
                 else:
-                    print("### " + df_row['username'] + "Team member{-}\n\n" + str(df_row['confidentialcomments']) + "\n\n", file=out).encode('utf-8')
+                    print("### " + df_row['username'] + "Team member{-}\n\n" + this_comment + "\n\n", file=out)
             
 
         # use the anu_cecs.latex template
