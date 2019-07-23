@@ -146,10 +146,13 @@ def feedback_tmc():
                     print("### " + df_row['username'] + " (Team member){-}\n\n" + this_comment + "\n\n", file=out)
             
 
-        # use the anu_cecs.latex template
-        pdoc_args = ['--pdf-engine', '/usr/bin/xelatex']
-        # convert to pdf
-        output = pypandoc.convert_file(this_out, to='md', format='md', outputfile=this_out, extra_args=['--pdf-engine', '/usr/bin/xelatex'])
+        HTML(this_out).write_pdf(this_pdf)
+
+
+        # # use the anu_cecs.latex template
+        # pdoc_args = ['--pdf-engine', '/usr/bin/xelatex']
+        # # convert to pdf
+        # output = pypandoc.convert_file(this_out, to='md', format='md', outputfile=this_out, extra_args=['--pdf-engine', '/usr/bin/xelatex'])
 
         # print message to console - complete!
         f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))
