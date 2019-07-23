@@ -105,11 +105,10 @@ def feedback_tmc():
             print("## " + header + "{-}\n\n", file=out)
             for i, df_row in this_data.iterrows():
                 # try encoding utf8
-                this_comment=f.remove_non_ascii(df_row['teamcomments'])
                 if ( str(df_row['teamcomments']) == "nan"):
                     print("### Team member {-}\n\nNo comments\n\n", file=out)
                 else:
-                    print("### Team member {-}\n\n" + this_comment + "\n\n", file=out)
+                    print("### Team member {-}\n\n" + df_row['teamcomments'] + "\n\n", file=out)
 
         HTML(this_out).write_pdf(this_pdf)
 
@@ -126,21 +125,19 @@ def feedback_tmc():
 
             for i, df_row in this_data.iterrows():
                 # try encoding utf8
-                this_comment=f.remove_non_ascii(df_row['teamcomments'])
                 if ( this_comment == "nan"):
                     print("###" + df_row['username'] + "Team member {-}\n\nNo comments\n\n", file=out)
                 else:
-                    print("###" + df_row['username'] + " (Team member) {-}\n\n" + this_comment + "\n\n", file=out)
+                    print("###" + df_row['username'] + " (Team member) {-}\n\n" + df_row['teamcomments'] + "\n\n", file=out)
             
             header=conf['pdf_messages']['tmc_confidential']
             print("## " + header + "{-}\n\n", file=out)
             for i, df_row in this_data.iterrows():
                 # try encoding utf8
-                this_comment=f.remove_non_ascii(df_row['confidentialcomments'])
                 if ( this_comment == "nan"):
                     print("### " + df_row['username'] + "Team member {-}\n\nNo comments\n\n", file=out)
                 else:
-                    print("### " + df_row['username'] + " (Team member){-}\n\n" + this_comment + "\n\n", file=out)
+                    print("### " + df_row['username'] + " (Team member){-}\n\n" + df_row['confidentialcomments'] + "\n\n", file=out)
             
 
         HTML(this_out).write_pdf(this_pdf)
