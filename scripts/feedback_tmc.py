@@ -93,10 +93,12 @@ def feedback_tmc():
         f.make_tmc_chart(this_anon_df, tmc_anon_out)
 
         this_out=c.tmc['anon'] + team + ".md"
-        this_pdf=c.tmc['anon'] + team + ".pdf"        
+        this_html=c.tmc['anon'] + team + ".html"
+        this_pdf=c.tmc['anon'] + team + ".pdf"
+
         with open(this_out, 'w') as out:
 
-            f.pandoc_header(out, team)
+            #f.pandoc_header(out, team)
 
             print("Peer evaluation of contribution by team members\n\n", file=out)
             print("*" + str(shape[1]) + "*" + " out of *" + str(shape[0]) + "* team members submitted reviews.\n\n", file=out)
@@ -110,43 +112,51 @@ def feedback_tmc():
                 else:
                     print("### Team member {-}\n\n" + str(df_row['teamcomments']) + "\n\n", file=out)
 
-        HTML(this_out).write_pdf(this_pdf)
+        import subprocess
+        subprocess.call("pandoc " + this_out + " -o " + this_pdf + " --template ./includes/pdf/anu_cecs.latex", shell=True)
 
-        this_out=c.tmc['conf'] + team + ".md"
-        this_pdf=c.tmc['conf'] + team + ".pdf"        
-        with open(this_out, 'w') as out:
+        # this_out=c.tmc['conf'] + team + ".md"
+        # this_html=c.tmc['conf'] + team + ".html"
+        # this_pdf=c.tmc['conf'] + team + ".pdf"        
+        
+        # with open(this_out, 'w') as out:
 
-            f.pandoc_header(out, team)
-            print("Peer evaluation of contribution by team members\n\n", file=out)
-            print("*" + str(shape[1]) + "*" + " out of *" + str(shape[0]) + "* team members submitted reviews.\n\n", file=out)
-            print('![](./feedback/tmc/' + team + '_anon.pdf)\n\n', file=out)
-            header=conf['pdf_messages']['tmc_title']
-            print("## " + header + "{-}\n\n", file=out)
+        #     #f.pandoc_header(out, team)
+        #     print("Peer evaluation of contribution by team members\n\n", file=out)
+        #     print("*" + str(shape[1]) + "*" + " out of *" + str(shape[0]) + "* team members submitted reviews.\n\n", file=out)
+        #     print('![](./feedback/tmc/' + team + '_anon.pdf)\n\n', file=out)
+        #     header=conf['pdf_messages']['tmc_title']
+        #     print("## " + header + "{-}\n\n", file=out)
 
-            for i, df_row in this_data.iterrows():
-                # try encoding utf8
-                if ( df_row['teamcomments'] == "nan"):
-                    print("###" + df_row['username'] + "Team member {-}\n\nNo comments\n\n", file=out)
-                else:
-                    print("###" + df_row['username'] + " (Team member) {-}\n\n" + str(df_row['teamcomments']) + "\n\n", file=out)
+        #     for i, df_row in this_data.iterrows():
+        #         # try encoding utf8
+        #         if ( df_row['teamcomments'] == "nan"):
+        #             print("###" + df_row['username'] + "Team member {-}\n\nNo comments\n\n", file=out)
+        #         else:
+        #             print("###" + df_row['username'] + " (Team member) {-}\n\n" + str(df_row['teamcomments']) + "\n\n", file=out)
             
-            header=conf['pdf_messages']['tmc_confidential']
-            print("## " + header + "{-}\n\n", file=out)
-            for i, df_row in this_data.iterrows():
-                # try encoding utf8
-                if ( df_row['confidentialcomments'] == "nan"):
-                    print("### " + df_row['username'] + "Team member {-}\n\nNo comments\n\n", file=out)
-                else:
-                    print("### " + df_row['username'] + " (Team member){-}\n\n" + str(df_row['confidentialcomments']) + "\n\n", file=out)
+        #     header=conf['pdf_messages']['tmc_confidential']
+        #     print("## " + header + "{-}\n\n", file=out)
+        #     for i, df_row in this_data.iterrows():
+        #         # try encoding utf8
+        #         if ( df_row['confidentialcomments'] == "nan"):
+        #             print("### " + df_row['username'] + "Team member {-}\n\nNo comments\n\n", file=out)
+        #         else:
+        #             print("### " + df_row['username'] + " (Team member){-}\n\n" + str(df_row['confidentialcomments']) + "\n\n", file=out)
             
+        # # pypandoc.convert_file(this_out, to='md', format='html', outputfile=this_html)
+        # # HTML(this_html).write_pdf(this_pdf)
 
-        HTML(this_out).write_pdf(this_pdf)
-
-        # # use the anu_cecs.latex template
-        # pdoc_args = ['--pdf-engine', '/usr/bin/xelatex']
+        # # # use the anu_cecs.latex template
+        # # pdoc_args = ['--pdf-engine', '/usr/bin/xelatex']
         # # convert to pdf
-        # output = pypandoc.convert_file(this_out, to='md', format='md', outputfile=this_out, extra_args=['--pdf-engine', '/usr/bin/xelatex'])
+        #  # use the anu_cecs.latex template
+        # pdoc_args = ['--pdf-engine','xelatex']
+        # # convert to pdf
+        # output = pypandoc.convert_file(this_out, to='pdf', format='md', outputfile=this_pdf, extra_args=pdoc_args)
 
-        # print message to console - complete!
-        f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))
+        
+
+    # print message to console - complete!
+    f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))
 
