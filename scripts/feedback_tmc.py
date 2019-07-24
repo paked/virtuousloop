@@ -113,7 +113,7 @@ def feedback_tmc():
                     print("### Team member {-}\n\n" + str(df_row['teamcomments']) + "\n\n", file=out)
 
         import subprocess
-        subprocess.call("pandoc " + this_out + " -o " + this_pdf + " --template ./includes/pdf/anu_cecs.latex --pdf-engine=xelatex", shell=True)
+        subprocess.call("pandoc " + this_out + " -o " + this_pdf + " --template=./includes/pdf/anu_cecs.latex --pdf-engine=xelatex", shell=True)
 
         # this_out=c.tmc['conf'] + team + ".md"
         # this_html=c.tmc['conf'] + team + ".html"
