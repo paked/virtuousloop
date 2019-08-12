@@ -17,6 +17,7 @@ import config as c
 import functions as f
 
 def wattle_csv():
+    f.config_exists()
     
     try:
         config = open('./files/app_config.yml')
