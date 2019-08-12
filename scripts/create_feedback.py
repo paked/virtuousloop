@@ -20,19 +20,21 @@ cfg = f.config_exists()
 
 # process the columns needed to run the scripts
 load_data()
-analysis_marks()
 
-# if (cfg['feedback_type']['marks'] == 'true') and (cfg['feedback_type']['tmc'] == 'true'):
-# 	f.pnt_fail(c.msg['console_marks_tmc_conflict'])
+if (cfg['feedback_type']['marks'] == 'true') and (cfg['feedback_type']['tmc'] == 'true'):
+	f.pnt_fail(c.msg['console_marks_tmc_conflict'])
 
-# if (cfg['feedback_type']['marks'] == 'true'):
-# 	# extract the crit/comment fields from the marks file
-# 	feedback_marks()
+if (cfg['feedback_type']['marks'] == 'true'):
+	# extract the crit/comment fields from the marks file
+	feedback_marks()
 
-# if (cfg['feedback_type']['tmc'] == 'true'):
-# 	# extract the crit/comment fields from the marks file
-# 	feedback_tmc()
+if (cfg['feedback_type']['tmc'] == 'true'):
+	# run the tmc module
+	feedback_tmc()
 
-# # create csv to upload to wattle
-#if (cfg['feedback_type']['wattle'] == 'true'):
-# wattle_csv()
+if (cfg['feedback_type']['analysis'] == 'true'):
+	analysis_marks()
+
+# create csv to upload to wattle
+if (cfg['feedback_type']['wattle'] == 'true'):
+wattle_csv()
