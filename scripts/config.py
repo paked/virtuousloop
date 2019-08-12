@@ -17,28 +17,30 @@ d = {
     "scales": "./files/scales/",
     "rubric": "./feedback/rubrics/",
     "tmc": "./feedback/tmc/",
-}
-
-tmc = {
-    "anon": "./feedback/anon/",
-    "conf": "./feedback/conf/",
+    "tmc_anon": "./feedback/tmc/anonymous/",
+    "tmc_conf": "./feedback/tmc/confidential/",
+    "tmc_chart": "./feedback/tmc/chart/",
+    "tmc_anon_md": "./feedback/tmc/anonymous/md/",
+    "tmc_conf_md": "./feedback/tmc/confidential/md/",
+    "nlp": "./feedback/nlp/",
+    "wattle": "./feedback/wattle/",
 }
 
 f = {
     "students": "./files/students.csv",
     "marks": "./files/marks.csv",
-    "wattle": "./feedback/wattle.csv",
+    "wattle": "./feedback/wattle_upload.csv",
     "crit_levels": "./files/crit_levels.csv",
     "data_tmc": "./files/data_tmc.csv",
     "fields": "./files/fields.csv",
-    "app_config": "./files/app_config.yml"
-
+    "app_config": "./files/app_config.yml",
+    "json": "./feedback/wattle/database.json",
 }
 
 t = {
     "students": "./files/students.tsv",
     "marks": "./files/marks.tsv",
-    "wattle": "./feedback/wattle.tsv",
+    "wattle": "./feedback/wattle_upload.tsv",
     "crit_levels": "./files/crit_levels.tsv",
     "data_tmc": "./files/data_tmc.tsv",
     "fields": "./files/fields.tsv",
@@ -50,7 +52,8 @@ df = {
     "wattle": "wattle_df",
     "crit_levels": "crit_levels_df",
     "data_tmc": "data_tmc_df",
-    "fields": "fields_df"
+    "fields": "fields_df",
+    "marker": "marker_df",
 }
 
 h = {

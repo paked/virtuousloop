@@ -7,7 +7,6 @@
 
 '''turns the marks spreadsheet into pdf feedback'''
 
-
 import os
 import csv
 import pandas as pd
@@ -23,7 +22,7 @@ from weasyprint import HTML
 def feedback_marks():
     
     # check that config exists
-    conf=f.config_exists()
+    cfg=f.config_exists()
     
     # print message to console - starting!
     f.pnt_notice(c.msg['console_start'],os.path.basename(__file__))
@@ -44,7 +43,7 @@ def feedback_marks():
     f.pnt_info(c.msg["console_creating_feedback_files"])
     
     # create distribution charts for later
-    if conf['crit_display']['graph'] == "true":
+    if cfg['crit_display']['graph'] == "true":
         stats=f.make_crit_list(crit)
         f.make_crit_chart(crit, stats)
 
@@ -52,7 +51,7 @@ def feedback_marks():
     for i, m_row in marks.iterrows():
 
         # decide whether to use the list_team or list_name field
-        if conf['feedback_type']['group'] == 'true':
+        if cfg['feedback_type']['group'] == 'true':
             this_record = m_row['list_team']
         else:
             this_record = m_row['user']
@@ -60,8 +59,7 @@ def feedback_marks():
 
         # define the out files
         # note that the pdf will be copied as out in wattle_csv.py
-        this_out = c.d['out'] + this_record + '.md'
-        this_pdf = c.d['out'] + this_record + '.pdf'
+        this_out = c.d['out'] + this_record
 
         # display a progress bar in the console
         # total for progress bar comes from marks.shape[0]
@@ -69,30 +67,30 @@ def feedback_marks():
                 
 
         #open up a file to print to
-        with open(this_out, 'w') as out:
+        with open(this_out + '.md', 'w') as out:
             
             # create the pandoc header
-            if conf['feedback_type']['group'] == 'true':
+            if cfg['feedback_type']['group'] == 'true':
                 f.pandoc_header(out, this_record)
             else:
                 f.pandoc_header(out, this_record_all)
 
-            if (conf['crit_display']['text'] == "true") or (conf['crit_display']['scale'] == "true") or (conf['crit_display']['graph'] == "true"):
+            if (cfg['crit_display']['text'] == "true") or (cfg['crit_display']['scale'] == "true") or (cfg['crit_display']['graph'] == "true"):
                 # start with indicator title and notes
-                print("## " + conf['pdf_messages']['indicator_title'] + "{-}\n\n", file=out)
-                print(conf['pdf_messages']['indicator_note'] + "\n\n", file=out)
+                print("## " + cfg['pdf_messages']['indicator_title'] + "{-}\n\n", file=out)
+                print(cfg['pdf_messages']['indicator_note'] + "\n\n", file=out)
 
             #loop through the crit columns
             for j, row in crit.iterrows():
 
-                if (conf['crit_display']['text'] == "true") or (conf['crit_display']['scale'] == "true") or (conf['crit_display']['graph'] == "true"):
+                # display the fields according to app_config
+                if (cfg['crit_display']['text'] == "true") or (cfg['crit_display']['scale'] == "true") or (cfg['crit_display']['graph'] == "true"):
                     f.print_results_header('crit', row, m_row, out)
-
-                if conf['crit_display']['text'] == "true":
+                if cfg['crit_display']['text'] == "true":
                     f.print_results_text('crit', row, m_row, out)
-                if conf['crit_display']['scale'] == "true":
+                if cfg['crit_display']['scale'] == "true":
                     f.print_results_scale('crit', row, m_row, out)
-                if conf['crit_display']['graph'] == "true":
+                if cfg['crit_display']['graph'] == "true":
                     f.print_results_graph('crit', row, m_row, out)
 
             # loop through the comment columns
@@ -100,18 +98,14 @@ def feedback_marks():
                 f.print_results_header('comm', row, m_row, out)
                 f.print_results_text('comm', row, m_row, out)
 
-            if conf['crit_display']['rubric'] == "true":
-                print("# " + conf['pdf_messages']['rubric_title'] + "{-}\n\n", file=out)
-                print(conf['pdf_messages']['rubric_note'] + "\n", file=out)
+            if cfg['crit_display']['rubric'] == "true":
+                print("# " + cfg['pdf_messages']['rubric_title'] + "{-}\n\n", file=out)
+                print(cfg['pdf_messages']['rubric_note'] + "\n", file=out)
                 f.print_results_rubric(out, m_row, this_record)
                 print("\n", file=out)
 
-
-        # use the anu_cecs.latex template
-        pdoc_args = ['--pdf-engine','xelatex']
-        # convert to pdf
-        output = pypandoc.convert_file(this_out, to='pdf', format='md', outputfile=this_pdf, extra_args=pdoc_args)
-
-
+        # convert md to pdf using the shell
+        f.pandoc_pdf(this_out)
+ 
     # print message to console - complete!
     f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))

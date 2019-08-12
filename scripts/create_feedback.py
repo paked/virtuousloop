@@ -13,22 +13,26 @@ from load_data import load_data
 from feedback_marks import feedback_marks
 from feedback_tmc import feedback_tmc
 from wattle_csv import wattle_csv
+from analysis_marks import analysis_marks
 
-conf = f.config_exists()
+
+cfg = f.config_exists()
 
 # process the columns needed to run the scripts
 load_data()
+analysis_marks()
 
-# if (conf['feedback_type']['marks'] == 'true') and (conf['feedback_type']['tmc'] == 'true'):
+# if (cfg['feedback_type']['marks'] == 'true') and (cfg['feedback_type']['tmc'] == 'true'):
 # 	f.pnt_fail(c.msg['console_marks_tmc_conflict'])
 
-# if (conf['feedback_type']['marks'] == 'true'):
+# if (cfg['feedback_type']['marks'] == 'true'):
 # 	# extract the crit/comment fields from the marks file
 # 	feedback_marks()
 
-if (conf['feedback_type']['tmc'] == 'true'):
-	# extract the crit/comment fields from the marks file
-	feedback_tmc()
+# if (cfg['feedback_type']['tmc'] == 'true'):
+# 	# extract the crit/comment fields from the marks file
+# 	feedback_tmc()
 
 # # create csv to upload to wattle
+#if (cfg['feedback_type']['wattle'] == 'true'):
 # wattle_csv()

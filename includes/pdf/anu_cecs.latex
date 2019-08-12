@@ -79,8 +79,9 @@ $endif$
 \usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
-  \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
+  \usepackage{fontspec}
+  % \usepackage[utf8]{inputenc}
+  % \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
 $if(mathspec)$
   \ifxetex
@@ -662,7 +663,7 @@ $endif$
 \lhead{$title$}
 \chead{}
 \rhead{$date$}
-\lfoot{$for(author)$$author$$sep$, $endfor$}
+\lfoot{$copyright$}
 \cfoot{}
 \rfoot{\thepage}
 \renewcommand{\headrulewidth}{0.4pt}

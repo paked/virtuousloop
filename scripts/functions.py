@@ -18,11 +18,13 @@ import time
 import matplotlib.pyplot as plt
 from weasyprint import HTML as weasy
 from unidecode import unidecode
+import readability
+from bs4 import BeautifulSoup
+from functools import reduce
+import syntok.segmenter as segmenter
+from aylienapiclient import textapi
+from jq import jq
 
-import locale
-def getpreferredencoding(do_setlocale = True):
-   return "utf-8"
-locale.getpreferredencoding = getpreferredencoding
 
 # ===========================================================
 # Organised into:
@@ -108,19 +110,27 @@ def make_directories(folder):
 def remove_non_ascii(text):
     return ''.join([i if ord(i) < 128 else ' ' for i in text])
 
+def correctSubtitleEncoding(filename, newFilename, encoding_from, encoding_to='UTF-8'):
+    with open(filename, 'r', encoding=encoding_from) as fr:
+        with open(newFilename, 'w', encoding=encoding_to) as fw:
+            for line in fr:
+                fw.write(line[:-1]+'\r\n')
+
+    # print(tsv.groupby(['group']).size())
+
 # ===========================================================
 #  print messages
 # ===========================================================
 
 def print_results_header(field, row, m_row, out):
     ## print the header for all fields
-    conf = config_exists()
+    cfg = config_exists()
     this_field = str(row['field'])
     this_text = str(row['text'])
     this_label = str(row['label'])
 
     print("### " + this_text + "{-}\n\n", file=out)
-    if (conf['crit_display']['label'] == 'true'):
+    if (cfg['crit_display']['label'] == 'true'):
         print(this_label + "\n\n", file=out)
 
 def print_results_text(field, row, m_row, out):
@@ -151,7 +161,7 @@ def print_results_graph(field, row, m_row, out):
 
 def print_results_rubric(out, m_row, record):
     # option for displaying rubric
-    conf = config_exists()
+    cfg = config_exists()
 
     this_rubric = c.d['rubric'] + record + '.html'
     this_rubric_pdf = c.d['rubric'] + record + '.pdf'
@@ -255,22 +265,45 @@ def col_to_lower(dataframe, column):
         c.df[dataframe][column] = c.df[dataframe][column].str.lower()
 
 # ===========================================================
+#  readability helpers
+# ===========================================================
+
+def readability_stats(dataframe, row, i, current_column, new_column, readability_group, readability_measure):
+    this_comment = row[current_column]
+    tokenized = '\n\n'.join(
+     '\n'.join(' '.join(token.value for token in sentence)
+        for sentence in paragraph)
+     for paragraph in segmenter.analyze(this_comment))
+    this_result = readability.getmeasures(tokenized, lang='en')
+    c.df[dataframe].at[i,new_column] = this_result[readability_group][readability_measure]
+
+def html_to_text(dataframe, row, i, current_column, new_column):
+    this_html = BeautifulSoup(row[current_column], 'html.parser')
+    replace = ('\r', ' '), ('\n', ' '), ('  ', ' ')
+    this_text = reduce(lambda a, kv: a.replace(*kv), replace, this_html.get_text())
+    c.df[dataframe].at[i,new_column] = this_text
+
+
+# ===========================================================
 #  pandoc helpers
 # ===========================================================
 
 def pandoc_header(out, record): 
-    conf = config_exists()
+    cfg = config_exists()
 
     print("---", file=out)
     print("title: " + record, file=out)
     print("date: Generated " + strftime("%Y-%m-%d %H:%M:%S", localtime()), file=out)
-    for i in conf['assignment']:
-        print(i + ": " + conf['assignment'][i], file=out)
-    for i in conf["pdf_front_matter"]:
-        print(i + ": " + conf["pdf_front_matter"][i], file=out)
+    for i in cfg['assignment']:
+        print(i + ": " + cfg['assignment'][i], file=out)
+    for i in cfg["pdf_front_matter"]:
+        print(i + ": " + cfg["pdf_front_matter"][i], file=out)
     print("---\n\n", file=out)
-    print("# " + conf['assignment']['assignment_title'] + " Feedback{-}\n\n", file=out)
-    print("# " + record + "{-}\n\n", file=out)
+    print("# " + cfg['assignment']['assignment_title'] + " Feedback{-}\n\n", file=out)
+    print("# " + record + "{-}\n\n\n", file=out)
+
+def pandoc_pdf(this_file):
+    subprocess.call("pandoc " + this_file + ".md -o " + this_file + ".pdf --template=./includes/pdf/anu_cecs.latex --pdf-engine=xelatex", shell=True)
 
 # ===========================================================
 #  filesystem helpers
@@ -284,6 +317,14 @@ def config_exists():
         f.pnt_fail(c.msg['console_app_config_fail'])
     else:
         return yaml.safe_load(config)
+
+def file_exists(file):
+    try:
+        this_file = open(file)
+    except IOError:
+        f.pnt_fail(c.msg['console_app_config_fail'])
+    else:
+        return yaml.safe_load(this_file)
 
 # ===========================================================
 #  console helpers
@@ -340,13 +381,13 @@ def make_crit_chart(crit, stats):
         plt.savefig(out, bbox_inches='tight')
 
 def make_tmc_chart(dataframe, out):
-    conf = config_exists()
-    ax = dataframe.plot(kind='bar', title ="", figsize=(10, 3), legend=True, fontsize=10, colormap=conf['tmc']['colormap'], width=0.5)
-    ax.set_xlabel(conf['tmc']['x_axis_title'], fontsize=10)
+    cfg = config_exists()
+    ax = dataframe.plot(kind='bar', title ="", figsize=(10, 3), legend=True, fontsize=10, colormap=cfg['tmc_chart']['colormap'], width=0.5)
+    ax.set_xlabel(cfg['tmc_chart']['x_axis_title'], fontsize=10)
     ax.set_xticklabels(ax.get_xticklabels(),rotation=0)
-    ax.set_yticks(conf['tmc']['y_tick_values']) 
-    ax.set_yticklabels(conf['tmc']['y_tick_labels'])
-    ax.set_ylabel(conf['tmc']['y_axis_title'], fontsize=10)
+    ax.set_yticks(cfg['tmc_chart']['y_tick_values']) 
+    ax.set_yticklabels(cfg['tmc_chart']['y_tick_labels'])
+    ax.set_ylabel(cfg['tmc_chart']['y_axis_title'], fontsize=10)
     ax.axhline(0, color='black', lw=1)
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
@@ -371,3 +412,51 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+
+
+# function to call api
+def text_analysis_api (text, label, record):
+    cfg=config_exists()
+    print(record)
+    this_nlp = c.d['nlp'] + record + '-' + label + '.json'
+    aylien = textapi.Client(cfg['aylien']['api_id'], cfg['aylien']['api_key'])
+    combined = aylien.Combined({
+        'text': text,
+        #'endpoint': ["sentiment", "classify", "extract", "summarize", "entities", "hashtags", "concepts"]
+        'endpoint': ["entities", "summarize"]
+    })
+
+    with open(this_nlp, 'w') as out:
+        print(combined["results"], file=out)
+
+
+    for result in combined["results"]:
+        print(result["endpoint"])
+        print(result["result"])
+        print(jq(".keyword[]").transform(result["result"]))
+
+
+    # # extract keywords
+    # for type in self shadow; do
+    #     jq '.results[1].result.entities.keyword[]' ./reviews/api/"$this_user"-"$type".txt | sed 's/ .*//g;s/"//g;s/\(.*\)/\L\1/;' | sort -u | sed '$!N; /\(.*\)\n\1s/!P;D;' > ./reviews/keywords/"$this_user"-"$type".txt
+    # done
+
+    # # extract hashtags
+    # for type in self shadow; do
+    #     jq '.results[4].result.hashtags[]' ./reviews/api/"$this_user"-"$type".txt | sed 's/ .*//g;s/"//g;s/\(.*\)/\L\1/;' | sort -u | sed '$!N; /\(.*\)\n\1s/!P;D;' > ./reviews/hashtags/"$this_user"-"$type".txt
+    # done
+
+#     this_nlp = c.d['reviews'] + user + '-' + label + '.txt'
+#     with open(this_nlp, 'w') as out:
+#         this_result=curl -s 'https://api.aylien.com/api/v1/combined' \
+#            -H "X-AYLIEN-TextAPI-Application-Key: " + cfg['aylien']['api_key'] \
+#            -H "X-AYLIEN-TextAPI-Application-ID: " + cfg['aylien']['api_id']  \
+#            --data-urlencode "text=$this_text_self" \
+#            --data-urlencode "endpoint=sentiment" \
+#            --data-urlencode "endpoint=classify" \
+#            --data-urlencode "endpoint=extract" \
+#            --data-urlencode "endpoint=summarize" \
+#            --data-urlencode "endpoint=entities" \
+#            --data-urlencode "endpoint=hashtags" \
+#            --data-urlencode "endpoint=concepts"
+#         print(this_result, file=out)

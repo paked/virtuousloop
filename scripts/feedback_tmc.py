@@ -9,25 +9,28 @@
 
 import os
 import csv
-import pandas as pd
-import yaml
-from shutil import copyfile
-from pathlib import Path
 import config as c
 import functions as f
+import pandas as pd
+import yaml
+import shutil
+from shutil import copyfile
+from pathlib import Path
 import pypandoc
 from weasyprint import HTML
 import itertools
 from pandas import DataFrame
-import re
 import matplotlib.pyplot as plt
+import subprocess
+
+# silence matplot warnings
 plt.rcParams.update({'figure.max_open_warning': 0})
 
-
+# main loop
 def feedback_tmc():
     
     #check that config exists
-    conf=f.config_exists()
+    cfg=f.config_exists()
 
     # print message to console - starting!
     f.pnt_notice(c.msg['console_start'],os.path.basename(__file__))
@@ -42,7 +45,7 @@ def feedback_tmc():
 
     # load data and translate the written labels into values
     data_tmc=f.load_tsv('data_tmc')
-    data_tmc.replace(conf['tmc']['find_labels'], conf['tmc']['replace_values'], inplace=True) 
+    data_tmc.replace(cfg['tmc_chart']['find_labels'], cfg['tmc_chart']['replace_values'], inplace=True) 
     
     # create a list of column headers for team member contributions
     # sort the list from TM1 to TMx
@@ -76,87 +79,82 @@ def feedback_tmc():
         # transpose the conf_df
         this_conf_df=DataFrame.from_records(team_data, columns=team_header).set_index('reviews').dropna(axis=1, how='all')
         this_anon_df=this_conf_df.rename(columns=lambda x: re.sub(' - .*','',x)).T
-        this_anon_df=this_anon_df.rename(columns=lambda x: re.sub('u.*',conf['tmc']['anon_legend'],x))
+        this_anon_df=this_anon_df.rename(columns=lambda x: re.sub('u.*',cfg['tmc_chart']['anon_legend'],x))
         this_conf_df=this_conf_df.T
 
         # get the shape of the dataframe to show the number of submissions
         shape=this_anon_df.shape
+
         this_anon_df['average'] = this_anon_df.mean(axis=1)
         this_conf_df['average'] = this_conf_df.mean(axis=1)
 
-        # set the out files
-        tmc_conf_out = c.d['tmc'] + team + "_conf.pdf"
-        tmc_anon_out = c.d['tmc'] + team + "_anon.pdf"
-
         # make the charts
-        f.make_tmc_chart(this_conf_df, tmc_conf_out)
-        f.make_tmc_chart(this_anon_df, tmc_anon_out)
+        f.make_tmc_chart(this_anon_df, c.d['tmc_chart'] + team + "_anon.pdf")
+        f.make_tmc_chart(this_conf_df, c.d['tmc_chart'] + team + "_conf.pdf")
 
-        this_out=c.tmc['anon'] + team + ".md"
-        this_html=c.tmc['anon'] + team + ".html"
-        this_pdf=c.tmc['anon'] + team + ".pdf"
-
-        with open(this_out, 'w') as out:
-
-            #f.pandoc_header(out, team)
-
-            print("Peer evaluation of contribution by team members\n\n", file=out)
-            print("*" + str(shape[1]) + "*" + " out of *" + str(shape[0]) + "* team members submitted reviews.\n\n", file=out)
-            print('![](./feedback/tmc/' + team + '_anon.pdf)\n\n', file=out)
-            header=conf['pdf_messages']['tmc_title']
-            print("## " + header + "{-}\n\n", file=out)
-            for i, df_row in this_data.iterrows():
-                # try encoding utf8
-                if ( str(df_row['teamcomments']) == "nan"):
-                    print("### Team member {-}\n\nNo comments\n\n", file=out)
-                else:
-                    print("### Team member {-}\n\n" + str(df_row['teamcomments']) + "\n\n", file=out)
-
-        import subprocess
-        subprocess.call("pandoc " + this_out + " -o " + this_pdf + " --template=./includes/pdf/anu_cecs.latex --pdf-engine=xelatex", shell=True)
-
-        # this_out=c.tmc['conf'] + team + ".md"
-        # this_html=c.tmc['conf'] + team + ".html"
-        # this_pdf=c.tmc['conf'] + team + ".pdf"        
-        
-        # with open(this_out, 'w') as out:
-
-        #     #f.pandoc_header(out, team)
-        #     print("Peer evaluation of contribution by team members\n\n", file=out)
-        #     print("*" + str(shape[1]) + "*" + " out of *" + str(shape[0]) + "* team members submitted reviews.\n\n", file=out)
-        #     print('![](./feedback/tmc/' + team + '_anon.pdf)\n\n', file=out)
-        #     header=conf['pdf_messages']['tmc_title']
-        #     print("## " + header + "{-}\n\n", file=out)
-
-        #     for i, df_row in this_data.iterrows():
-        #         # try encoding utf8
-        #         if ( df_row['teamcomments'] == "nan"):
-        #             print("###" + df_row['username'] + "Team member {-}\n\nNo comments\n\n", file=out)
-        #         else:
-        #             print("###" + df_row['username'] + " (Team member) {-}\n\n" + str(df_row['teamcomments']) + "\n\n", file=out)
-            
-        #     header=conf['pdf_messages']['tmc_confidential']
-        #     print("## " + header + "{-}\n\n", file=out)
-        #     for i, df_row in this_data.iterrows():
-        #         # try encoding utf8
-        #         if ( df_row['confidentialcomments'] == "nan"):
-        #             print("### " + df_row['username'] + "Team member {-}\n\nNo comments\n\n", file=out)
-        #         else:
-        #             print("### " + df_row['username'] + " (Team member){-}\n\n" + str(df_row['confidentialcomments']) + "\n\n", file=out)
-            
-        # # pypandoc.convert_file(this_out, to='md', format='html', outputfile=this_html)
-        # # HTML(this_html).write_pdf(this_pdf)
-
-        # # # use the anu_cecs.latex template
-        # # pdoc_args = ['--pdf-engine', '/usr/bin/xelatex']
-        # # convert to pdf
-        #  # use the anu_cecs.latex template
-        # pdoc_args = ['--pdf-engine','xelatex']
-        # # convert to pdf
-        # output = pypandoc.convert_file(this_out, to='pdf', format='md', outputfile=this_pdf, extra_args=pdoc_args)
-
-        
+        format_feedback(team, 'conf', shape, this_data)
+        format_feedback(team, 'anon', shape, this_data)
 
     # print message to console - complete!
     f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))
 
+# print feedback loop
+def format_feedback(team, kind, shape, dataframe):
+    cfg=f.config_exists()
+
+    this_out=c.d['tmc_' + kind] + team
+
+    with open(this_out + ".md", 'w') as out:
+
+        # print pandoc header
+        f.pandoc_header(out, team)
+
+        # print graph
+        this_chart=c.d['tmc_chart'] + team + "_" + kind + ".pdf"
+        this_chart_path=Path(this_chart)
+        
+        # check that a chart has been generated
+        # if so, print the title and caption too
+        if this_chart_path.is_file():
+
+            print("\n\n## " + cfg['tmc_pdf']['eval_header'] + "{-}\n\n", file=out)
+            if ( cfg['tmc_pdf']['team_count_message'] == "true" ):
+                print("**" + str(shape[1]) + "**" + " out of **" + str(shape[0]) + "** " + cfg['tmc_pdf']['count_message'] + "\n\n", file=out)
+
+            print('![](' + this_chart + ')\n\n', file=out)
+            print( cfg['tmc_pdf']['tmc_chart_caption'] + "\n\n", file=out )
+        
+        # print the comments for the team
+        print("## " + cfg['pdf_messages']['tmc_title'] + "{-}\n\n", file=out)
+        for i, df_row in dataframe.iterrows():
+            # if the field is empty
+            if ( str(df_row['teamcomments']) == "nan"):
+                # print confidential and anonymous
+                if ( kind == 'conf'):
+                    print("### " + df_row['user'] + " (" + df_row['username'] + ")" + " {-}\n\n" + cfg['tmc_pdf']['member_no_comment'] + "\n\n", file=out)
+                else:
+                    print("### " + cfg['tmc_pdf']['member_header'] + " {-}\n\n" + cfg['tmc_pdf']['member_no_comment'] + "\n\n", file=out)
+            else:
+                # print confidential and anonymous
+                if ( kind == 'conf'):
+                    print("### " + df_row['user'] + " (" + df_row['username'] + ")" + " {-}\n\n" + str(df_row['teamcomments']) + "\n\n", file=out)
+                else:
+                    print("### " + cfg['tmc_pdf']['member_header'] + " {-}\n\n" + str(df_row['teamcomments']) + "\n\n", file=out)
+
+        # print confidential comments
+        if ( kind == 'conf'):
+            print("## " + cfg['pdf_messages']['tmc_confidential'] + "{-}\n\n", file=out)
+            for i, df_row in dataframe.iterrows():
+                # try encoding utf8
+                if ( df_row['confidentialcomments'] == "nan"):
+                    print("### " + df_row['user'] + " (" + df_row['username'] + ")" + " {-}\n\n" + cfg['tmc_pdf']['member_no_comment'] + "\n\n", file=out)
+                else:
+                    print("### " + df_row['user'] + " (" + df_row['username'] + ")" + " {-}\n\n" + str(df_row['confidentialcomments']) + "\n\n", file=out)
+
+    # convert md to pdf using the shell
+    f.pandoc_pdf(this_out)
+
+    # archive the md files
+    source = c.d['tmc_' + kind] + team + '.md'
+    dest = c.d['tmc_' + kind + '_md'] + team + '.md'
+    shutil.move(source, dest)

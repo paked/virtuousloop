@@ -36,9 +36,8 @@ def wattle_csv():
     f.load_tsv('students')
     f.load_tsv('marks')
 
-    
-    if conf['fields']['marks_field'] == 'list_name':
-
+    # decide whether to use the list_team or list_name field
+    if cfg['feedback_type']['group'] == 'false':
         # print message to console - creating secrets
         f.pnt_info(c.msg['console_secrets'])
 
@@ -56,9 +55,7 @@ def wattle_csv():
             file_from = c.d['out'] + user + ".pdf"
             file_to = c.d['pdf'] + secret_file
             copyfile(file_from, file_to)
-
-    elif conf['fields']['marks_field'] == 'list_team':
-
+    else:
         # loop through each row and create a secret for each student
         for i, row in c.df['marks'].iterrows():
             user = row['user']
@@ -73,8 +70,7 @@ def wattle_csv():
             file_from = c.d['out'] + group + ".pdf"
             file_to = c.d['pdf'] + group + ".pdf"
             copyfile(file_from, file_to)
-    else:
-        f.pnt_info(c.msg['console_missing_marks_field'])
+
 
     # print message to console - final csv for upload
     f.pnt_info(c.msg['console_upload'])
