@@ -22,6 +22,7 @@ import itertools
 from pandas import DataFrame
 import matplotlib.pyplot as plt
 import subprocess
+import re
 
 # silence matplot warnings
 plt.rcParams.update({'figure.max_open_warning': 0})
