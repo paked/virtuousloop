@@ -48,7 +48,6 @@ def analysis_marks():
     # create distribution charts for later
     stats=f.make_crit_list(crit)
     f.make_crit_chart(crit, stats)
-    nlp = spacy.load("en_core_web_sm")
 
     c.df['marks'].loc[c.df['marks'].grade_calculated == 0, ['marker_name', 'marker_id']] = 'No Submission', 'nil'
 
