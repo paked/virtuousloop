@@ -37,4 +37,4 @@ if (cfg['feedback_type']['analysis'] == 'true'):
 
 # create csv to upload to wattle
 if (cfg['feedback_type']['wattle'] == 'true'):
-wattle_csv()
+	wattle_csv()
