@@ -21,7 +21,6 @@ from unidecode import unidecode
 import readability
 from bs4 import BeautifulSoup
 from functools import reduce
-import syntok.segmenter as segmenter
 from aylienapiclient import textapi
 from jq import jq
 

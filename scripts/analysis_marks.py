@@ -18,8 +18,6 @@ import config as c
 import functions as f
 import pypandoc
 from weasyprint import HTML
-import spacy
-#from textstat.textstat import textstatistics, easy_word_set, legacy_round 
 import readability
 from bs4 import BeautifulSoup as soup
 
