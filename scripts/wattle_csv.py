@@ -17,14 +17,7 @@ import config as c
 import functions as f
 
 def wattle_csv():
-    f.config_exists()
-    
-    try:
-        config = open('./files/app_config.yml')
-    except IOError:
-        f.pnt_fail("Can't locate ./files/app_config.yml. Please find it. The script will fail.")
-    else:
-        conf = yaml.safe_load(config)
+    cfg = f.config_exists()
 
     # print message to console - complete!
     f.pnt_notice(c.msg['console_start'],os.path.basename(__file__))
@@ -47,7 +40,7 @@ def wattle_csv():
             user = row['user']
             secret = hashlib.sha1(row['user'].encode('utf-8')).hexdigest()
             secret_file = user + "-" + secret + ".pdf"
-            comment = "<a href=\"" + conf['assignment']['feedback_url'] + "/" + user + "-" + secret + ".pdf\">PDF Feedback</a>"
+            comment = "<a href=\"" + cfg['assignment']['feedback_url'] + "/" + user + "-" + secret + ".pdf\">PDF Feedback</a>"
             
             # update the df
             c.df['marks'].at[i,'secret'] = comment
@@ -62,7 +55,7 @@ def wattle_csv():
             user = row['user']
             group = row['list_team']
 
-            comment = "<a href=\"" + conf['assignment']['feedback_url'] + "/" + group + ".pdf\">PDF Feedback for" + group + "</a>"
+            comment = "<a href=\"" + cfg['assignment']['feedback_url'] + "/" + group + ".pdf\">PDF Feedback for" + group + "</a>"
 
             # update the df
             c.df['marks'].at[i,'secret'] = comment
