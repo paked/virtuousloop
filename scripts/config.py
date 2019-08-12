@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# python ./scripts/config.py
+# python scripts/config.py
 #
 #
 # chris.browne@anu.edu.au - all care and no responsibility :)
@@ -10,40 +10,40 @@
 
 
 d = {
-    "feedback_dir": "./feedback/",
-    "out": "./feedback/out/",
-    "pdf": "./feedback/pdf/",
-    "graphs": "./feedback/graphs/",
-    "scales": "./files/scales/",
-    "rubric": "./feedback/rubrics/",
-    "tmc": "./feedback/tmc/",
-    "tmc_anon": "./feedback/tmc/anonymous/",
-    "tmc_conf": "./feedback/tmc/confidential/",
-    "tmc_chart": "./feedback/tmc/chart/",
-    "tmc_anon_md": "./feedback/tmc/anonymous/md/",
-    "tmc_conf_md": "./feedback/tmc/confidential/md/",
-    "nlp": "./feedback/nlp/",
-    "wattle": "./feedback/wattle/",
+    "feedback_dir": "feedback/",
+    "out": "feedback/out/",
+    "pdf": "feedback/pdf/",
+    "graphs": "feedback/graphs/",
+    "scales": "files/scales/",
+    "rubric": "feedback/rubrics/",
+    "tmc": "feedback/tmc/",
+    "tmc_anon": "feedback/tmc/anonymous/",
+    "tmc_conf": "feedback/tmc/confidential/",
+    "tmc_chart": "feedback/tmc/chart/",
+    "tmc_anon_md": "feedback/tmc/anonymous/md/",
+    "tmc_conf_md": "feedback/tmc/confidential/md/",
+    "nlp": "feedback/nlp/",
+    "wattle": "feedback/wattle/",
 }
 
 f = {
-    "students": "./files/students.csv",
-    "marks": "./files/marks.csv",
-    "wattle": "./feedback/wattle_upload.csv",
-    "crit_levels": "./files/crit_levels.csv",
-    "data_tmc": "./files/data_tmc.csv",
-    "fields": "./files/fields.csv",
-    "app_config": "./files/app_config.yml",
-    "json": "./feedback/wattle/database.json",
+    "students": "files/students.csv",
+    "marks": "files/marks.csv",
+    "wattle": "feedback/wattle_upload.csv",
+    "crit_levels": "files/crit_levels.csv",
+    "data_tmc": "files/data_tmc.csv",
+    "fields": "files/fields.csv",
+    "app_config": "files/app_config.yml",
+    "json": "feedback/wattle/database.json",
 }
 
 t = {
-    "students": "./files/students.tsv",
-    "marks": "./files/marks.tsv",
-    "wattle": "./feedback/wattle_upload.tsv",
-    "crit_levels": "./files/crit_levels.tsv",
-    "data_tmc": "./files/data_tmc.tsv",
-    "fields": "./files/fields.tsv",
+    "students": "files/students.tsv",
+    "marks": "files/marks.tsv",
+    "wattle": "feedback/wattle_upload.tsv",
+    "crit_levels": "files/crit_levels.tsv",
+    "data_tmc": "files/data_tmc.tsv",
+    "fields": "files/fields.tsv",
 }
 
 df = {
@@ -57,8 +57,8 @@ df = {
 }
 
 h = {
-    "wkhtml_header": "./includes/pdf/header.html",
-    "wkhtml_footer": "./includes/pdf/footer.html",
+    "wkhtml_header": "includes/pdf/header.html",
+    "wkhtml_footer": "includes/pdf/footer.html",
 }
 
 msg = {
@@ -69,10 +69,10 @@ msg = {
     "console_start": "STARTING...",
     "console_complete": "COMPLETE...",
     "console_loading": "loading files into the scripts..",
-    "console_app_config_check": "checking that ./files/app_config.yml exists..",
-    "console_app_config_fail": "Can't locate ./files/app_config.yml. Please find it. The script will fail.",
+    "console_app_config_check": "checking that files/app_config.yml exists..",
+    "console_app_config_fail": "Can't locate files/app_config.yml. Please find it. The script will fail.",
     "console_creating_feedback_files": "Creating feedback files..",
-    "console_marks_tmc_conflict": "Both Marks and TMC are true is ./files/app_config.yml. Only one can be 'true'. The script will probably fail.",
+    "console_marks_tmc_conflict": "Both Marks and TMC are true is files/app_config.yml. Only one can be 'true'. The script will probably fail.",
     "check_dupes": "there are duplicates in the csv: ",
     "fail_warn": "Please find it. The script will fail.",
 }
