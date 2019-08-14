@@ -150,15 +150,16 @@ def print_results_scale(field, row, m_row, out):
     this_field = row['field']
     this_result = m_row[this_field]
     this_image = filter_row('crit_levels', 'index', '^' + this_result + '$').img.to_string(index=False).lstrip()
+    this_image_url = "../../files/scales/" + this_image
     if field == 'crit':
-        print("![](" + c.d['scales'] + this_image + ")\n\n", file=out)
+        print("![](" + this_image_url + ")\n\n", file=out)
 
 def print_results_graph(field, row, m_row, out):
     # option for displaying graphs
     this_field = row['field']
-    this_image = c.d['graphs'] + this_field + ".pdf"
+    this_image = c.d['graphs'] + this_field + ".png"
     if field == 'crit':
-        print("![](" + this_image + ")\n\n", file=out)
+        print("![](../." + this_image + ")\n\n", file=out)
 
 def print_results_rubric(out, m_row, record):
     # option for displaying rubric
@@ -289,9 +290,8 @@ def html_to_text(dataframe, row, i, current_column, new_column):
 #  pandoc helpers
 # ===========================================================
 
-def pandoc_header(out, record): 
+def pandoc_yml(out, record): 
     cfg = config_exists()
-
     print("---", file=out)
     print("title: " + record, file=out)
     print("date: Generated " + strftime("%Y-%m-%d %H:%M:%S", localtime()), file=out)
@@ -300,11 +300,25 @@ def pandoc_header(out, record):
     for i in cfg["pdf_front_matter"]:
         print(i + ": " + cfg["pdf_front_matter"][i], file=out)
     print("---\n\n", file=out)
-    print("# " + cfg['assignment']['assignment_title'] + " Feedback{-}\n\n", file=out)
-    print("# " + record + "{-}\n\n\n", file=out)
+
+def pandoc_css(out, record): 
+    cfg = config_exists()
+    now = strftime("%Y-%m-%d %H:%M:%S", localtime())
+
+    print("@page {", file=out)
+    print("@top-left {", file=out)
+    print("content: '" + cfg["assignment"]["assignment_title"] + "';}", file=out)
+    print("@bottom-left {", file=out)
+    print("content: '" + cfg["pdf_front_matter"]["copyright"] + "';}", file=out)
+    print("@bottom-right {", file=out)
+    print("content: 'Generated " + now + "';}", file=out)
+    print("}", file=out)
 
 def pandoc_pdf(this_file):
-    subprocess.call("pandoc " + this_file + ".md -o " + this_file + ".pdf --template=./includes/pdf/anu_cecs.latex --pdf-engine=xelatex", shell=True)
+    # subprocess.call("pandoc " + this_file + ".md -o " + this_file + ".pdf --template=./includes/pdf/anu_cecs.latex --pdf-engine=xelatex", shell=True)
+    subprocess.call("pandoc -s -t html5 -c ../." + this_file + ".css -c ../../includes/pdf/report.css --metadata-file=" + this_file + ".yaml --template=./includes/pdf/pandoc_template.html " + this_file + ".md -o " + this_file + ".html", shell=True)
+    weasy(this_file + ".html").write_pdf(this_file + ".pdf")
+
 
 # ===========================================================
 #  filesystem helpers
@@ -378,7 +392,7 @@ def make_crit_chart(crit, stats):
         ax.spines['right'].set_visible(False)
         ax.spines['left'].set_visible(False)
         ax.spines['top'].set_visible(False)
-        out = c.d['graphs'] + this_crit + ".pdf"
+        out = c.d['graphs'] + this_crit + ".png"
         plt.savefig(out, bbox_inches='tight')
 
 def make_tmc_chart(dataframe, out):

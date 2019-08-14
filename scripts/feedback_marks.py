@@ -66,15 +66,23 @@ def feedback_marks():
         # total for progress bar comes from marks.shape[0]
         f.progress_bar(i, marks.shape[0], this_record)
                 
+        with open(this_out + '.yaml', 'w') as out:
+        # create the pandoc header
+            if cfg['feedback_type']['group'] == 'true':
+                f.pandoc_yml(out, this_record)
+            else:
+                f.pandoc_yml(out, this_record_all)
+
+        with open(this_out + '.css', 'w') as out:
+        # create the pandoc header
+            if cfg['feedback_type']['group'] == 'true':
+                f.pandoc_css(out, this_record)
+            else:
+                f.pandoc_css(out, this_record_all)
+
 
         #open up a file to print to
         with open(this_out + '.md', 'w') as out:
-            
-            # create the pandoc header
-            if cfg['feedback_type']['group'] == 'true':
-                f.pandoc_header(out, this_record)
-            else:
-                f.pandoc_header(out, this_record_all)
 
             if (cfg['crit_display']['text'] == "true") or (cfg['crit_display']['scale'] == "true") or (cfg['crit_display']['graph'] == "true"):
                 # start with indicator title and notes
@@ -107,6 +115,7 @@ def feedback_marks():
 
         # convert md to pdf using the shell
         f.pandoc_pdf(this_out)
+
  
     # print message to console - complete!
     f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))

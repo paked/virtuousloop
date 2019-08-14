@@ -27,13 +27,6 @@ if (cfg['feedback_type']['marks'] == 'true') and (cfg['feedback_type']['tmc'] ==
 if (cfg['feedback_type']['marks'] == 'true'):
 	# extract the crit/comment fields from the marks file
 	feedback_marks()
-	# Open a file
-	path = "./feedback/"
-	dirs = os.listdir( path )
-
-	# This would print all the files and directories
-	for file in dirs:
-   		print(file)
 
 if (cfg['feedback_type']['tmc'] == 'true'):
 	# run the tmc module
