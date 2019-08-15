@@ -25,8 +25,8 @@ cfg = f.config_exists()
 load_data()
 
 if (cfg['feedback_type']['many_eyes'] == 'true'):
-	#feedback_tmc()
-	#feedback_many_eyes()
+	feedback_tmc()
+	feedback_many_eyes()
 	wattle_csv_many_eyes()
 
 else:
