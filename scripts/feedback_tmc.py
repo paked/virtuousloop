@@ -63,7 +63,8 @@ def feedback_tmc():
 
         # display a progress bar in the console
         # total for progress bar comes from marks.shape[0]
-        f.progress_bar(1, teams.shape[0], team)
+        # f.progress_bar(i, teams.shape[0], team)
+        print(team)
 
         # get the tmc values matching the team
         # only take the first row of tm_cols_id as the list

@@ -41,28 +41,45 @@ def wattle_csv_many_eyes():
 
     f.load_tsv('students')
     students=f.filter_row('students', 'role', 'Student')
-
+    user_list=[]
+    comment_list=[]
 
     # loop through each row and create a secret for each student
     for i, row in students.iterrows():
         user = row['user']
         role = row['role']
+        project_team = row['projectteam']
+        team_row=f.filter_row('data_tutor', 'team', project_team)
+        if not team_row.empty:
+            team_performance=team_row.iloc[0]['suggestedindicator']
+        else:
+            team_performance="TBA"
+
         if role != 'student':
             project_team = row['projectteam']
             shadow_team = row['shadowteam']
-
-            comment = "<ul><li><a href=\"" + cfg['assignment']['feedback_url'] + "/" + str(project_team) + ".pdf\">PDF Feedback for" + str(project_team) + "</a></li><li><a href=\"" + cfg['assignment']['feedback_url'] + "/" + str(shadow_team) + ".pdf\">PDF Feedback for" + str(shadow_team) + "</a></li></ul>"
+            comment = "Your Team's Progress Indicator:"
+            comment += "<ul><li><strong>" + team_performance + "</strong></li></ul>"
+            comment += "Feedback for Your Teams:"
+            comment += "<ul><li><a href=\"" + cfg['assignment']['feedback_url'] + "/" + str(project_team) + ".pdf\">PDF Feedback for" + str(project_team) + "</a></li>"
+            comment += "<li><a href=\"" + cfg['assignment']['feedback_url'] + "/" + str(shadow_team) + ".pdf\">PDF Feedback for" + str(shadow_team) + "</a></li></ul>"
 
             # update the df
-            students.at[i,'feedback'] = comment
+            user_list.append(user)
+            comment_list.append(comment)
 
 
     # print message to console - final csv for upload
     f.pnt_info(c.msg['console_upload'])
-
+    # print(comments)
+    
     # create an output file
-    out=students[['user','feedback']]
-    out.to_csv(c.f['wattle'], index=False)
+
+    this_out = pd.DataFrame()
+    this_out['users']=user_list
+    this_out['feedback']=comment_list
+
+    this_out.to_csv(c.f['wattle'], index=False)
 
 
 

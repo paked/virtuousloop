@@ -124,10 +124,11 @@ html {
     font-size: 12pt; }
   html body article#cover {
     background-color: #C7DDE8;
+    margin: 0px;
     height: 297mm;
     text-align: center; }
     html body article#cover h1 {
-      margin-top: 400px;
+      padding-top: 400px;
       }
     html body article#cover address {
       margin-top: 500px;

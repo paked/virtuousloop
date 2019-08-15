@@ -125,7 +125,12 @@ def feedback_many_eyes():
         team_list.append(this_team)
     # for each team 
     for team in team_list: 
+
+        # display a progress bar in the console
+        # total for progress bar comes from marks.shape[0]
+        #f.progress_bar(i, team_list.shape[0], team)
         print(team)
+
         this_team_self_df=self_df[self_df['team'].str.contains(team)]
         this_team_shadow_df=shadow_df[shadow_df['team'].str.contains(team)]
         this_team_tutor_df=tutor_df[tutor_df['team'].str.contains(team)]
