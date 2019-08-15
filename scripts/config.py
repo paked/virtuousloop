@@ -45,7 +45,7 @@ f = {
     "app_config": "./files/app_config.yml",
     "wattle": "./feedback/wattle_upload.csv",
     "json": "./feedback/wattle/database.json",
-    "feedack_course": "./files/feedback_course.csv",
+    "feedback_course": "./files/feedback_course.csv",
 }
 
 t = {
@@ -60,7 +60,7 @@ t = {
     "data_shadow": "./files/data_shadow.tsv",
     "data_tutor": "./files/data_tutor.tsv",
     "data_conv": "./files/data_conv.tsv",
-    "feedack_course": "./files/feedback_course.tsv",
+    "feedback_course": "./files/feedback_course.tsv",
 }
 
 df = {
@@ -76,7 +76,7 @@ df = {
     "data_shadow": "data_shadow_df",
     "data_tutor": "data_tutor_df",
     "data_conv": "data_conv_df",
-    "feedack_course": "feedback_course_df",
+    "feedback_course": "feedback_course_df",
 }
 
 h = {
