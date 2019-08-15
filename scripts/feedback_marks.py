@@ -60,7 +60,7 @@ def feedback_marks():
 
         # define the out files
         # note that the pdf will be copied as out in wattle_csv.py
-        this_out = c.d['out'] + this_record
+        this_out = c.d['archive'] + this_record
 
         # display a progress bar in the console
         # total for progress bar comes from marks.shape[0]
@@ -114,7 +114,7 @@ def feedback_marks():
                 print("\n", file=out)
 
         # convert md to pdf using the shell
-        f.pandoc_pdf(this_out)
+        f.pandoc_pdf(this_out, '2')
 
  
     # print message to console - complete!

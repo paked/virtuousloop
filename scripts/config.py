@@ -10,30 +10,40 @@
 
 
 d = {
-    "feedback_dir": "./feedback/",
-    "out": "./feedback/out/",
-    "pdf": "./feedback/pdf/",
-    "graphs": "./feedback/graphs/",
+    "feedback": "./feedback/",
+    "upload": "./feedback/upload/",
+    "archive": "./feedback/archive/",
+    "charts": "./feedback/archive/charts/",
+    "rubric": "./feedback/archive/rubrics/",
+    "yaml": "./feedback/archive/yaml/",
+    "css": "./feedback/archive/css/",
+    "nlp": "./feedback/archive/nlp/",
+    "json": "./feedback/archive/json/",
+    "md": "./feedback/archive/md/",
+    "pdf": "./feedback/archive/pdf/",
+    "html": "./feedback/archive/html/",
+    # "tmc_anon": "./feedback/tmc_anonymous/",
+    # "tmc_conf": "./feedback/tmc_confidential/",
+    # "tmc_chart": "./feedback/tmc/chart/",
+    # "tmc_anon_md": "./feedback/tmc/anonymous/md/",
+    # "tmc_conf_md": "./feedback/tmc/confidential/md/",
+    "files": "./files/",
     "scales": "./files/scales/",
-    "rubric": "./feedback/rubrics/",
-    "tmc": "./feedback/tmc/",
-    "tmc_anon": "./feedback/tmc/anonymous/",
-    "tmc_conf": "./feedback/tmc/confidential/",
-    "tmc_chart": "./feedback/tmc/chart/",
-    "tmc_anon_md": "./feedback/tmc/anonymous/md/",
-    "tmc_conf_md": "./feedback/tmc/confidential/md/",
-    "nlp": "./feedback/nlp/",
-    "wattle": "./feedback/wattle/",
 }
 
 f = {
     "students": "./files/students.csv",
     "marks": "./files/marks.csv",
-    "wattle": "./feedback/wattle_upload.csv",
     "crit_levels": "./files/crit_levels.csv",
     "data_tmc": "./files/data_tmc.csv",
     "fields": "./files/fields.csv",
+    "data_client": "./files/data_client.csv",
+    "data_self": "./files/data_self.csv",
+    "data_shadow": "./files/data_shadow.csv",
+    "data_tutor": "./files/data_tutor.csv",
+    "data_conv": "./files/data_conv.csv",
     "app_config": "./files/app_config.yml",
+    "wattle": "./feedback/wattle_upload.csv",
     "json": "./feedback/wattle/database.json",
 }
 
@@ -44,6 +54,11 @@ t = {
     "crit_levels": "./files/crit_levels.tsv",
     "data_tmc": "./files/data_tmc.tsv",
     "fields": "./files/fields.tsv",
+    "data_client": "./files/data_client.tsv",
+    "data_self": "./files/data_self.tsv",
+    "data_shadow": "./files/data_shadow.tsv",
+    "data_tutor": "./files/data_tutor.tsv",
+    "data_conv": "./files/data_conv.tsv",
 }
 
 df = {
@@ -54,6 +69,11 @@ df = {
     "data_tmc": "data_tmc_df",
     "fields": "fields_df",
     "marker": "marker_df",
+    "data_client": "data_client_df",
+    "data_self": "data_self_df",
+    "data_shadow": "data_shadow_df",
+    "data_tutor": "data_tutor_df",
+    "data_conv": "data_conv_df",
 }
 
 h = {

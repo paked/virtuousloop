@@ -157,7 +157,7 @@ def print_results_scale(field, row, m_row, out):
 def print_results_graph(field, row, m_row, out):
     # option for displaying graphs
     this_field = row['field']
-    this_image = c.d['graphs'] + this_field + ".png"
+    this_image = c.d['charts'] + this_field + ".png"
     if field == 'crit':
         print("![](../." + this_image + ")\n\n", file=out)
 
@@ -233,6 +233,14 @@ def print_results_rubric(out, m_row, record):
 
     print("![](" + this_rubric_pdf + ")", file=out)
 
+
+def print_comment_header(field, row, out):
+    ## print the header for comments
+    cfg = config_exists()
+    this_text = str(row['description'])
+
+    print("### " + this_text + "{-}\n\n", file=out)
+    
 # ===========================================================
 #  dataframe manipulations
 # ===========================================================
@@ -290,7 +298,7 @@ def html_to_text(dataframe, row, i, current_column, new_column):
 #  pandoc helpers
 # ===========================================================
 
-def pandoc_yml(out, record): 
+def pandoc_yaml(out, record): 
     cfg = config_exists()
     print("---", file=out)
     print("title: " + record, file=out)
@@ -314,10 +322,17 @@ def pandoc_css(out, record):
     print("content: 'Generated " + now + "';}", file=out)
     print("}", file=out)
 
-def pandoc_pdf(this_file):
-    # subprocess.call("pandoc " + this_file + ".md -o " + this_file + ".pdf --template=./includes/pdf/anu_cecs.latex --pdf-engine=xelatex", shell=True)
-    subprocess.call("pandoc -s -t html5 -c ../." + this_file + ".css -c ../../includes/pdf/report.css --metadata-file=" + this_file + ".yaml --template=./includes/pdf/pandoc_template.html " + this_file + ".md -o " + this_file + ".html", shell=True)
-    weasy(this_file + ".html").write_pdf(this_file + ".pdf")
+
+def pandoc_pdf(this_file, depth):
+    subprocess.call("pandoc -s -t html5 \
+        --toc -c ../../." + c.d["css"] + this_file + ".css \
+        -c ../../../includes/pdf/report.css \
+        --metadata-file=" + c.d["yaml"] + this_file + ".yaml \
+        --template=./includes/pdf/pandoc_report.html \
+        " + c.d["md"] + this_file + ".md \
+        -o " + c.d["html"] + this_file + ".html", shell=True)
+    # subprocess.call("pandoc -s -t html5 " + c.d["md"] + this_file + ".md -o " + c.d["html"] + this_file + ".html", shell=True)
+    weasy(c.d["html"] + this_file + ".html").write_pdf(c.d["pdf"] + this_file + ".pdf")
 
 
 # ===========================================================
@@ -384,7 +399,7 @@ def make_crit_list(crit):
 def make_crit_chart(crit, stats):
     for i, crit_row in crit.iterrows():
         this_crit = crit_row['field']
-        ax = stats[[this_crit]].plot(kind='bar', title ="", figsize=(10, 2), width=0.9, legend=False, fontsize=8)
+        ax = stats[[this_crit]].plot(kind='bar', title ="", figsize=(10, 2), width=0.9, legend=False, fontsize=8, colormap=cfg['tmc_chart']['colormap'])
         ax.set_xlabel("", fontsize=8)
         ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
         ax.set_yticklabels("", rotation=0)
@@ -392,7 +407,7 @@ def make_crit_chart(crit, stats):
         ax.spines['right'].set_visible(False)
         ax.spines['left'].set_visible(False)
         ax.spines['top'].set_visible(False)
-        out = c.d['graphs'] + this_crit + ".png"
+        out = c.d['charts'] + this_crit + ".png"
         plt.savefig(out, bbox_inches='tight')
 
 def make_tmc_chart(dataframe, out):
@@ -417,6 +432,30 @@ def make_tmc_chart(dataframe, out):
     plt.tight_layout()
     plt.savefig(out, bbox_inches='tight')
     plt.clf()
+
+def make_audit_chart(dataframe, out):
+    cfg = config_exists()
+    ax = dataframe.plot(kind='bar', title ="", figsize=(10, 3), legend=True, fontsize=10, colormap=cfg['audit_chart']['colormap'], width=0.5)
+    ax.set_xlabel(cfg['audit_chart']['x_axis_title'], fontsize=10)
+    ax.set_xticklabels(ax.get_xticklabels(),rotation=0)
+    ax.set_yticks(cfg['audit_chart']['y_tick_values']) 
+    ax.set_yticklabels(cfg['audit_chart']['y_tick_labels'])
+    ax.set_ylabel(cfg['audit_chart']['y_axis_title'], fontsize=10)
+    ax.axhline(0, color='black', lw=1)
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
+    leg = plt.legend( loc = 'lower center', ncol=8)
+    bb = leg.get_bbox_to_anchor().inverse_transformed(ax.transAxes)
+    yOffset = 0.5
+    bb.y0 -= yOffset
+    bb.y1 -= yOffset
+    leg.set_bbox_to_anchor(bb, transform = ax.transAxes)        
+    plt.ylim(-2, 4)
+    plt.tight_layout()
+    plt.savefig(out, bbox_inches='tight')
+    plt.clf()
+
 
 class bcolors:
     INFO = '\033[95m'

@@ -36,6 +36,7 @@ def load_data():
         if this_csv == 'students':
             # rename fields
             f.rename_header(this_csv, 'user id', 'user')
+            f.rename_header(this_csv, 'uniid', 'user')
             f.rename_header(this_csv, 'first_name', 'first')
             f.rename_header(this_csv, 'surname', 'last')
             f.check_duplicates(this_csv, 'user')
@@ -55,6 +56,44 @@ def load_data():
         elif this_csv == 'data_tmc':
             # rename fields
             f.rename_header(this_csv, 'teamdropdown', 'list_team')
+            f.rename_header(this_csv, 'list', 'list_team')
+        elif this_csv == 'data_self':
+            # rename fields
+            f.rename_header(this_csv, 'crita', 'crit_a')
+            f.rename_header(this_csv, 'critb', 'crit_b')
+            f.rename_header(this_csv, 'confidential_comments', 'comment_confidential')
+        elif this_csv == 'data_shadow':
+            # rename fields
+            f.rename_header(this_csv, 'crita', 'crit_a')
+            f.rename_header(this_csv, 'critb', 'crit_b')
+            f.rename_header(this_csv, 'confidential_comments', 'comment_confidential')
+        elif this_csv == 'data_tutor':
+            # rename fields
+            f.rename_header(this_csv, 'list', 'team')
+            f.rename_header(this_csv, 'commentgood', 'comment_a')
+            f.rename_header(this_csv, 'commentimprove', 'comment_b')
+        elif this_csv == 'data_client':
+            # rename fields
+            f.rename_header(this_csv, 'crita', 'crit_a')
+            f.rename_header(this_csv, 'critb', 'crit_b')
+            f.rename_header(this_csv, 'critc', 'crit_c')
+            f.rename_header(this_csv, 'critd', 'crit_d')
+            f.rename_header(this_csv, 'crite', 'crit_e')
+            f.rename_header(this_csv, 'critf', 'crit_f')
+            f.rename_header(this_csv, 'commentgood', 'comment_a')
+            f.rename_header(this_csv, 'commentimprove', 'comment_b')
+            f.rename_header(this_csv, 'confidential', 'comment_confidential')
+            f.rename_header(this_csv, 'q5', 'team')
+            f.rename_header(this_csv, 'q1_1', 'crit_a')
+            f.rename_header(this_csv, 'q1_2', 'crit_b')
+            f.rename_header(this_csv, 'q1_3', 'crit_c')
+            f.rename_header(this_csv, 'q1_4', 'crit_d')
+            f.rename_header(this_csv, 'q1_5', 'crit_e')
+            f.rename_header(this_csv, 'q1_6', 'crit_f')
+            f.rename_header(this_csv, 'q2', 'comment_a')
+            f.rename_header(this_csv, 'q3', 'comment_b')
+            f.rename_header(this_csv, 'q4', 'comment_confidential')
+
 
         #print(c.df[this_csv])
         c.df[this_csv].to_csv(c.t[this_csv], sep='\t', encoding='utf-8', index=False)
