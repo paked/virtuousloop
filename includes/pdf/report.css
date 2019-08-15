@@ -123,6 +123,7 @@ html {
   html body h4 {
     font-size: 12pt; }
   html body article#cover {
+    background-color: #C7DDE8;
     height: 297mm;
     text-align: center; }
     html body article#cover h1 {
