@@ -87,7 +87,6 @@ def feedback_many_eyes():
     shadow_frames = [shadow_a_df, shadow_b_df]
     shadow_df = pd.concat(shadow_frames, ignore_index=True, sort=False)
 
-
     tutor_df=c.df['data_tutor']
     tutor_df.replace(cfg['audit_chart']['find_labels'], cfg['audit_chart']['replace_values'], inplace=True) 
 
@@ -145,47 +144,49 @@ def feedback_many_eyes():
         #open up a file to print to
         
     
+        with open(c.d["md"] + this_out + '_audit.md', 'w') as out:
+
+            # print graph
+            this_chart=c.d['charts'] + team + "_audit.png"
+
+            print("\n\n# " + cfg['audit_pdf']['audit_chart_header'] + "\n\n", file=out)
+            
+            print('![](../../.' + this_chart + ')\n\n', file=out)
+            print( cfg['audit_pdf']['audit_chart_caption'] + "\n\n", file=out )
         #loop through the crit columns
-        for j, row in crit.iterrows():
-            # print(row['label'])
-            this_team_self_crit_df=this_team_self_df[this_team_self_df['crit_text'].str.contains(row['label'])]
-            this_team_shadow_crit_df=this_team_shadow_df[this_team_shadow_df['crit_text'].str.contains(row['label'])]
-            #print(this_team_crit_df)
-            crit_self_ave.append(this_team_self_crit_df['crit_val'].mean())
-            crit_shadow_ave.append(this_team_shadow_crit_df['crit_val'].mean())
-            crit_tutor_ave.append(this_team_tutor_df[row['field']].mean())
+            for j, row in crit.iterrows():
+                # print(row['label'])
+                this_team_self_crit_df=this_team_self_df[this_team_self_df['crit_text'].str.contains(row['label'])]
+                this_team_shadow_crit_df=this_team_shadow_df[this_team_shadow_df['crit_text'].str.contains(row['label'])]
+                #print(this_team_crit_df)
+                crit_self_ave.append(this_team_self_crit_df['crit_val'].mean())
+                crit_shadow_ave.append(this_team_shadow_crit_df['crit_val'].mean())
+                crit_tutor_ave.append(this_team_tutor_df[row['field']].mean())
 
-            with open(c.d["md"] + this_out + '_audit.md', 'w') as out:
-
-                # print graph
-                this_chart=c.d['charts'] + team + "_audit.png"
-
-                print("\n\n# " + cfg['audit_pdf']['audit_chart_header'] + "\n\n", file=out)
-                
-                print('![](../../.' + this_chart + ')\n\n', file=out)
-                print( cfg['audit_pdf']['audit_chart_caption'] + "\n\n", file=out )
+                #print(this_team_self_crit_df)
         
 
-                for j, row in crit.iterrows():
                 # loop through the comment columns
-                    f.print_comment_header('field', row, out)
-                    for k, c_row in this_team_self_crit_df.iterrows():
-                        this_text = str(c_row['crit_comment'])
-                        print("**Self Review**\n\n" + this_text + "\n\n", file=out)
-                    for k, c_row in this_team_shadow_crit_df.iterrows():
-                        this_text = str(c_row['crit_comment'])
-                        print("**Shadow Review**\n\n" + this_text + "\n\n", file=out)
+                f.print_comment_header('field', row, out)
+                print(this_team_self_crit_df)
+                for k, c_row in this_team_self_crit_df.iterrows():
+                    this_text = str(c_row['crit_comment'])
+                    # this_text = h2t.html2text(this_text)
+                    print("**Self Review**\n\n" + this_text + "\n\n", file=out)
+                for k, c_row in this_team_shadow_crit_df.iterrows():
+                    this_text = str(c_row['crit_comment'])
+                    print("**Shadow Review**\n\n" + this_text + "\n\n", file=out)
         
-                for j, row in comment.iterrows():
-                    this_field=row['field']
-                    if this_field != 'comment_c':
-                        f.print_comment_header('field', row, out)
-                        for k, c_row in this_team_tutor_df.iterrows():
-                            this_text = str(c_row[this_field])
-                            print("**Tutor**\n\n" + this_text + "\n\n", file=out)
-                        for k, c_row in this_team_client_df.iterrows():
-                            this_text = str(c_row[this_field])
-                            print("**Client**\n\n" + this_text + "\n\n", file=out)
+            for j, row in comment.iterrows():
+                this_field=row['field']
+                if this_field != 'comment_c':
+                    f.print_comment_header('field', row, out)
+                    for k, c_row in this_team_tutor_df.iterrows():
+                        this_text = str(c_row[this_field])
+                        print("**Tutor**\n\n" + this_text + "\n\n", file=out)
+                    for k, c_row in this_team_client_df.iterrows():
+                        this_text = str(c_row[this_field])
+                        print("**Client**\n\n" + this_text + "\n\n", file=out)
                 
         if this_team_client_df.empty:
             for l, row in crit.iterrows():

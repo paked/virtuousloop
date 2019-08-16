@@ -17,8 +17,6 @@ from analysis_marks import analysis_marks
 from feedback_many_eyes import feedback_many_eyes
 from wattle_csv_many_eyes import wattle_csv_many_eyes
 
-
-
 cfg = f.config_exists()
 
 # process the columns needed to run the scripts
