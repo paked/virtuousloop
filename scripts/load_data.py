@@ -50,6 +50,8 @@ def load_data():
         elif this_csv == 'fields':
             # lower fields to match marks.csv lower
             f.col_to_lower(this_csv, 'field')
+        elif this_csv == 'fields_course':
+            f.col_to_lower(this_csv, 'field')
         elif this_csv == 'crit_levels':
             # rename fields
             f.rename_header(this_csv, 'level', 'index')
@@ -93,6 +95,9 @@ def load_data():
             f.rename_header(this_csv, 'q2', 'comment_a')
             f.rename_header(this_csv, 'q3', 'comment_b')
             f.rename_header(this_csv, 'q4', 'comment_confidential')
+        elif this_csv == 'feedback_course':
+            c.df[this_csv]['tutor_name'] = c.df[this_csv]['tutor'].str.replace(' ', '_')
+
 
 
         #print(c.df[this_csv])

@@ -60,20 +60,20 @@ def feedback_marks():
 
         # define the out files
         # note that the pdf will be copied as out in wattle_csv.py
-        this_out = c.d['archive'] + this_record
+        this_out = this_record
 
         # display a progress bar in the console
         # total for progress bar comes from marks.shape[0]
         f.progress_bar(i, marks.shape[0], this_record)
                 
-        with open(this_out + '.yaml', 'w') as out:
+        with open(c.d['yaml'] + this_out + '.yaml', 'w') as out:
         # create the pandoc header
             if cfg['feedback_type']['group'] == 'true':
                 f.pandoc_yml(out, this_record)
             else:
                 f.pandoc_yml(out, this_record_all)
 
-        with open(this_out + '.css', 'w') as out:
+        with open(c.d['css'] + this_out + '.css', 'w') as out:
         # create the pandoc header
             if cfg['feedback_type']['group'] == 'true':
                 f.pandoc_css(out, this_record)
@@ -82,7 +82,7 @@ def feedback_marks():
 
 
         #open up a file to print to
-        with open(this_out + '.md', 'w') as out:
+        with open(c.d['md'] + this_out + '.md', 'w') as out:
 
             if (cfg['crit_display']['text'] == "true") or (cfg['crit_display']['scale'] == "true") or (cfg['crit_display']['graph'] == "true"):
                 # start with indicator title and notes
@@ -114,7 +114,7 @@ def feedback_marks():
                 print("\n", file=out)
 
         # convert md to pdf using the shell
-        f.pandoc_pdf(this_out, '2')
+        f.pandoc_pdf(c.d['archive'] + this_out, '2')
 
  
     # print message to console - complete!

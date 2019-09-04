@@ -5,7 +5,7 @@
 # chris.browne@anu.edu.au - all care and no responsibility :)
 # ===========================================================
 
-'''turns the marks spreadsheet into pdf feedback'''
+'''turns the data_ csvs into pdf feedback'''
 
 import os
 import csv
@@ -33,16 +33,17 @@ def feedback_many_eyes():
     
     # load in tsvs of needed fields
     fields=f.load_tsv('fields')
+
     data_self=f.load_tsv('data_self')
     data_shadow=f.load_tsv('data_shadow')
     data_tutor=f.load_tsv('data_tutor')
     data_client=f.load_tsv('data_client')
 
-    # crit_levels=f.load_tsv('crit_levels')
+    crit_levels=f.load_tsv('crit_levels')
 
-    # # create a df of just the crit and the comments
-    # crit=f.filter_row('fields', 'field', 'crit_')
-    # comm=f.filter_row('fields', 'field', 'comment_')
+    # create a df of just the crit and the comments
+    crit=f.filter_row('fields', 'field', 'crit_')
+    comm=f.filter_row('fields', 'field', 'comment_')
 
     # print message to console
     f.pnt_info(c.msg["console_creating_feedback_files"])
@@ -50,7 +51,6 @@ def feedback_many_eyes():
     # load data and create list of teams
     teams=f.load_tsv('students')
     teams.drop_duplicates(subset=['projectteam'], keep='first', inplace=True)
-    team_list=[]
 
     crit_levels=f.load_tsv('crit_levels')
 
@@ -59,33 +59,7 @@ def feedback_many_eyes():
     comment=f.filter_row('fields', 'field', 'comment_')
     crit_list=[]
     for j, row in crit.iterrows():
-            crit_list.append(row['label'])
-
-    self_df=c.df['data_self']
-    self_df.replace(cfg['audit_chart']['find_labels'], cfg['audit_chart']['replace_values'], inplace=True) 
-    self_a_df=self_df[['username', 'team', 'crit_a', 'crita_text', 'crita_comment']]
-    self_b_df=self_df[['username', 'team', 'crit_b', 'critb_text', 'critb_comment']]
-    self_a_df.rename(columns={'crit_a': 'crit_val'}, inplace=True)
-    self_a_df.rename(columns={'crita_text': 'crit_text'}, inplace=True)
-    self_a_df.rename(columns={'crita_comment': 'crit_comment'}, inplace=True)
-    self_b_df.rename(columns={'crit_b': 'crit_val'}, inplace=True)
-    self_b_df.rename(columns={'critb_text': 'crit_text'}, inplace=True)
-    self_b_df.rename(columns={'critb_comment': 'crit_comment'}, inplace=True)
-    self_frames = [self_a_df, self_b_df]
-    self_df = pd.concat(self_frames, ignore_index=True, sort=False)
-
-    shadow_df=c.df['data_shadow']
-    shadow_df.replace(cfg['audit_chart']['find_labels'], cfg['audit_chart']['replace_values'], inplace=True) 
-    shadow_a_df=shadow_df[['username', 'team', 'crit_a', 'crita_text', 'crita_comment']]
-    shadow_b_df=shadow_df[['username', 'team', 'crit_b', 'critb_text', 'critb_comment']]
-    shadow_a_df.rename(columns={'crit_a': 'crit_val'}, inplace=True)
-    shadow_a_df.rename(columns={'crita_text': 'crit_text'}, inplace=True)
-    shadow_a_df.rename(columns={'crita_comment': 'crit_comment'}, inplace=True)
-    shadow_b_df.rename(columns={'crit_b': 'crit_val'}, inplace=True)
-    shadow_b_df.rename(columns={'critb_text': 'crit_text'}, inplace=True)
-    shadow_b_df.rename(columns={'critb_comment': 'crit_comment'}, inplace=True)
-    shadow_frames = [shadow_a_df, shadow_b_df]
-    shadow_df = pd.concat(shadow_frames, ignore_index=True, sort=False)
+         crit_list.append(row['label'])
 
     tutor_df=c.df['data_tutor']
     tutor_df.replace(cfg['audit_chart']['find_labels'], cfg['audit_chart']['replace_values'], inplace=True) 
@@ -93,14 +67,20 @@ def feedback_many_eyes():
     client_df=c.df['data_client']
     client_df.replace(cfg['audit_chart']['find_client_labels'], cfg['audit_chart']['replace_client_values'], inplace=True) 
 
+    for eyes in cfg['many_eyes']['eyes']:
+        this_array = 'class_' + eyes + '_ave'
+        vars()[this_array]=[]
+    
+    self_df=f.many_eyes_dataframe_sort('data_self')
+    shadow_df=f.many_eyes_dataframe_sort('data_shadow')
+
     class_self_ave=[]
     class_shadow_ave=[]
     class_tutor_ave=[]
     class_client_ave=[]
-    
+
     #loop through the crit columns
     for j, row in crit.iterrows():
-        # print(row['label'])
         class_self_crit_df=self_df[self_df['crit_text'].str.contains(row['label'])]
         class_shadow_crit_df=shadow_df[shadow_df['crit_text'].str.contains(row['label'])]
                 
@@ -119,15 +99,16 @@ def feedback_many_eyes():
 
     class_ave_list = class_ave_df["class_ave"].values
 
+    team_list=[]
     for i, row in teams.iterrows():
         this_team = row['projectteam']
         team_list.append(this_team)
+
+    f.pnt_info(c.msg["console_many_eyes"])
+
     # for each team 
     for team in team_list: 
 
-        # display a progress bar in the console
-        # total for progress bar comes from marks.shape[0]
-        #f.progress_bar(i, team_list.shape[0], team)
         print(team)
 
         this_team_self_df=self_df[self_df['team'].str.contains(team)]
@@ -139,55 +120,17 @@ def feedback_many_eyes():
         crit_shadow_ave=[]
         crit_tutor_ave=[]
         crit_client_ave=[]
-
-        this_out = team
-        #open up a file to print to
         
-    
-        with open(c.d["md"] + this_out + '_audit.md', 'w') as out:
-
-            # print graph
-            this_chart=c.d['charts'] + team + "_audit.png"
-
-            print("\n\n# " + cfg['audit_pdf']['audit_chart_header'] + "\n\n", file=out)
-            
-            print('![](../../.' + this_chart + ')\n\n', file=out)
-            print( cfg['audit_pdf']['audit_chart_caption'] + "\n\n", file=out )
         #loop through the crit columns
-            for j, row in crit.iterrows():
-                # print(row['label'])
-                this_team_self_crit_df=this_team_self_df[this_team_self_df['crit_text'].str.contains(row['label'])]
-                this_team_shadow_crit_df=this_team_shadow_df[this_team_shadow_df['crit_text'].str.contains(row['label'])]
-                #print(this_team_crit_df)
-                crit_self_ave.append(this_team_self_crit_df['crit_val'].mean())
-                crit_shadow_ave.append(this_team_shadow_crit_df['crit_val'].mean())
-                crit_tutor_ave.append(this_team_tutor_df[row['field']].mean())
+        for j, row in crit.iterrows():
 
-                #print(this_team_self_crit_df)
-        
+            this_team_self_crit_df=this_team_self_df[this_team_self_df['crit_text'].str.contains(row['label'])]
+            this_team_shadow_crit_df=this_team_shadow_df[this_team_shadow_df['crit_text'].str.contains(row['label'])]
 
-                # loop through the comment columns
-                f.print_comment_header('field', row, out)
-                print(this_team_self_crit_df)
-                for k, c_row in this_team_self_crit_df.iterrows():
-                    this_text = str(c_row['crit_comment'])
-                    # this_text = h2t.html2text(this_text)
-                    print("**Self Review**\n\n" + this_text + "\n\n", file=out)
-                for k, c_row in this_team_shadow_crit_df.iterrows():
-                    this_text = str(c_row['crit_comment'])
-                    print("**Shadow Review**\n\n" + this_text + "\n\n", file=out)
-        
-            for j, row in comment.iterrows():
-                this_field=row['field']
-                if this_field != 'comment_c':
-                    f.print_comment_header('field', row, out)
-                    for k, c_row in this_team_tutor_df.iterrows():
-                        this_text = str(c_row[this_field])
-                        print("**Tutor**\n\n" + this_text + "\n\n", file=out)
-                    for k, c_row in this_team_client_df.iterrows():
-                        this_text = str(c_row[this_field])
-                        print("**Client**\n\n" + this_text + "\n\n", file=out)
-                
+            crit_self_ave.append(this_team_self_crit_df['crit_val'].mean())
+            crit_shadow_ave.append(this_team_shadow_crit_df['crit_val'].mean())
+            crit_tutor_ave.append(this_team_tutor_df[row['field']].mean())
+
         if this_team_client_df.empty:
             for l, row in crit.iterrows():
                 crit_client_ave.append('0')
@@ -209,28 +152,132 @@ def feedback_many_eyes():
 
         f.make_audit_chart(this_team_ave_df, c.d['charts'] + team + "_audit.png")
 
-        this_chart=c.d['charts'] + team + ".png"
+        #open up a file to print to
+        this_out = team
+        
+        format_audit_feedback(team, 'conf')
+        format_audit_feedback(team, 'anon')
 
-        # define the out files
-        # note that the pdf will be copied as out in wattle_csv.py
-                      
-        with open(c.d["yaml"] + this_out + '.yaml', 'w') as out:
-        # create the pandoc header
-            f.pandoc_yaml(out, team)
-
-        with open(c.d["css"] + this_out + '.css', 'w') as out:
-        # create the pandoc header
-            f.pandoc_css(out, team)
-
-        files = [c.d['files'] + 'text_preamble.md', c.d['md'] + this_out + "_tmc_anon.md", c.d['md'] + this_out + "_audit.md", c.d['files'] + 'text_changelog.md']
-        with open(c.d['md'] + this_out + ".md", 'w') as outfile:
+        files = [c.d['files'] + 'text_preamble.md', c.d['md'] + this_out + "_tmc_anon.md", c.d['md'] + this_out + "_audit_anon.md", c.d['files'] + 'text_changelog.md']
+        with open(c.d['md'] + this_out + "_" + cfg['assignment']['assignment_short'] + "_audit_anon.md", 'w') as outfile:
             for fname in files:
                 with open(fname) as infile:
                     outfile.write(infile.read())
 
+        files = [c.d['md'] + this_out + "_tmc_conf.md", c.d['md'] + this_out + "_audit_conf.md"]
+        with open(c.d['md'] + this_out + "_" + cfg['assignment']['assignment_short'] + "_audit_conf.md", 'w') as outfile:
+            for fname in files:
+                with open(fname) as infile:
+                    outfile.write(infile.read())
+
+
         # convert md to pdf using the shell
-        f.pandoc_pdf(this_out, '2')
+        f.pandoc_pdf(this_out + "_" + cfg['assignment']['assignment_short'] + "_audit_anon", team, 'anon')
+        f.pandoc_pdf(this_out + "_" + cfg['assignment']['assignment_short'] + "_audit_conf", team, 'conf')
+
+
+# print feedback loop
+def format_audit_feedback(team, kind):
+    cfg=f.config_exists()
+
+    this_out=team
+
+    # open and create a file for the yaml
+    with open(c.d['yaml'] + team + '.yaml', 'w') as out:
+        f.pandoc_yaml(out, team)
+
+    # open and create a file for the css
+    with open(c.d['css'] + team + "_" + kind + '.css', 'w') as out:
+        f.pandoc_css(out, team, kind)
+
+    with open(c.d["md"] + this_out + '_audit_' + kind + '.md', 'w') as out:
+
+        # print graph
+        this_chart=c.d['charts'] + team + "_audit.png"
+
+        print("\n\n# " + cfg['audit_pdf']['audit_chart_header'] + "\n\n", file=out)
+        
+        print('![](../../.' + this_chart + ')\n\n', file=out)
+        print( cfg['audit_pdf']['audit_chart_caption'] + "\n\n", file=out )
+        
+        crit=f.filter_row('fields', 'field', 'crit_')
+        comment=f.filter_row('fields', 'field', 'comment_')
+        self_df=f.many_eyes_dataframe_sort('data_self')
+        shadow_df=f.many_eyes_dataframe_sort('data_shadow')
+        tutor_df=c.df['data_tutor']
+        tutor_df.replace(cfg['audit_chart']['find_labels'], cfg['audit_chart']['replace_values'], inplace=True) 
+        client_df=c.df['data_client']
+        client_df.replace(cfg['audit_chart']['find_client_labels'], cfg['audit_chart']['replace_client_values'], inplace=True) 
+
+        this_team_self_df=self_df[self_df['team'].str.contains(team)]
+        this_team_shadow_df=shadow_df[shadow_df['team'].str.contains(team)]
+        this_team_tutor_df=tutor_df[tutor_df['team'].str.contains(team)]
+        this_team_client_df=client_df[client_df['team'].str.contains(team, na=False)]
+        
+        this_team_self_df.fillna('',inplace=True)
+        this_team_shadow_df.fillna('',inplace=True)
+        this_team_tutor_df.fillna('',inplace=True)
+        this_team_client_df.fillna('',inplace=True)
+
+        #loop through the crit columns
+        for j, row in crit.iterrows():
+
+            this_team_self_crit_df=this_team_self_df[this_team_self_df['crit_text'].str.contains(row['label'])]
+            this_team_shadow_crit_df=this_team_shadow_df[this_team_shadow_df['crit_text'].str.contains(row['label'])]
+
+            # loop through the comment columns
+            f.print_comment_header('field', row, out)
+            for k, c_row in this_team_self_crit_df.iterrows():
+                this_text = str(c_row['crit_comment'])
+                if kind == 'conf':
+                    if ( str(c_row['crit_comment']) == ""):
+                        # print messages if the comment is empty
+                        print("**Self Review - " + c_row['user'] + " (" + c_row['username'] + ")" + "**\n\n" + cfg['tmc_pdf']['member_no_comment'] + "\n\n", file=out)
+                    else:
+                        print("**Self Review - " + c_row['user'] + " (" + c_row['username'] + ")" + "**\n\n" + this_text + "\n\n", file=out)
+                else:
+                    if ( str(c_row['crit_comment']) == ""):
+                        print("**Self Review**\n\n" + cfg['tmc_pdf']['member_no_comment'] + "\n\n", file=out)
+                    else:
+                        print("**Self Review**\n\n" + this_text + "\n\n", file=out)
+
+            for k, c_row in this_team_shadow_crit_df.iterrows():
+                this_text = str(c_row['crit_comment'])
+                if kind == 'conf':
+                    if ( str(c_row['crit_comment']) == ""):
+                        # print messages if the comment is empty
+                        print("**Shadow Review - " + c_row['user'] + " (" + c_row['username'] + ")" + "**\n\n" + cfg['tmc_pdf']['member_no_comment'] + "\n\n", file=out)
+                    else:
+                        print("**Shadow Review - " + c_row['user'] + " (" + c_row['username'] + ")" + "**\n\n" + this_text + "\n\n", file=out)
+                else:
+                    if ( str(c_row['crit_comment']) == ""):
+                        print("**Shadow Review**\n\n" + cfg['tmc_pdf']['member_no_comment'] + "\n\n", file=out)
+                    else:
+                        print("**Shadow Review**\n\n" + this_text + "\n\n", file=out)
+    
+        for j, row in comment.iterrows():
+            this_field=row['field']
+            if this_field != 'comment_confidential':
+                f.print_comment_header('field', row, out)
+                for k, c_row in this_team_tutor_df.iterrows():
+                    this_text = str(c_row[this_field])
+                    print("**Tutor**\n\n" + this_text + "\n\n", file=out)
+                for k, c_row in this_team_client_df.iterrows():
+                    this_text = str(c_row[this_field])
+                    print("**Client**\n\n" + this_text + "\n\n", file=out)
+
+        if kind == 'conf':
+            print("\n\n# Confidential feedback about the team progress", file=out)
+            self_conf_df=c.df['data_self']
+            this_team_self_conf_df=self_conf_df[self_df['team'].str.contains(team)]
+            for j, row in this_team_self_conf_df.iterrows():            
+                if ( str(row['comment_confidential']) == ""):
+                    # print messages if the comment is empty
+                    print("**" + row['user'] + " (" + row['username'] + ")" + "**\n\n" + cfg['tmc_pdf']['member_no_comment'] + "\n\n", file=out)
+                else:
+                    print("**" + row['user'] + " (" + row['username'] + ")" + "**\n\n" + str(row['comment_confidential']) + "\n\n", file=out)
+
 
  
-    # print message to console - complete!
-    f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))
+# print message to console - complete!
+f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))

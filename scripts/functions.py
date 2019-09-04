@@ -129,6 +129,7 @@ def print_results_header(field, row, m_row, out):
     this_field = str(row['field'])
     this_text = str(row['text'])
     this_label = str(row['label'])
+    print(this_field)
 
     print("### " + this_text + "{-}\n\n", file=out)
     if (cfg['crit_display']['label'] == 'true'):
@@ -136,8 +137,8 @@ def print_results_header(field, row, m_row, out):
 
 def print_results_text(field, row, m_row, out):
     # option for displaying text results
-    this_field = row['field']
-    this_result = m_row[this_field]
+    this_field = str(row['field'])
+    this_result = str(m_row[this_field])
     this_result_text = filter_row('crit_levels', 'index', '^' + this_result + '$').text.to_string(index=False).lstrip()
 
     if field == 'crit':
@@ -148,7 +149,7 @@ def print_results_text(field, row, m_row, out):
 def print_results_scale(field, row, m_row, out):
     # option for displaying scales
     this_field = row['field']
-    this_result = m_row[this_field]
+    this_result = str(m_row[this_field])
     this_image = filter_row('crit_levels', 'index', '^' + this_result + '$').img.to_string(index=False).lstrip()
     this_image_url = "../../files/scales/" + this_image
     if field == 'crit':
@@ -238,9 +239,10 @@ def print_comment_header(field, row, out):
     ## print the header for comments
     cfg = config_exists()
     this_text = str(row['description'])
-
     print("### " + this_text + "{-}\n\n", file=out)
-    
+
+
+
 # ===========================================================
 #  dataframe manipulations
 # ===========================================================
@@ -273,6 +275,21 @@ def check_duplicates(dataframe, column):
 def col_to_lower(dataframe, column):
     if column in c.df[dataframe].columns:
         c.df[dataframe][column] = c.df[dataframe][column].str.lower()
+
+def many_eyes_dataframe_sort(dataframe):
+    cfg=config_exists()
+    this_df=c.df[dataframe]
+    this_df.replace(cfg['audit_chart']['find_labels'], cfg['audit_chart']['replace_values'], inplace=True) 
+    this_a_df=this_df[['username', 'user', 'team', 'crit_a', 'crita_text', 'crita_comment']]
+    this_b_df=this_df[['username', 'user', 'team', 'crit_b', 'critb_text', 'critb_comment']]
+    this_a_df.rename(columns={'crit_a': 'crit_val'}, inplace=True)
+    this_a_df.rename(columns={'crita_text': 'crit_text'}, inplace=True)
+    this_a_df.rename(columns={'crita_comment': 'crit_comment'}, inplace=True)
+    this_b_df.rename(columns={'crit_b': 'crit_val'}, inplace=True)
+    this_b_df.rename(columns={'critb_text': 'crit_text'}, inplace=True)
+    this_b_df.rename(columns={'critb_comment': 'crit_comment'}, inplace=True)
+    this_frames = [this_a_df, this_b_df]
+    return pd.concat(this_frames, ignore_index=True, sort=False)
 
 # ===========================================================
 #  readability helpers
@@ -309,11 +326,13 @@ def pandoc_yaml(out, record):
         print(i + ": " + cfg["pdf_front_matter"][i], file=out)
     print("---\n\n", file=out)
 
-def pandoc_css(out, record): 
+def pandoc_css(out, record, kind): 
     cfg = config_exists()
     now = strftime("%Y-%m-%d %H:%M:%S", localtime())
 
     print("@page {", file=out)
+    if (kind == 'conf'):
+        print("background-image: url(../../../includes/pdf/watermark_confidential.png);", file=out)
     print("@top-left {", file=out)
     print("content: '" + cfg["assignment"]["assignment_title"] + "';}", file=out)
     print("@bottom-left {", file=out)
@@ -321,13 +340,22 @@ def pandoc_css(out, record):
     print("@bottom-right {", file=out)
     print("content: 'Generated " + now + "';}", file=out)
     print("}", file=out)
+    print("html body article#cover {", file=out)
+    if (kind == 'conf'):
+        print("background-color: #D38C98;}", file=out)
+    else:
+        print("background-color: #C7DDE8;}", file=out)
+    print("@page :first {", file=out)
+    if (kind == 'conf'):
+        print("background-image: url(../../../includes/pdf/watermark_confidential.png);}", file=out)
 
+    
 
-def pandoc_pdf(this_file, depth):
+def pandoc_pdf(this_file, this_record, kind):
     subprocess.call("pandoc -s -t html5 \
-        --toc -c ../../." + c.d["css"] + this_file + ".css \
-        -c ../../../includes/pdf/report.css \
-        --metadata-file=" + c.d["yaml"] + this_file + ".yaml \
+        --toc -c ../../../includes/pdf/report.css \
+        -c ../../." + c.d["css"] + this_record + "_" + kind + ".css \
+        --metadata-file=" + c.d["yaml"] + this_record + ".yaml \
         --template=./includes/pdf/pandoc_report.html \
         " + c.d["md"] + this_file + ".md \
         -o " + c.d["html"] + this_file + ".html", shell=True)
@@ -387,7 +415,6 @@ def progress_bar (iteration, upper, suffix, prefix = '', decimals = 1, length = 
 def make_crit_list(crit):
     crit_levels=load_tsv('crit_levels')
     marks=load_tsv('marks')
-
     crit_list=[crit_levels]
     for i, crit_row in crit.iterrows():
         this_crit = crit_row['field']

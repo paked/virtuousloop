@@ -58,12 +58,12 @@ def feedback_tmc():
     tm_cols_tmc.insert(0,'username')
     tm_cols_id = [w.replace('contribution', 'id') for w in tm_cols_tmc]
 
+    f.pnt_info(c.msg["console_tmc"])
+
     # for each team 
     for team in teams: 
 
-        # display a progress bar in the console
-        # total for progress bar comes from marks.shape[0]
-        # f.progress_bar(i, teams.shape[0], team)
+        # report progress to the console
         print(team)
 
         # get the tmc values matching the team
@@ -81,13 +81,14 @@ def feedback_tmc():
         # strip the names of the reviewed for the anonymous version, transpose
         # transpose the conf_df
         this_conf_df=DataFrame.from_records(team_data, columns=team_header).set_index('reviews').dropna(axis=1, how='all')
-        this_anon_df=this_conf_df.rename(columns=lambda x: re.sub(' - .*','',x)).T
-        this_anon_df=this_anon_df.rename(columns=lambda x: re.sub('u.*',cfg['tmc_chart']['anon_legend'],x))
-        this_conf_df=this_conf_df.T
+        this_conf_df=this_conf_df.rename(columns=lambda x: re.sub(' - .*','',x)).T
+        this_anon_df=this_conf_df.rename(columns=lambda x: re.sub('u.*',cfg['tmc_chart']['anon_legend'],x))
+        
 
         # get the shape of the dataframe to show the number of submissions
         shape=this_anon_df.shape
 
+        # add an average column
         this_anon_df['average'] = this_anon_df.mean(axis=1)
         this_conf_df['average'] = this_conf_df.mean(axis=1)
 
@@ -95,42 +96,37 @@ def feedback_tmc():
         f.make_tmc_chart(this_anon_df, c.d['charts'] + team + "_tmc_anon.png")
         f.make_tmc_chart(this_conf_df, c.d['charts'] + team + "_tmc_conf.png")
 
-        format_feedback(team, 'conf', shape, this_data)
-        format_feedback(team, 'anon', shape, this_data)
+        # call a conf and anon version
+        format_tmc_feedback(team, 'conf', shape, this_data)
+        format_tmc_feedback(team, 'anon', shape, this_data)
 
     # print message to console - complete!
     f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))
 
 # print feedback loop
-def format_feedback(team, kind, shape, dataframe):
+def format_tmc_feedback(team, kind, shape, dataframe):
     cfg=f.config_exists()
+    # NaNs as comments
+    dataframe.fillna('',inplace=True)
 
     this_out=team + "_tmc_" + kind
 
-    with open(c.d['yaml'] + this_out + '.yaml', 'w') as out:
-    # create the pandoc header
-        if cfg['feedback_type']['group'] == 'true':
-            f.pandoc_yaml(out, team)
-        else:
-            f.pandoc_yaml(out, team)
+    # open and create a file for the yaml
+    with open(c.d['yaml'] + team + '.yaml', 'w') as out:
+        f.pandoc_yaml(out, team)
 
-    with open(c.d['css'] + this_out + '.css', 'w') as out:
-    # create the pandoc header
-        if cfg['feedback_type']['group'] == 'true':
-            f.pandoc_css(out, team)
-        else:
-            f.pandoc_css(out, team)
+    # open and create a file for the css
+    with open(c.d['css'] + team + "_" + kind + '.css', 'w') as out:
+        f.pandoc_css(out, team, kind)
 
+    # open and create a file for the md
     with open(c.d['md'] + this_out + ".md", 'w') as out:
 
-        # # print graph
+        # print graph
         this_chart=c.d['charts'] + team + "_tmc_" + kind + ".png"
-        # this_chart_path=Path(this_chart)
         
-        # # check that a chart has been generated
-        # # if so, print the title and caption too
-        # if this_chart_path.is_file():
-        print("# Team Member Contributon\n\n", file=out)
+        # check that a chart has been generated
+        print("\n\n# " + cfg['pdf_messages']['tmc_header_1'] + "\n\n", file=out)
         print("\n\n## " + cfg['tmc_pdf']['eval_header'] + "\n\n", file=out)
         if ( cfg['tmc_pdf']['team_count_message'] == "true" ):
             print("**" + str(shape[1]) + "**" + " out of **" + str(shape[0]) + "** " + cfg['tmc_pdf']['count_message'] + "\n\n", file=out)
@@ -139,17 +135,17 @@ def format_feedback(team, kind, shape, dataframe):
         print( cfg['tmc_pdf']['tmc_chart_caption'] + "\n\n", file=out )
     
         # print the comments for the team
-        print("### " + cfg['pdf_messages']['tmc_title'] + "\n\n", file=out)
+        print("## " + cfg['pdf_messages']['tmc_header_2'] + "\n\n", file=out)
         for i, df_row in dataframe.iterrows():
             # if the field is empty
-            if ( str(df_row['teamcomments']) == "nan"):
-                # print confidential and anonymous
+            if (df_row['teamcomments'] == ""):
+                # print messages if the comment is empty
                 if ( kind == 'conf'):
                     print("**" + df_row['user'] + " (" + df_row['username'] + ")" + "**\n\n" + cfg['tmc_pdf']['member_no_comment'] + "\n\n", file=out)
                 else:
                     print("**" + cfg['tmc_pdf']['member_header'] + "**\n\n" + cfg['tmc_pdf']['member_no_comment'] + "\n\n", file=out)
             else:
-                # print confidential and anonymous
+                # print messages if the comment is not empty
                 if ( kind == 'conf'):
                     print("**" + df_row['user'] + " (" + df_row['username'] + ")" + "**\n\n" + str(df_row['teamcomments']) + "\n\n", file=out)
                 else:
@@ -160,16 +156,11 @@ def format_feedback(team, kind, shape, dataframe):
             print("## " + cfg['pdf_messages']['tmc_confidential'] + "\n\n", file=out)
             for i, df_row in dataframe.iterrows():
                 # try encoding utf8
-                if ( df_row['confidentialcomments'] == "nan"):
+                if (df_row['teamcomments'] == ""):
+                    print(df_row['confidentialcomments'])
                     print("**" + df_row['user'] + " (" + df_row['username'] + ")" + "**\n\n" + cfg['tmc_pdf']['member_no_comment'] + "\n\n", file=out)
                 else:
                     print("**" + df_row['user'] + " (" + df_row['username'] + ")" + "**\n\n" + str(df_row['confidentialcomments']) + "\n\n", file=out)
 
     # convert md to pdf using the shell
-
-    f.pandoc_pdf(this_out, '3')
-
-    # archive the md files
-    #source = c.d['tmc_' + kind] + team + '.md'
-    #dest = c.d['tmc_' + kind + '_md'] + team + '.md'
-    #shutil.move(source, dest)
+    f.pandoc_pdf(this_out, team, kind)

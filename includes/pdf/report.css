@@ -1,12 +1,14 @@
 @charset "UTF-8";
 
-
 @page {
-
 margin-left: 1cm;
 margin-right: 1cm;
 margin-top: 1.5cm;
 margin-bottom: 1.5cm;
+/*background-image: url(watermark_confidential.png);*/
+background-position: 0 0;
+background-repeat: no-repeat;
+position: relative;
 
   @top-left {
     height: 1cm;
@@ -46,6 +48,15 @@ margin-bottom: 1.5cm;
     width: 100%; }
   }
 
+@page img, @page :first img,  {
+/* the actual 'watermark' */
+position: absolute;
+top: 0; /* or whatever */
+left: 0; /* or whatever, position according to taste */
+opacity: 0.3; /* Firefox, Chrome, Safari, Opera, IE >= 9 (preview) */
+filter:alpha(opacity=30); /* for <= IE 8 */
+}
+
 @page :blank {
   @top-left {
     background: none;
@@ -80,7 +91,11 @@ margin-bottom: 1.5cm;
 
 @page :first {
   background-size: cover;
-  margin: 0; }
+  margin: 0;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  position: relative;
+  }
 
 @page chapter {
   background: #fbc847;
@@ -110,6 +125,9 @@ html {
     text-align: center;
     page: '';
     }
+  html body h1 {
+    break-before: always;
+  }
   html body h2, html body h3, html body h4 {
     color: black;
     font-weight: 600; }
@@ -123,7 +141,7 @@ html {
   html body h4 {
     font-size: 12pt; }
   html body article#cover {
-    background-color: #C7DDE8;
+    /*background-color: #C7DDE8;*/
     margin: 0px;
     height: 297mm;
     text-align: center; }
@@ -134,13 +152,12 @@ html {
       margin-top: 500px;
       }
   html body article#contents {
-    break-before: right;
-    break-after: left;
+    /*break-before: right;*/
+    /*break-after: left;*/
     page: no-chapter; }
     html body article#contents h2 {
       font-size: 20pt;
-      font-weight: 500;
-      margin-bottom: 3cm; }
+      font-weight: 500; }
     html body article#contents h3 {
       font-weight: 500;
       margin: 3em 0 1em; }
@@ -153,14 +170,14 @@ html {
         width: 2cm; }
     html body article#contents ul {
       list-style: none;
-      padding-left: 0; }
+      /*padding-left: 0;*/ }
       html body article#contents ul li {
-        border-top: .25pt solid #c1c1c1;
-        margin: .25cm 0;
+        /*border-top: .25pt solid #c1c1c1;*/
+        margin: 0 0;
         padding-top: .25cm; }
         html body article#contents ul li::before {
           color: #000000;
-          content: '• ';
+          /*content: '• ';*/
           font-size: 40pt;
           line-height: 16pt;
           vertical-align: bottom; }
@@ -191,7 +208,7 @@ html {
     html body article#competences section#table-content::before {
       background: url(table-content.svg) no-repeat center #fbc847;
       background-size: 50%;
-      content: '';
+      /*content: '';*/
       display: inline-block;
       float: left;
       height: 2cm;
@@ -354,8 +371,7 @@ img{
   h1 { display: block; page-break-before: always; }
 }*/
 
-html body#TOC {
+html body article#contents #TOC {
   margin-top: 100px;
-  height: 297mm;
-  break-after: always;
+  margin-bottom: 100px;
 }

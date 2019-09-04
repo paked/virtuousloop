@@ -16,6 +16,8 @@ from wattle_csv import wattle_csv
 from analysis_marks import analysis_marks
 from feedback_many_eyes import feedback_many_eyes
 from wattle_csv_many_eyes import wattle_csv_many_eyes
+from feedback_course import feedback_course
+
 
 cfg = f.config_exists()
 
@@ -45,3 +47,7 @@ else:
 	# create csv to upload to wattle
 	if (cfg['feedback_type']['wattle'] == 'true'):
 		wattle_csv()
+
+	# create csv to upload to wattle
+	if (cfg['feedback_type']['course'] == 'true'):
+		feedback_course()

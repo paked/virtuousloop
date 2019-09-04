@@ -22,11 +22,6 @@ d = {
     "md": "./feedback/archive/md/",
     "pdf": "./feedback/archive/pdf/",
     "html": "./feedback/archive/html/",
-    # "tmc_anon": "./feedback/tmc_anonymous/",
-    # "tmc_conf": "./feedback/tmc_confidential/",
-    # "tmc_chart": "./feedback/tmc/chart/",
-    # "tmc_anon_md": "./feedback/tmc/anonymous/md/",
-    # "tmc_conf_md": "./feedback/tmc/confidential/md/",
     "files": "./files/",
     "scales": "./files/scales/",
 }
@@ -37,6 +32,7 @@ f = {
     "crit_levels": "./files/crit_levels.csv",
     "data_tmc": "./files/data_tmc.csv",
     "fields": "./files/fields.csv",
+    "fields_course": "./files/fields_course.csv",
     "data_client": "./files/data_client.csv",
     "data_self": "./files/data_self.csv",
     "data_shadow": "./files/data_shadow.csv",
@@ -55,6 +51,7 @@ t = {
     "crit_levels": "./files/crit_levels.tsv",
     "data_tmc": "./files/data_tmc.tsv",
     "fields": "./files/fields.tsv",
+    "fields_course": "./files/fields_course.tsv",
     "data_client": "./files/data_client.tsv",
     "data_self": "./files/data_self.tsv",
     "data_shadow": "./files/data_shadow.tsv",
@@ -70,6 +67,7 @@ df = {
     "crit_levels": "crit_levels_df",
     "data_tmc": "data_tmc_df",
     "fields": "fields_df",
+    "fields_course": "fields_course_df",
     "marker": "marker_df",
     "data_client": "data_client_df",
     "data_self": "data_self_df",
@@ -98,6 +96,9 @@ msg = {
     "console_marks_tmc_conflict": "Both Marks and TMC are true is ./files/app_config.yml. Only one can be 'true'. The script will probably fail.",
     "check_dupes": "there are duplicates in the csv: ",
     "fail_warn": "Please find it. The script will fail.",
+    "console_tmc": "Creating the Team Member Contributions",
+    "console_many_eyes": "Creating the Many Eyes Feedback",
+    #"console_tmc": "Creating the Team Member Contributions",
 }
 
 

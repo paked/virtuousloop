@@ -35,8 +35,8 @@ def wattle_csv_many_eyes():
     for i, row in teams.iterrows():
         this_team = row['projectteam']
         # cp pdf to secret here
-        file_from = c.d['pdf'] + this_team + ".pdf"
-        file_to = c.d['upload'] + this_team + ".pdf"
+        file_from = c.d['pdf'] + this_team + "_" + cfg['assignment']['assignment_short'] + "_audit_anon.pdf"
+        file_to = c.d['upload'] + this_team + "_" + cfg['assignment']['assignment_short'] + ".pdf"
         copyfile(file_from, file_to)
 
     f.load_tsv('students')
