@@ -46,7 +46,7 @@ def wattle_csv():
             c.df['marks'].at[i,'secret'] = comment
             
             # cp pdf to secret here
-            file_from = c.d['archive'] + user + ".pdf"
+            file_from = c.d['pdf'] + user + ".pdf"
             file_to = c.d['upload'] + secret_file
             copyfile(file_from, file_to)
     else:
@@ -61,7 +61,7 @@ def wattle_csv():
             c.df['marks'].at[i,'secret'] = comment
             
             # cp pdf to secret here
-            file_from = c.d['archive'] + group + ".pdf"
+            file_from = c.d['pdf'] + group + ".pdf"
             file_to = c.d['upload'] + group + ".pdf"
             copyfile(file_from, file_to)
 

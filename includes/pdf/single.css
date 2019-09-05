@@ -89,14 +89,6 @@ filter:alpha(opacity=30); /* for <= IE 8 */
     content: none; }
   }
 
-@page :first {
-  background-size: cover;
-  margin: 0;
-  background-position: 0 0;
-  background-repeat: no-repeat;
-  position: relative;
-  }
-
 @page chapter {
   background: #fbc847;
   margin: 0;
@@ -378,7 +370,7 @@ html body article#contents #TOC {
 
 table {
     margin-bottom: 1rem;
-    width: 100%;
+    width: 95%;
     font-size: 0.8rem;
     border: 1px solid #e5e5e5;
     border-collapse: collapse;

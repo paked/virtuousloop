@@ -129,7 +129,6 @@ def print_results_header(field, row, m_row, out):
     this_field = str(row['field'])
     this_text = str(row['text'])
     this_label = str(row['label'])
-    print(this_field)
 
     print("### " + this_text + "{-}\n\n", file=out)
     if (cfg['crit_display']['label'] == 'true'):
@@ -160,14 +159,13 @@ def print_results_graph(field, row, m_row, out):
     this_field = row['field']
     this_image = c.d['charts'] + this_field + ".png"
     if field == 'crit':
-        print("![](../." + this_image + ")\n\n", file=out)
+        print("![](../../." + this_image + ")\n\n", file=out)
 
 def print_results_rubric(out, m_row, record):
     # option for displaying rubric
     cfg = config_exists()
 
     this_rubric = c.d['rubric'] + record + '.html'
-    this_rubric_pdf = c.d['rubric'] + record + '.pdf'
     levels=filter_row('crit_levels', 'rubric', 'show')
     fields=filter_row('fields', 'field', 'crit_')
     with open(this_rubric, 'w') as rubric_out:
@@ -229,10 +227,11 @@ def print_results_rubric(out, m_row, record):
         footer = open(c.h['wkhtml_footer'], "r")
         print(footer.read(), file=rubric_out)
         footer.close()
+    # can directly add if using weasy
 
-    weasy(this_rubric).write_pdf(this_rubric_pdf)
+    # weasy(this_rubric).write_pdf(this_rubric_pdf)
 
-    print("![](" + this_rubric_pdf + ")", file=out)
+    # print("![](" + this_rubric_pdf + ")", file=out)
 
 
 def print_comment_header(field, row, out):
@@ -349,9 +348,7 @@ def pandoc_css(out, record, kind):
     if (kind == 'conf'):
         print("background-image: url(../../../includes/pdf/watermark_confidential.png);}", file=out)
 
-    
-
-def pandoc_pdf(this_file, this_record, kind):
+def pandoc_html_toc(this_file, this_record, kind):
     subprocess.call("pandoc -s -t html5 \
         --toc -c ../../../includes/pdf/report.css \
         -c ../../." + c.d["css"] + this_record + "_" + kind + ".css \
@@ -359,8 +356,20 @@ def pandoc_pdf(this_file, this_record, kind):
         --template=./includes/pdf/pandoc_report.html \
         " + c.d["md"] + this_file + ".md \
         -o " + c.d["html"] + this_file + ".html", shell=True)
-    # subprocess.call("pandoc -s -t html5 " + c.d["md"] + this_file + ".md -o " + c.d["html"] + this_file + ".html", shell=True)
+
+def pandoc_html(this_file, this_record, kind):
+    subprocess.call("pandoc -s -t html5 \
+        -c ../../../includes/pdf/single.css \
+        -c ../../." + c.d["css"] + this_record + "_" + kind + ".css \
+        --metadata-file=" + c.d["yaml"] + this_record + ".yaml \
+        --template=./includes/pdf/pandoc_single.html \
+        " + c.d["md"] + this_file + ".md \
+        -o " + c.d["html"] + this_file + ".html", shell=True)
+
+def pandoc_pdf(this_file, this_record, kind):
     weasy(c.d["html"] + this_file + ".html").write_pdf(c.d["pdf"] + this_file + ".pdf")
+
+
 
 
 # ===========================================================
@@ -424,6 +433,7 @@ def make_crit_list(crit):
     return (crit_list[0].join(crit_list[1:]))
 
 def make_crit_chart(crit, stats):
+    cfg = config_exists()
     for i, crit_row in crit.iterrows():
         this_crit = crit_row['field']
         ax = stats[[this_crit]].plot(kind='bar', title ="", figsize=(10, 2), width=0.9, legend=False, fontsize=8, colormap=cfg['tmc_chart']['colormap'])

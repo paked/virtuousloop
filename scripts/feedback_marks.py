@@ -64,21 +64,22 @@ def feedback_marks():
 
         # display a progress bar in the console
         # total for progress bar comes from marks.shape[0]
-        f.progress_bar(i, marks.shape[0], this_record)
+        #f.progress_bar(i, marks.shape[0], this_record)
+        print(this_record)
                 
         with open(c.d['yaml'] + this_out + '.yaml', 'w') as out:
         # create the pandoc header
             if cfg['feedback_type']['group'] == 'true':
-                f.pandoc_yml(out, this_record)
+                f.pandoc_yaml(out, this_record)
             else:
-                f.pandoc_yml(out, this_record_all)
+                f.pandoc_yaml(out, this_record_all)
 
         with open(c.d['css'] + this_out + '.css', 'w') as out:
         # create the pandoc header
             if cfg['feedback_type']['group'] == 'true':
-                f.pandoc_css(out, this_record)
+                f.pandoc_css(out, this_record, 'anon')
             else:
-                f.pandoc_css(out, this_record_all)
+                f.pandoc_css(out, this_record_all, 'anon')
 
 
         #open up a file to print to
@@ -114,8 +115,17 @@ def feedback_marks():
                 print("\n", file=out)
 
         # convert md to pdf using the shell
-        f.pandoc_pdf(c.d['archive'] + this_out, '2')
+        f.pandoc_html(this_out, this_record, 'anon')
 
+        if cfg['crit_display']['rubric'] == "true":
+
+            files = [c.d['rubric'] + this_out + ".html"]
+            with open(c.d['html'] + this_out + '.html', 'a') as outfile:
+                for fname in files:
+                    with open(fname) as infile:
+                        outfile.write(infile.read())
+
+        f.pandoc_pdf(this_out, this_record, 'anon')
  
     # print message to console - complete!
     f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))

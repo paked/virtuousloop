@@ -163,4 +163,5 @@ def format_tmc_feedback(team, kind, shape, dataframe):
                     print("**" + df_row['user'] + " (" + df_row['username'] + ")" + "**\n\n" + str(df_row['confidentialcomments']) + "\n\n", file=out)
 
     # convert md to pdf using the shell
+    f.pandoc_html(this_out, team, kind)
     f.pandoc_pdf(this_out, team, kind)

@@ -40,7 +40,7 @@ f = {
     "data_conv": "./files/data_conv.csv",
     "app_config": "./files/app_config.yml",
     "wattle": "./feedback/wattle_upload.csv",
-    "json": "./feedback/wattle/database.json",
+    "json": "./feedback/archive/json/database.json",
     "feedback_course": "./files/feedback_course.csv",
 }
 

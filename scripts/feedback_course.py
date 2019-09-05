@@ -95,6 +95,8 @@ def feedback_course():
                     if ( this_text != "nan" ):
                         print("**" + this_user + "**\n\n" + this_text + "\n\n", file=out)
 
+        f.pandoc_html(tutor + "_anon", tutor, 'anon')
+        f.pandoc_html(tutor + "_conf", tutor, 'conf')
 
         f.pandoc_pdf(tutor + "_anon", tutor, 'anon')
         f.pandoc_pdf(tutor + "_conf", tutor, 'conf')

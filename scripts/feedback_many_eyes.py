@@ -172,6 +172,9 @@ def feedback_many_eyes():
 
 
         # convert md to pdf using the shell
+        f.pandoc_html_toc(this_out + "_" + cfg['assignment']['assignment_short'] + "_audit_anon", team, 'anon')
+        f.pandoc_html_toc(this_out + "_" + cfg['assignment']['assignment_short'] + "_audit_conf", team, 'conf')
+
         f.pandoc_pdf(this_out + "_" + cfg['assignment']['assignment_short'] + "_audit_anon", team, 'anon')
         f.pandoc_pdf(this_out + "_" + cfg['assignment']['assignment_short'] + "_audit_conf", team, 'conf')
 
