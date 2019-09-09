@@ -55,7 +55,7 @@ def wattle_csv():
             user = row['user']
             group = row['list_team']
 
-            comment = "<a href=\"" + cfg['assignment']['feedback_url'] + "/" + group + ".pdf\">PDF Feedback for" + group + "</a>"
+            comment = "<a href=\"" + cfg['assignment']['feedback_url'] + "/" + group + ".pdf\">PDF Feedback for " + group + "</a>"
 
             # update the df
             c.df['marks'].at[i,'secret'] = comment

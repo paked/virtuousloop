@@ -39,6 +39,7 @@ def load_data():
             f.rename_header(this_csv, 'uniid', 'user')
             f.rename_header(this_csv, 'first_name', 'first')
             f.rename_header(this_csv, 'surname', 'last')
+            f.rename_header(this_csv, 'projectteam', 'group')
             f.check_duplicates(this_csv, 'user')
         elif this_csv == 'marks':
             # rename fields
@@ -98,11 +99,8 @@ def load_data():
         elif this_csv == 'feedback_course':
             c.df[this_csv]['tutor_name'] = c.df[this_csv]['tutor'].str.replace(' ', '_')
 
-
-
         #print(c.df[this_csv])
         c.df[this_csv].to_csv(c.t[this_csv], sep='\t', encoding='utf-8', index=False)
-
 
     if cfg['feedback_type']['json'] == 'true':
         #f.json_list(c.t['students'])

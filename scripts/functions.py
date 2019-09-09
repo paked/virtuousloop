@@ -358,6 +358,8 @@ def pandoc_html_toc(this_file, this_record, kind):
         -o " + c.d["html"] + this_file + ".html", shell=True)
 
 def pandoc_html(this_file, this_record, kind):
+    print(this_file)
+    print(this_record)
     subprocess.call("pandoc -s -t html5 \
         -c ../../../includes/pdf/single.css \
         -c ../../." + c.d["css"] + this_record + "_" + kind + ".css \
@@ -432,6 +434,16 @@ def make_crit_list(crit):
     crit_list = [df.set_index('index') for df in crit_list]
     return (crit_list[0].join(crit_list[1:]))
 
+def make_crit_list_2(crit, dataframe):
+    crit_levels=load_tsv('crit_levels')
+    crit_list=[crit_levels]
+    for i, crit_row in crit.iterrows():
+        this_crit = crit_row['field']
+        this_crit=dataframe[this_crit].value_counts().reset_index()
+        crit_list.append(this_crit)
+    crit_list = [df.set_index('index') for df in crit_list]
+    return (crit_list[0].join(crit_list[1:]))
+
 def make_crit_chart(crit, stats):
     cfg = config_exists()
     for i, crit_row in crit.iterrows():
@@ -445,6 +457,20 @@ def make_crit_chart(crit, stats):
         ax.spines['left'].set_visible(False)
         ax.spines['top'].set_visible(False)
         out = c.d['charts'] + this_crit + ".png"
+        plt.savefig(out, bbox_inches='tight')
+
+def make_crit_chart_2(crit, stats, name):
+    cfg = config_exists()
+    for i, crit_row in crit.iterrows():
+        this_crit = crit_row['field']
+        ax = stats[[this_crit]].plot(kind='bar', title ="", figsize=(10, 2), width=0.9, legend=False, fontsize=8, colormap=cfg['tmc_chart']['colormap'])
+        ax.set_xlabel("", fontsize=8)
+        ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
+        ax.get_yaxis().set_ticks([])
+        ax.spines['right'].set_visible(False)
+        ax.spines['left'].set_visible(False)
+        ax.spines['top'].set_visible(False)
+        out = c.d['charts'] + this_crit + name + ".png"
         plt.savefig(out, bbox_inches='tight')
 
 def make_tmc_chart(dataframe, out):
@@ -493,6 +519,28 @@ def make_audit_chart(dataframe, out):
     plt.savefig(out, bbox_inches='tight')
     plt.clf()
 
+def make_feedback_chart(dataframe, out):
+    cfg = config_exists()
+    ax = dataframe.plot(kind='bar', title ="", figsize=(10, 3), legend=True, fontsize=10, colormap=cfg['audit_chart']['colormap'], width=0.5)
+    ax.set_xlabel(cfg['audit_chart']['x_axis_title'], fontsize=10)
+    ax.set_xticklabels(ax.get_xticklabels(),rotation=0)
+    # ax.set_yticks(cfg['audit_chart']['y_tick_values']) 
+    # ax.set_yticklabels(cfg['audit_chart']['y_tick_labels'])
+    # ax.set_ylabel(cfg['audit_chart']['y_axis_title'], fontsize=10)
+    ax.axhline(0, color='black', lw=1)
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
+    leg = plt.legend( loc = 'lower center', ncol=8)
+    bb = leg.get_bbox_to_anchor().inverse_transformed(ax.transAxes)
+    yOffset = 0.5
+    bb.y0 -= yOffset
+    bb.y1 -= yOffset
+    leg.set_bbox_to_anchor(bb, transform = ax.transAxes)        
+    # plt.ylim(0, 50)
+    plt.tight_layout()
+    plt.savefig(out, bbox_inches='tight')
+    plt.clf()
 
 class bcolors:
     INFO = '\033[95m'
@@ -503,7 +551,6 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
-
 
 # function to call api
 def text_analysis_api (text, label, record):
