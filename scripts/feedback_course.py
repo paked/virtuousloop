@@ -91,7 +91,6 @@ def feedback_course():
         # tell the console
         print(tutor)
         this_tutor_df=feedback_course_df[feedback_course_df['tutor_name'].str.contains(tutor)]
-        print(this_tutor_df)
         with open(c.d['yaml'] + tutor + '.yaml', 'w') as out:
             f.pandoc_yaml(out, tutor)
             
@@ -100,41 +99,42 @@ def feedback_course():
             
         # create the anon feedback for the tutor
         # open up a file to print to
-        with open(c.d['md'] + tutor + '.md', 'w') as out:
-            # loop through the crit columns
-            # for i, row in crit.iterrows():
-            #     this_crit=str(row['field'])
-            #     this_text = str(row['description'])
-            #     this_image = c.d['charts'] + this_crit + "_" + tutor + ".png"
-            #     # print header and image to out
-            #     print("### " + this_text + "\n", file=out)
-            #     print("![](../../." + this_image + ")\n", file=out)
-                  
-            # # loop through the comment columns
-            # for i, row in comm.iterrows():
-            #     this_field=str(row['field'])
-            #     this_description=str(row['description'])
-                
-            #     # ensure that comment_confidential is not printed
-            #     if this_field != 'comment_confidential':
-            #         # print the crit description
-            #         print("\n\n## " + this_description + "\n\n", file=out)
-            #         for i, i_row in this_tutor_df.iterrows():
-            #             this_text=str(i_row[this_field])
-            #             # check not empty
-            #             if ( this_text != "" or this_text != "nan" or this_text != "N/A" ):
-            #                 # this_text_clean = BeautifulSoup(this_text, features="html5lib")
-            #                 # print header and image to out
-            #                 # print("**Student Comment**\n\n" + this_text_clean.get_text() + "\n\n", file=out)
-            #                 print("**Student Comment**\n\n" + this_text + "\n\n", file=out)
-            print("# Hello World!", file=out)
-            print("\n\nHello World!", file=out)
-            print("\n\nHello World!", file=out)
-            print("\n\nHello World!", file=out)
-            print("\n\nHello World!", file=out)
-            # convert to html then pdf
-            f.pandoc_html_single(tutor)
-            f.pandoc_pdf(tutor)
+        f_out = open(c.d['md'] + tutor + '.md', 'w')
+
+        with f_out as out:
+            try: 
+                #loop through the crit columns
+                for i, row in crit.iterrows():
+                    this_crit=str(row['field'])
+                    this_text = str(row['description'])
+                    this_image = c.d['charts'] + this_crit + "_" + tutor + ".png"
+                    # print header and image to out
+                    print("### " + this_text + "\n", file=out)
+                    print("![](../../." + this_image + ")\n", file=out)
+                      
+                # loop through the comment columns
+                for i, row in comm.iterrows():
+                    this_field=str(row['field'])
+                    this_description=str(row['description'])
+                    
+                    # ensure that comment_confidential is not printed
+                    if this_field != 'comment_confidential':
+                        # print the crit description
+                        print("\n\n## " + this_description + "\n\n", file=out)
+                        for i, i_row in this_tutor_df.iterrows():
+                            this_text=str(i_row[this_field])
+                            # check not empty
+                            if ( this_text != "" or this_text != "nan" or this_text != "N/A" ):
+                                # this_text_clean = BeautifulSoup(this_text, features="html5lib")
+                                # print header and image to out
+                                # print("**Student Comment**\n\n" + this_text_clean.get_text() + "\n\n", file=out)
+                                print("**Student Comment**\n\n" + this_text + "\n\n", file=out)
+            finally:
+                f_out.close()
+
+        # convert to html then pdf
+        f.pandoc_html_single(tutor)
+        f.pandoc_pdf(tutor)
 
         # create the confidential version for the convenor
         # open up a file to print to
