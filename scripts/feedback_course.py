@@ -19,7 +19,6 @@ import pypandoc
 from weasyprint import HTML
 import subprocess
 from bs4 import BeautifulSoup
-from sh import pandoc
 
 
 def feedback_course():
