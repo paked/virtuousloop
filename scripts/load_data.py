@@ -98,7 +98,7 @@ def load_data():
             f.rename_header(this_csv, 'q4', 'comment_confidential')
         elif this_csv == 'feedback_course':
             c.df[this_csv]['tutor_name'] = c.df[this_csv]['tutor'].str.replace(' ', '_')
-
+                
         #print(c.df[this_csv])
         c.df[this_csv].to_csv(c.t[this_csv], sep='\t', encoding='utf-8', index=False)
 

@@ -58,32 +58,25 @@ def feedback_marks():
             this_record = m_row['user']
             this_record_all = m_row['list_name']
 
-        # define the out files
-        # note that the pdf will be copied as out in wattle_csv.py
-        this_out = this_record
-
         # display a progress bar in the console
-        # total for progress bar comes from marks.shape[0]
-        #f.progress_bar(i, marks.shape[0], this_record)
         print(this_record)
                 
-        with open(c.d['yaml'] + this_out + '.yaml', 'w') as out:
         # create the pandoc header
+        with open(c.d['yaml'] + this_record + '.yaml', 'w') as out:
             if cfg['feedback_type']['group'] == 'true':
                 f.pandoc_yaml(out, this_record)
             else:
                 f.pandoc_yaml(out, this_record_all)
 
-        with open(c.d['css'] + this_out + '.css', 'w') as out:
         # create the pandoc header
+        with open(c.d['css'] + this_record + '.css', 'w') as out:
             if cfg['feedback_type']['group'] == 'true':
                 f.pandoc_css(out, this_record, 'anon')
             else:
                 f.pandoc_css(out, this_record_all, 'anon')
 
-
         #open up a file to print to
-        with open(c.d['md'] + this_out + '.md', 'w') as out:
+        with open(c.d['md'] + this_record + '.md', 'w') as out:
 
             if (cfg['crit_display']['text'] == "true") or (cfg['crit_display']['scale'] == "true") or (cfg['crit_display']['graph'] == "true"):
                 # start with indicator title and notes
@@ -115,17 +108,17 @@ def feedback_marks():
                 print("\n", file=out)
 
         # convert md to pdf using the shell
-        f.pandoc_html(this_out, this_record, 'anon')
+        f.pandoc_html_default(this_record)
 
         if cfg['crit_display']['rubric'] == "true":
 
-            files = [c.d['rubric'] + this_out + ".html"]
-            with open(c.d['html'] + this_out + '.html', 'a') as outfile:
+            files = [c.d['rubric'] + this_record + ".html"]
+            with open(c.d['html'] + this_record + '.html', 'a') as outfile:
                 for fname in files:
                     with open(fname) as infile:
                         outfile.write(infile.read())
 
-        f.pandoc_pdf(this_out, this_record, 'anon')
+        f.pandoc_pdf(this_record)
  
     # print message to console - complete!
     f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))

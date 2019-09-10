@@ -119,6 +119,14 @@ def correctSubtitleEncoding(filename, newFilename, encoding_from, encoding_to='U
 
     # print(tsv.groupby(['group']).size())
 
+def create_list(dataframe, column):
+    this_list=[] 
+    for i, row in dataframe.iterrows():
+        this_val = str(row[column])
+        this_list.append(this_val)
+    return this_list
+
+
 # ===========================================================
 #  print messages
 # ===========================================================
@@ -358,8 +366,6 @@ def pandoc_html_toc(this_file, this_record, kind):
         -o " + c.d["html"] + this_file + ".html", shell=True)
 
 def pandoc_html(this_file, this_record, kind):
-    print(this_file)
-    print(this_record)
     subprocess.call("pandoc -s -t html5 \
         -c ../../../includes/pdf/single.css \
         -c ../../." + c.d["css"] + this_record + "_" + kind + ".css \
@@ -368,7 +374,16 @@ def pandoc_html(this_file, this_record, kind):
         " + c.d["md"] + this_file + ".md \
         -o " + c.d["html"] + this_file + ".html", shell=True)
 
-def pandoc_pdf(this_file, this_record, kind):
+def pandoc_html_single(this_file):
+    subprocess.call("pandoc -s -t html5 \
+        -c ../../../includes/pdf/single.css \
+        -c ../../." + c.d["css"] + this_file + "_anon.css \
+        --metadata-file=" + c.d["yaml"] + this_file + ".yaml \
+        --template=./includes/pdf/pandoc_single.html \
+        " + c.d["md"] + this_file + ".md \
+        -o " + c.d["html"] + this_file + ".html", shell=True)
+
+def pandoc_pdf(this_file):
     weasy(c.d["html"] + this_file + ".html").write_pdf(c.d["pdf"] + this_file + ".pdf")
 
 

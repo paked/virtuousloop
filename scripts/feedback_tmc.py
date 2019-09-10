@@ -164,4 +164,4 @@ def format_tmc_feedback(team, kind, shape, dataframe):
 
     # convert md to pdf using the shell
     f.pandoc_html(this_out, team, kind)
-    f.pandoc_pdf(this_out, team, kind)
+    f.pandoc_pdf(this_out)
