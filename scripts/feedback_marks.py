@@ -108,7 +108,7 @@ def feedback_marks():
                 print("\n", file=out)
 
         # convert md to pdf using the shell
-        f.pandoc_html_default(this_record)
+        f.pandoc_html_single(this_record)
 
         if cfg['crit_display']['rubric'] == "true":
 
