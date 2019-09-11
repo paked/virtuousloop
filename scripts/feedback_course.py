@@ -116,18 +116,18 @@ def feedback_course():
                     this_field=str(row['field'])
                     this_description=str(row['description'])
                     
+                    this_df=this_tutor_df[['tutor_name',this_field]].dropna()
+
                     # ensure that comment_confidential is not printed
                     if this_field != 'comment_confidential':
                         # print the crit description
                         print("\n\n## " + this_description + "\n\n", file=out)
-                        for i, i_row in this_tutor_df.iterrows():
+                        for i, i_row in this_df.iterrows():
                             this_text=str(i_row[this_field])
                             # check not empty
                             if ( this_text != "" or this_text != "nan" or this_text != "N/A" ):
-                                # this_text_clean = BeautifulSoup(this_text, features="html5lib")
-                                # print header and image to out
-                                # print("**Student Comment**\n\n" + this_text_clean.get_text() + "\n\n", file=out)
-                                print("**Student Comment**\n\n" + this_text + "\n\n", file=out)
+                                this_text_clean = BeautifulSoup(this_text, features="html5lib")
+                                print("**Student Comment**\n\n" + this_text_clean.get_text() + "\n\n", file=out)
             finally:
                 f_out.close()
 
@@ -145,9 +145,11 @@ def feedback_course():
             for i, row in comm.iterrows():
                 this_field=str(row['field'])
                 this_description = str(row['description'])
+                
+                this_df=this_tutor_df[['tutor_name','user',this_field]].dropna()
 
                 print("\n\n## " + this_description + "\n\n", file=out)
-                for i, i_row in this_tutor_df.iterrows():
+                for i, i_row in this_df.iterrows():
                     this_text=str(i_row[this_field])
                     this_user=str(i_row['user'])
                     if ( this_text != "" or this_text != "nan" or this_text != "N/A" ):

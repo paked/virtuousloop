@@ -69,8 +69,9 @@ def wattle_csv():
             copyfile(file_from, file_to)
 
         marks_out=c.df['marks'][['list_team','grade_final','secret']]
+        print(marks_out)
         wattle_out = marks_out.merge(c.df['students'], left_on='list_team', right_on='group', how='left')[['user','grade_final','secret','group']]
-
+        print(wattle_out)
     # print message to console - final csv for upload
     f.pnt_info(c.msg['console_upload'])
     wattle_out.to_csv(c.f['wattle'], index=False)

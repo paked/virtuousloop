@@ -117,6 +117,10 @@ html {
     text-align: center;
     page: '';
     }
+  html body article#cover h1 {
+    color: #000000;
+  }
+
   html body h1 {
     break-before: always;
   }

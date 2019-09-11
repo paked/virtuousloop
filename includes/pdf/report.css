@@ -128,6 +128,11 @@ html {
   html body h1 {
     break-before: always;
   }
+  
+  html body article#cover h1 {
+    color: #000000;
+  }
+
   html body h2, html body h3, html body h4 {
     color: black;
     font-weight: 600; }
