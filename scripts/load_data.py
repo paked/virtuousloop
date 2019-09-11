@@ -111,11 +111,8 @@ def load_data():
         member_count=teams['user'].max()
 
         # create a list of teams to iterate through
-        team_list=[]
-        for i, row in teams.iterrows():
-            this_team = row['group']
-            team_list.append(this_team)
-
+        team_list=f.create_list(teams,'group')
+        
         # add a column with user - first last
         for i, row in c.df['students'].iterrows():
             list_name=row['user'] + " - " + row['first'] + " " + row['last']

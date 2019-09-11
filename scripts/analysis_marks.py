@@ -51,8 +51,6 @@ def analysis_marks():
 
     c.df['marks'].loc[c.df['marks'].grade_calculated == 0, ['marker_name', 'marker_id']] = 'No Submission', 'nil'
 
-    
-
     for i, row in c.df['marks'].iterrows():
         f.html_to_text('marks', row, i, 'comment_a', 'comment_a_txt')
         f.html_to_text('marks', row, i, 'comment_b', 'comment_b_txt')
@@ -100,84 +98,7 @@ def analysis_marks():
         marker.at[i,'flesch_a'] = this_flesch_a
         marker.at[i,'flesch_b'] = this_flesch_b
 
-
     print(marker)
-
-
-
-        
-    #marks['comment_wc'] = len('comment_a')
-    #print(marks['comment_wc'])
-
-
-    # print(type(raw))
-    # print(len(raw))
-    # print(raw[:75])
-
-    #print(marks.groupby('marker_id', as_index=False).agg({"Grade_Final"}))
-    # #iterate through the marks file
-    # for i, m_row in marks.iterrows():
-
-    #     print(m_row['marker_name'] + " - " + m_row['marker_id'])
-    #     data.groupby(['month', 'item'])['date'].count()
-
-
-        # # decide whether to use the list_team or list_name field
-        # if cfg['feedback_type']['group'] == 'true':
-        #     this_record = m_row['list_team']
-        # else:
-        #     this_record = m_row['user']
-        #     this_record_all = m_row['list_name']
-
-        # # define the out files
-        # # note that the pdf will be copied as out in wattle_csv.py
-        # this_out = c.d['archive'] + this_record
-
-        # # display a progress bar in the console
-        # # total for progress bar comes from marks.shape[0]
-        # f.progress_bar(i, marks.shape[0], this_record)
-                
-
-        # #open up a file to print to
-        # with open(this_out + '.md', 'w') as out:
-            
-        #     # create the pandoc header
-        #     if cfg['feedback_type']['group'] == 'true':
-        #         f.pandoc_header(out, this_record)
-        #     else:
-        #         f.pandoc_header(out, this_record_all)
-
-        #     if (cfg['crit_display']['text'] == "true") or (cfg['crit_display']['scale'] == "true") or (cfg['crit_display']['graph'] == "true"):
-        #         # start with indicator title and notes
-        #         print("## " + cfg['pdf_messages']['indicator_title'] + "{-}\n\n", file=out)
-        #         print(cfg['pdf_messages']['indicator_note'] + "\n\n", file=out)
-
-        #     #loop through the crit columns
-        #     for j, row in crit.iterrows():
-
-        #         # display the fields according to app_config
-        #         if (cfg['crit_display']['text'] == "true") or (cfg['crit_display']['scale'] == "true") or (cfg['crit_display']['graph'] == "true"):
-        #             f.print_results_header('crit', row, m_row, out)
-        #         if cfg['crit_display']['text'] == "true":
-        #             f.print_results_text('crit', row, m_row, out)
-        #         if cfg['crit_display']['scale'] == "true":
-        #             f.print_results_scale('crit', row, m_row, out)
-        #         if cfg['crit_display']['graph'] == "true":
-        #             f.print_results_graph('crit', row, m_row, out)
-
-        #     # loop through the comment columns
-        #     for j, row in comm.iterrows():
-        #         f.print_results_header('comm', row, m_row, out)
-        #         f.print_results_text('comm', row, m_row, out)
-
-        #     if cfg['crit_display']['rubric'] == "true":
-        #         print("# " + cfg['pdf_messages']['rubric_title'] + "{-}\n\n", file=out)
-        #         print(cfg['pdf_messages']['rubric_note'] + "\n", file=out)
-        #         f.print_results_rubric(out, m_row, this_record)
-        #         print("\n", file=out)
-
-        # convert md to pdf using the shell
-        #f.pandoc_pdf(this_out)
  
     # print message to console - complete!
     f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))

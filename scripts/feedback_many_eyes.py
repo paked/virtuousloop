@@ -50,7 +50,7 @@ def feedback_many_eyes():
     
     # load data and create list of teams
     teams=f.load_tsv('students')
-    teams.drop_duplicates(subset=['projectteam'], keep='first', inplace=True)
+    teams.drop_duplicates(subset=['group'], keep='first', inplace=True)
 
     crit_levels=f.load_tsv('crit_levels')
 
@@ -101,7 +101,7 @@ def feedback_many_eyes():
 
     team_list=[]
     for i, row in teams.iterrows():
-        this_team = row['projectteam']
+        this_team = row['group']
         team_list.append(this_team)
 
     f.pnt_info(c.msg["console_many_eyes"])
@@ -151,39 +151,34 @@ def feedback_many_eyes():
         this_team_ave_df.set_index("criterion",drop=True,inplace=True)
 
         f.make_audit_chart(this_team_ave_df, c.d['charts'] + team + "_audit.png")
-
-        #open up a file to print to
-        this_out = team
-        
+    
         format_audit_feedback(team, 'conf')
         format_audit_feedback(team, 'anon')
 
-        files = [c.d['files'] + 'text_preamble.md', c.d['md'] + this_out + "_tmc_anon.md", c.d['md'] + this_out + "_audit_anon.md", c.d['files'] + 'text_changelog.md']
-        with open(c.d['md'] + this_out + "_" + cfg['assignment']['assignment_short'] + "_audit_anon.md", 'w') as outfile:
+        files = [c.d['files'] + 'text_preamble.md', c.d['md'] + team + "_tmc_anon.md", c.d['md'] + team + "_audit_anon.md", c.d['files'] + 'text_changelog.md']
+        with open(c.d['md'] + team + "_" + cfg['assignment']['assignment_short'] + "_audit_anon.md", 'w') as outfile:
             for fname in files:
                 with open(fname) as infile:
                     outfile.write(infile.read())
 
-        files = [c.d['md'] + this_out + "_tmc_conf.md", c.d['md'] + this_out + "_audit_conf.md"]
-        with open(c.d['md'] + this_out + "_" + cfg['assignment']['assignment_short'] + "_audit_conf.md", 'w') as outfile:
+        files = [c.d['md'] + team + "_tmc_conf.md", c.d['md'] + team + "_audit_conf.md"]
+        with open(c.d['md'] + team + "_" + cfg['assignment']['assignment_short'] + "_audit_conf.md", 'w') as outfile:
             for fname in files:
                 with open(fname) as infile:
                     outfile.write(infile.read())
 
 
         # convert md to pdf using the shell
-        f.pandoc_html_toc(this_out + "_" + cfg['assignment']['assignment_short'] + "_audit_anon", team, 'anon')
-        f.pandoc_html_toc(this_out + "_" + cfg['assignment']['assignment_short'] + "_audit_conf", team, 'conf')
+        f.pandoc_html_toc(team + "_" + cfg['assignment']['assignment_short'] + "_audit_anon", team, 'anon')
+        f.pandoc_html_toc(team + "_" + cfg['assignment']['assignment_short'] + "_audit_conf", team, 'conf')
 
-        f.pandoc_pdf(this_out + "_" + cfg['assignment']['assignment_short'] + "_audit_anon", team, 'anon')
-        f.pandoc_pdf(this_out + "_" + cfg['assignment']['assignment_short'] + "_audit_conf", team, 'conf')
+        f.pandoc_pdf(team + "_" + cfg['assignment']['assignment_short'] + "_audit_anon")
+        f.pandoc_pdf(team + "_" + cfg['assignment']['assignment_short'] + "_audit_conf")
 
 
 # print feedback loop
 def format_audit_feedback(team, kind):
     cfg=f.config_exists()
-
-    this_out=team
 
     # open and create a file for the yaml
     with open(c.d['yaml'] + team + '.yaml', 'w') as out:
@@ -193,7 +188,7 @@ def format_audit_feedback(team, kind):
     with open(c.d['css'] + team + "_" + kind + '.css', 'w') as out:
         f.pandoc_css(out, team, kind)
 
-    with open(c.d["md"] + this_out + '_audit_' + kind + '.md', 'w') as out:
+    with open(c.d["md"] + team + '_audit_' + kind + '.md', 'w') as out:
 
         # print graph
         this_chart=c.d['charts'] + team + "_audit.png"

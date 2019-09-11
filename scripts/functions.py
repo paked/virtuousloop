@@ -387,8 +387,6 @@ def pandoc_pdf(this_file):
     weasy(c.d["html"] + this_file + ".html").write_pdf(c.d["pdf"] + this_file + ".pdf")
 
 
-
-
 # ===========================================================
 #  filesystem helpers
 # ===========================================================

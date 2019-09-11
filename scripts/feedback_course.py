@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-# python ./scripts/feedback_marks.py
+# python ./scripts/feedback_course.py
 #
 #
 # chris.browne@anu.edu.au - all care and no responsibility :)
 # ===========================================================
 
-'''turns the marks spreadsheet into pdf feedback'''
+'''turns the feedback_course spreadsheet into pdf feedback'''
 
 import os
 import csv
