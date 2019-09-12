@@ -145,13 +145,16 @@ def print_results_header(field, row, m_row, out):
 def print_results_text(field, row, m_row, out):
     # option for displaying text results
     this_field = str(row['field'])
-    this_result = str(m_row[this_field])
-    this_result_text = filter_row('crit_levels', 'index', '^' + this_result + '$').text.to_string(index=False).lstrip()
+    this_result = m_row[this_field]
+    #print(this_result)
+    this_text_clean = BeautifulSoup(this_result, features="html5lib").get_text()
+
 
     if field == 'crit':
-        print("**" + this_result_text + "**\n\n", file=out)
+        print("**" + this_text_clean + "**\n\n", file=out)
+        # print("**" + this_result_text + "**\n\n", file=out)
     else: 
-        print(this_result + "\n\n", file=out)
+        print(this_text_clean + "\n\n", file=out)
 
 def print_results_scale(field, row, m_row, out):
     # option for displaying scales
@@ -568,46 +571,18 @@ class bcolors:
 # function to call api
 def text_analysis_api (text, label, record):
     cfg=config_exists()
-    print(record)
+    print(text)
     this_nlp = c.d['nlp'] + record + '-' + label + '.json'
     aylien = textapi.Client(cfg['aylien']['api_id'], cfg['aylien']['api_key'])
     combined = aylien.Combined({
         'text': text,
-        #'endpoint': ["sentiment", "classify", "extract", "summarize", "entities", "hashtags", "concepts"]
-        'endpoint': ["entities", "summarize"]
+        'endpoint': ["sentiment", "classify", "extract", "summarize", "entities", "hashtags", "concepts"]
     })
 
     with open(this_nlp, 'w') as out:
         print(combined["results"], file=out)
 
-
     for result in combined["results"]:
         print(result["endpoint"])
         print(result["result"])
-        print(jq(".keyword[]").transform(result["result"]))
-
-
-    # # extract keywords
-    # for type in self shadow; do
-    #     jq '.results[1].result.entities.keyword[]' ./reviews/api/"$this_user"-"$type".txt | sed 's/ .*//g;s/"//g;s/\(.*\)/\L\1/;' | sort -u | sed '$!N; /\(.*\)\n\1s/!P;D;' > ./reviews/keywords/"$this_user"-"$type".txt
-    # done
-
-    # # extract hashtags
-    # for type in self shadow; do
-    #     jq '.results[4].result.hashtags[]' ./reviews/api/"$this_user"-"$type".txt | sed 's/ .*//g;s/"//g;s/\(.*\)/\L\1/;' | sort -u | sed '$!N; /\(.*\)\n\1s/!P;D;' > ./reviews/hashtags/"$this_user"-"$type".txt
-    # done
-
-#     this_nlp = c.d['reviews'] + user + '-' + label + '.txt'
-#     with open(this_nlp, 'w') as out:
-#         this_result=curl -s 'https://api.aylien.com/api/v1/combined' \
-#            -H "X-AYLIEN-TextAPI-Application-Key: " + cfg['aylien']['api_key'] \
-#            -H "X-AYLIEN-TextAPI-Application-ID: " + cfg['aylien']['api_id']  \
-#            --data-urlencode "text=$this_text_self" \
-#            --data-urlencode "endpoint=sentiment" \
-#            --data-urlencode "endpoint=classify" \
-#            --data-urlencode "endpoint=extract" \
-#            --data-urlencode "endpoint=summarize" \
-#            --data-urlencode "endpoint=entities" \
-#            --data-urlencode "endpoint=hashtags" \
-#            --data-urlencode "endpoint=concepts"
-#         print(this_result, file=out)
+        # print(jq(".keyword[]").transform(result["result"]))

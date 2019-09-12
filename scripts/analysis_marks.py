@@ -66,6 +66,7 @@ def analysis_marks():
 
         f.text_analysis_api(row['comment_a_txt'], 'comment_a', row['user'])
         f.text_analysis_api(row['comment_b_txt'], 'comment_b', row['user'])
+        
 
     
     marker=c.df['marks']['grade_calculated'].groupby([c.df['marks']['marker_name']]).mean().reset_index()
