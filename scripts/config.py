@@ -12,6 +12,7 @@
 d = {
     "feedback": "./feedback/",
     "upload": "./feedback/upload/",
+    "review": "./feedback/review/",
     "archive": "./feedback/archive/",
     "charts": "./feedback/archive/charts/",
     "rubric": "./feedback/archive/rubrics/",
@@ -22,6 +23,8 @@ d = {
     "md": "./feedback/archive/md/",
     "pdf": "./feedback/archive/pdf/",
     "html": "./feedback/archive/html/",
+    "wordcloud": "./feedback/archive/wordcloud/",
+    "txt": "./feedback/archive/txt/",
     "files": "./files/",
     "scales": "./files/scales/",
 }
@@ -40,6 +43,7 @@ f = {
     "data_conv": "./files/data_conv.csv",
     "app_config": "./files/app_config.yml",
     "wattle": "./feedback/wattle_upload.csv",
+    "wattle_analysis": "./feedback/wattle_analysis_upload.csv",
     "json": "./feedback/archive/json/database.json",
     "feedback_course": "./files/feedback_course.csv",
 }
@@ -58,6 +62,8 @@ t = {
     "data_tutor": "./files/data_tutor.tsv",
     "data_conv": "./files/data_conv.tsv",
     "feedback_course": "./files/feedback_course.tsv",
+    "data_self_sorted": "./files/data_self_sorted.tsv",
+    "data_shadow_sorted": "./files/data_shadow_sorted.tsv",
 }
 
 df = {
@@ -69,6 +75,9 @@ df = {
     "fields": "fields_df",
     "fields_course": "fields_course_df",
     "marker": "marker_df",
+    "client": "client_df",
+    "data_self_sorted": "self_df",
+    "data_shadow_sorted": "shadow_df",
     "data_client": "data_client_df",
     "data_self": "data_self_df",
     "data_shadow": "data_shadow_df",
@@ -91,7 +100,7 @@ msg = {
     "console_complete": "COMPLETE...",
     "console_loading": "loading files into the scripts..",
     "console_app_config_check": "checking that ./files/app_config.yml exists..",
-    "console_app_config_fail": "Can't locate ./files/app_config.yml. Please find it. The script will fail.",
+    "console_app_config_fail": "Can't locate the default config file. Please find it. The script will fail.",
     "console_creating_feedback_files": "Creating feedback files..",
     "console_marks_tmc_conflict": "Both Marks and TMC are true is ./files/app_config.yml. Only one can be 'true'. The script will probably fail.",
     "check_dupes": "there are duplicates in the csv: ",

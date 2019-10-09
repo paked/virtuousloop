@@ -15,7 +15,6 @@ import yaml
 import warnings
 import sys
 import time
-import matplotlib.pyplot as plt
 from weasyprint import HTML as weasy
 from unidecode import unidecode
 import readability
@@ -25,6 +24,16 @@ import syntok.segmenter as segmenter
 from aylienapiclient import textapi
 from jq import jq
 import subprocess
+import unicodedata
+import json
+import fileinput
+import pyjq
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import cm
+from matplotlib.colors import ListedColormap, LinearSegmentedColormap
+import logging
+
 
 
 # ===========================================================
@@ -89,7 +98,7 @@ def load_tsv(file):
     try:
         test = open(c.t[file], encoding='utf-8', errors='ignore')
     except IOError:
-        pnt_fail("Can't locate" + c.t[file] + c.msg['fail_warn'])
+        pnt_fail("Can't locate" + c.t[file] + "\n" + c.msg['fail_warn'])
     else:
         pnt_ok ("Loaded " + c.t[file] + "...OK")
         # if the file has na as an index..
@@ -107,17 +116,6 @@ def make_directories(folder):
     for key, value in folder.items():
         if not os.path.exists(value):
             os.makedirs(value)
-
-def remove_non_ascii(text):
-    return ''.join([i if ord(i) < 128 else ' ' for i in text])
-
-def correctSubtitleEncoding(filename, newFilename, encoding_from, encoding_to='UTF-8'):
-    with open(filename, 'r', encoding=encoding_from) as fr:
-        with open(newFilename, 'w', encoding=encoding_to) as fw:
-            for line in fr:
-                fw.write(line[:-1]+'\r\n')
-
-    # print(tsv.groupby(['group']).size())
 
 def create_list(dataframe, column):
     this_list=[] 
@@ -148,7 +146,6 @@ def print_results_text(field, row, m_row, out):
     this_result = m_row[this_field]
     #print(this_result)
     this_text_clean = BeautifulSoup(this_result, features="html5lib").get_text()
-
 
     if field == 'crit':
         print("**" + this_text_clean + "**\n\n", file=out)
@@ -238,11 +235,6 @@ def print_results_rubric(out, m_row, record):
         footer = open(c.h['wkhtml_footer'], "r")
         print(footer.read(), file=rubric_out)
         footer.close()
-    # can directly add if using weasy
-
-    # weasy(this_rubric).write_pdf(this_rubric_pdf)
-
-    # print("![](" + this_rubric_pdf + ")", file=out)
 
 
 def print_comment_header(field, row, out):
@@ -288,18 +280,30 @@ def col_to_lower(dataframe, column):
 
 def many_eyes_dataframe_sort(dataframe):
     cfg=config_exists()
-    this_df=c.df[dataframe]
-    this_df.replace(cfg['audit_chart']['find_labels'], cfg['audit_chart']['replace_values'], inplace=True) 
-    this_a_df=this_df[['username', 'user', 'team', 'crit_a', 'crita_text', 'crita_comment']]
-    this_b_df=this_df[['username', 'user', 'team', 'crit_b', 'critb_text', 'critb_comment']]
+    this_df=c.df[dataframe].copy()
+    this_a_df=this_df[['username', 'user', 'team', 'crit_a', 'crita_text', 'crita_comment']].copy()
+    this_b_df=this_df[['username', 'user', 'team', 'crit_b', 'critb_text', 'critb_comment']].copy()
     this_a_df.rename(columns={'crit_a': 'crit_val'}, inplace=True)
     this_a_df.rename(columns={'crita_text': 'crit_text'}, inplace=True)
-    this_a_df.rename(columns={'crita_comment': 'crit_comment'}, inplace=True)
+    this_a_df.rename(columns={'crita_comment': 'crit_comment_html'}, inplace=True)
     this_b_df.rename(columns={'crit_b': 'crit_val'}, inplace=True)
     this_b_df.rename(columns={'critb_text': 'crit_text'}, inplace=True)
-    this_b_df.rename(columns={'critb_comment': 'crit_comment'}, inplace=True)
+    this_b_df.rename(columns={'critb_comment': 'crit_comment_html'}, inplace=True)
     this_frames = [this_a_df, this_b_df]
-    return pd.concat(this_frames, ignore_index=True, sort=False)
+    this_dataframe=pd.concat(this_frames, ignore_index=True, sort=False)
+    this_dataframe['crit_desc']=this_dataframe['crit_val']
+    this_dataframe['crit_val'].replace(cfg['audit_chart']['find_labels'], cfg['audit_chart']['replace_values'], inplace=True) 
+    this_dataframe['crit_comment_txt']=this_dataframe['crit_comment_html'].mask(pd.isnull, "No Comment")
+    this_dataframe['crit_comment_clean'] = [BeautifulSoup(text, features="html5lib").get_text() for text in this_dataframe['crit_comment_txt'] ]
+    
+    for i, row in this_dataframe.iterrows():
+        this_html = BeautifulSoup(row['crit_comment_clean'], 'html.parser')
+        replace = ('\r', ' '), ('\n', ' '), ('  ', ' '), ("\"","\'")
+        this_text = reduce(lambda a, kv: a.replace(*kv), replace, this_html.get_text())
+        text_clean = unicodedata.normalize("NFKD", this_text)
+        this_dataframe.at[i,'crit_comment'] = text_clean
+    
+    this_dataframe[['username', 'user', 'team', 'crit_val', 'crit_desc', 'crit_text', 'crit_comment']].to_csv(c.t[dataframe + "_sorted"], sep='\t', encoding='utf-8', index=False)
 
 # ===========================================================
 #  readability helpers
@@ -316,10 +320,10 @@ def readability_stats(dataframe, row, i, current_column, new_column, readability
 
 def html_to_text(dataframe, row, i, current_column, new_column):
     this_html = BeautifulSoup(row[current_column], 'html.parser')
-    replace = ('\r', ' '), ('\n', ' '), ('  ', ' ')
+    replace = ('\r', ' '), ('\n', ' '), ('  ', ' '), ("\"","\'")
     this_text = reduce(lambda a, kv: a.replace(*kv), replace, this_html.get_text())
-    c.df[dataframe].at[i,new_column] = this_text
-
+    text_clean = unicodedata.normalize("NFKD", this_text)
+    c.df[dataframe].at[i,new_column] = text_clean
 
 # ===========================================================
 #  pandoc helpers
@@ -339,7 +343,6 @@ def pandoc_yaml(out, record):
 def pandoc_css(out, record, kind): 
     cfg = config_exists()
     now = strftime("%Y-%m-%d %H:%M:%S", localtime())
-
     print("@page {", file=out)
     if (kind == 'conf'):
         print("background-image: url(../../../includes/pdf/watermark_confidential.png);", file=out)
@@ -378,30 +381,50 @@ def pandoc_html(this_file, this_record, kind):
         -o " + c.d["html"] + this_file + ".html", shell=True)
 
 def pandoc_html_single(this_file):
-    subprocess.call("pandoc -s -t html5 \
-        -c ../../../includes/pdf/single.css \
-        -c ../../." + c.d["css"] + this_file + ".css \
-        --metadata-file=" + c.d["yaml"] + this_file + ".yaml \
-        --template=./includes/pdf/pandoc_single.html \
-        " + c.d["md"] + this_file + ".md \
-        -o " + c.d["html"] + this_file + ".html", shell=True)
+    try:
+        subprocess.call("pandoc -s -t html5 \
+            -c ../../../includes/pdf/single.css \
+            -c ../../." + c.d["css"] + this_file + ".css \
+            --metadata-file=" + c.d["yaml"] + this_file + ".yaml \
+            --template=./includes/pdf/pandoc_single.html \
+            " + c.d["md"] + this_file + ".md \
+            -o " + c.d["html"] + this_file + ".html", shell=True)
+    except:
+        f.pnt_fail("Unable to create " + this_file + "feedback file")
+
 
 def pandoc_pdf(this_file):
-    weasy(c.d["html"] + this_file + ".html").write_pdf(c.d["pdf"] + this_file + ".pdf")
+    try:
+        weasy(c.d["html"] + this_file + ".html").write_pdf(c.d["pdf"] + this_file + ".pdf")
+    except:
+        print(this_file + " cannot be converted")
 
 
 # ===========================================================
 #  filesystem helpers
 # ===========================================================
 
-def config_exists():
-    #pnt_notice(c.msg['console_app_config_check'],os.path.basename(__file__))
-    try:
-        config = open('./files/app_config.yml')
-    except IOError:
-        f.pnt_fail(c.msg['console_app_config_fail'])
+def myprint(d):
+  for k, v in d.items():
+    if isinstance(v, dict):
+      myprint(v)
+      print("{0}:".format(k))
     else:
-        return yaml.safe_load(config)
+      print("  {0}: '{1}'".format(k, v))
+
+def config_exists():
+
+    # Read default YAML file
+    with open("./includes/config_defaults.yml", 'r') as stream:
+        config_defaults = yaml.safe_load(stream)
+
+    # Read local configuration
+    with open("./files/app_config.yml", 'r') as stream:
+        app_config = yaml.safe_load(stream)
+
+    # Replace defaults with local config
+    config_defaults.update(app_config)
+    return config_defaults
 
 def file_exists(file):
     try:
@@ -439,18 +462,7 @@ def progress_bar (iteration, upper, suffix, prefix = '', decimals = 1, length = 
 #  print chart 
 # ===========================================================
 
-def make_crit_list(crit):
-    crit_levels=load_tsv('crit_levels')
-    marks=load_tsv('marks')
-    crit_list=[crit_levels]
-    for i, crit_row in crit.iterrows():
-        this_crit = crit_row['field']
-        this_crit=marks[this_crit].value_counts().reset_index()
-        crit_list.append(this_crit)
-    crit_list = [df.set_index('index') for df in crit_list]
-    return (crit_list[0].join(crit_list[1:]))
-
-def make_crit_list_2(crit, dataframe):
+def make_crit_list(crit, dataframe):
     crit_levels=load_tsv('crit_levels')
     crit_list=[crit_levels]
     for i, crit_row in crit.iterrows():
@@ -460,34 +472,68 @@ def make_crit_list_2(crit, dataframe):
     crit_list = [df.set_index('index') for df in crit_list]
     return (crit_list[0].join(crit_list[1:]))
 
-def make_crit_chart(crit, stats):
+def make_crit_chart(crit, stats, name):
     cfg = config_exists()
     for i, crit_row in crit.iterrows():
         this_crit = crit_row['field']
         ax = stats[[this_crit]].plot(kind='bar', title ="", figsize=(10, 2), width=0.9, legend=False, fontsize=8, colormap=cfg['tmc_chart']['colormap'])
         ax.set_xlabel("", fontsize=8)
         ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
-        ax.set_yticklabels("", rotation=0)
         ax.get_yaxis().set_ticks([])
         ax.spines['right'].set_visible(False)
         ax.spines['left'].set_visible(False)
         ax.spines['top'].set_visible(False)
-        out = c.d['charts'] + this_crit + ".png"
+        if name == "na":
+            out = c.d['charts'] + this_crit + ".png"
+        else:
+            out = c.d['charts'] + this_crit + "_" + name + ".png"
         plt.savefig(out, bbox_inches='tight')
+        plt.clf()
 
-def make_crit_chart_2(crit, stats, name):
+def make_col_chart(dataframe, col, role, chart_min, chart_max):
     cfg = config_exists()
-    for i, crit_row in crit.iterrows():
-        this_crit = crit_row['field']
-        ax = stats[[this_crit]].plot(kind='bar', title ="", figsize=(10, 2), width=0.9, legend=False, fontsize=8, colormap=cfg['tmc_chart']['colormap'])
-        ax.set_xlabel("", fontsize=8)
-        ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
-        ax.get_yaxis().set_ticks([])
-        ax.spines['right'].set_visible(False)
-        ax.spines['left'].set_visible(False)
-        ax.spines['top'].set_visible(False)
-        out = c.d['charts'] + this_crit + name + ".png"
-        plt.savefig(out, bbox_inches='tight')
+    if role == 'self':
+        this_color = "#23537D"
+    else:
+        this_color = "#26AD63"
+    ax = dataframe.hist(column=col, color=this_color, bins=20, grid=False, figsize=(10,3), zorder=2, rwidth=0.9, range=(chart_min, chart_max))
+    ax = ax[0]
+    for x in ax:
+        x.spines['right'].set_visible(False)
+        x.spines['top'].set_visible(False)
+        x.spines['left'].set_visible(False)
+        x.tick_params(axis="both", which="both", bottom="off", top="off", labelbottom="on", left="off", right="off", labelleft="on")
+        vals = x.get_yticks()
+        for tick in vals:
+            x.axhline(y=tick, linestyle='dashed', alpha=0.4, color='#eeeeee', zorder=1)
+        x.set_title("")
+        x.set_xlabel("", labelpad=20, weight='bold', size=12)
+        x.set_ylabel("Frequency", labelpad=20, weight='bold', size=12)
+        # x.yaxis.set_major_formatter(StrMethodFormatter('{x:,g}'))
+    out = c.d['charts'] + col + "_" + role + ".png"
+    plt.savefig(out, bbox_inches='tight')
+    plt.clf()
+
+def make_stat_chart(dataframe, group_axis, count_axis, title):
+    cfg = config_exists()
+    this = dataframe.groupby(group_axis)[count_axis].mean()
+    # this.columns = [x.strip().replace('_', ' ') for x in this.columns]
+    # this.head()
+    this_colormap = cm.get_cmap(cfg['tmc_chart']['colormap'], 512)
+    limited_colormap = ListedColormap(this_colormap(np.linspace(0.25, 0.75, 256)))
+    this_title=cfg['crit_chart'][title]
+    ax = this.plot(kind='barh', title ="", figsize=(10, 3), width=0.9, legend=True, fontsize=8, colormap=limited_colormap)
+    ax.tick_params(axis="both", which="both", bottom="off", top="off", labelbottom="on", left="off", right="off", labelleft="on")
+    ax.set_xlabel(this_title.replace("_", " ").capitalize(), labelpad=20, size=8, weight='bold')
+    ax.set_ylabel(group_axis.replace("_", " ").capitalize(), labelpad=20, size=8, weight='bold')    
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    out = c.d['charts'] + title + ".png"
+    plt.tight_layout()
+    plt.savefig(out, bbox_inches='tight')
+    plt.clf()
+
+
 
 def make_tmc_chart(dataframe, out):
     cfg = config_exists()
@@ -506,7 +552,7 @@ def make_tmc_chart(dataframe, out):
     yOffset = 0.5
     bb.y0 -= yOffset
     bb.y1 -= yOffset
-    leg.set_bbox_to_anchor(bb, transform = ax.transAxes)        
+    leg.set_bbox_to_anchor(bb, transform = ax.transAxes)
     plt.ylim(-2, 2)
     plt.tight_layout()
     plt.savefig(out, bbox_inches='tight')
@@ -535,14 +581,36 @@ def make_audit_chart(dataframe, out):
     plt.savefig(out, bbox_inches='tight')
     plt.clf()
 
-def make_feedback_chart(dataframe, out):
+def make_audit_crit_chart(dataframe, out):
     cfg = config_exists()
     ax = dataframe.plot(kind='bar', title ="", figsize=(10, 3), legend=True, fontsize=10, colormap=cfg['audit_chart']['colormap'], width=0.5)
     ax.set_xlabel(cfg['audit_chart']['x_axis_title'], fontsize=10)
     ax.set_xticklabels(ax.get_xticklabels(),rotation=0)
-    # ax.set_yticks(cfg['audit_chart']['y_tick_values']) 
-    # ax.set_yticklabels(cfg['audit_chart']['y_tick_labels'])
-    # ax.set_ylabel(cfg['audit_chart']['y_axis_title'], fontsize=10)
+    ax.set_yticks(cfg['audit_chart']['y_tick_values']) 
+    ax.set_yticklabels(cfg['audit_chart']['y_tick_labels'])
+    ax.set_ylabel(cfg['audit_chart']['y_axis_title'], fontsize=10)
+    ax.axhline(0, color='black', lw=1)
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    ax.spines['bottom'].set_visible(False)
+    leg = plt.legend( loc = 'lower center', ncol=8)
+    bb = leg.get_bbox_to_anchor().inverse_transformed(ax.transAxes)
+    yOffset = 0.5
+    bb.y0 -= yOffset
+    bb.y1 -= yOffset
+    leg.set_bbox_to_anchor(bb, transform = ax.transAxes)        
+    plt.ylim(-2, 4)
+    plt.tight_layout()
+    plt.savefig(out, bbox_inches='tight')
+    plt.clf()
+
+def make_feedback_chart(dataframe, out):
+    cfg = config_exists()
+    ax = dataframe.plot(kind='bar', title ="", figsize=(10, 3), legend=True, fontsize=10, colormap=cfg['audit_chart']['colormap'], width=0.5)
+    ax.set_xlabel("", fontsize=8)
+    x_tick_labels = dataframe['index'].values
+    ax.set_xticklabels(x_tick_labels, rotation=0)
+    ax.set_ylabel('Count', labelpad=20, size=8, weight='bold')    
     ax.axhline(0, color='black', lw=1)
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
@@ -571,18 +639,68 @@ class bcolors:
 # function to call api
 def text_analysis_api (text, label, record):
     cfg=config_exists()
-    print(text)
-    this_nlp = c.d['nlp'] + record + '-' + label + '.json'
+    this_json = c.d['nlp'] + record + '-' + label + '.json'
+    this_yaml = c.d['nlp'] + record + '-' + label + '.yaml'
     aylien = textapi.Client(cfg['aylien']['api_id'], cfg['aylien']['api_key'])
     combined = aylien.Combined({
         'text': text,
-        'endpoint': ["sentiment", "classify", "extract", "summarize", "entities", "hashtags", "concepts"]
+        'endpoint': cfg['aylien']['endpoints']
     })
 
-    with open(this_nlp, 'w') as out:
-        print(combined["results"], file=out)
-
+    this_dict = dict();
     for result in combined["results"]:
-        print(result["endpoint"])
-        print(result["result"])
-        # print(jq(".keyword[]").transform(result["result"]))
+        this_endpoint = result["endpoint"]
+        this_result = result["result"]
+        if this_endpoint == "entities":
+            try:
+                this_dict['entities'] = this_result["entities"]["keyword"]
+            except: 
+                this_dict['entities'] = ["None detected"]
+        if this_endpoint == "sentiment":
+            try:
+                this_dict['polarity'] = this_result["polarity"]
+            except:
+                this_dict['polarity'] = ["None detected"]
+        if this_endpoint == "hashtags":
+            try:
+                this_dict['hashtags'] = this_result["hashtags"]
+            except:
+                this_dict['polarity'] = ["None detected"]
+        if this_endpoint == "summarize":
+            try:
+                this_dict['sentences'] = this_result["sentences"]
+            except:
+                this_dict['sentences'] = ["None detected"]
+    this_dict_dump = json.dumps(this_dict)
+    return this_dict_dump
+
+def sentiment_table(columns, rows):
+    cfg=config_exists()
+    sentiment_columns=["Name",]
+    sentiment_list=[]
+    # set up the columns
+    for i, row in columns.iterrows():
+        field_text = row['text']
+        sentiment_columns.append(field_text)
+
+    # work through the rows
+    for num, endpoint in enumerate(cfg['aylien']['endpoints'], start=0):
+        name=(cfg['aylien']['endpoint_name'][num])
+        if endpoint == 'sentiment':
+            for i, row in rows.iterrows():
+                this_marker_name=row['marker_name']
+                sentiment_rows=[this_marker_name]
+                for i, row in columns.iterrows():
+                    comment = row['field']
+                    with open(c.d['nlp'] + this_marker_name + "_" + comment + ".json") as json_file:
+                        this_nlp = json.load(json_file)
+                        try: 
+                            item_out = ""
+                            for item in this_nlp[name]:
+                                item_out += item
+                            sentiment_rows.append(item_out)
+                        except:
+                            sentiment_rows.append("N/A")
+                sentiment_list.append(sentiment_rows)
+    # return the result
+    return pd.DataFrame(sentiment_list, columns = sentiment_columns)

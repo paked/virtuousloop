@@ -15,6 +15,7 @@ from feedback_tmc import feedback_tmc
 from wattle_csv import wattle_csv
 from analysis_marks import analysis_marks
 from feedback_many_eyes import feedback_many_eyes
+from analysis_many_eyes import analysis_many_eyes
 from wattle_csv_many_eyes import wattle_csv_many_eyes
 from feedback_course import feedback_course
 
@@ -27,6 +28,9 @@ load_data()
 if (cfg['feedback_type']['many_eyes'] == 'true'):
 	feedback_tmc()
 	feedback_many_eyes()
+	if (cfg['feedback_type']['analysis'] == 'true'):
+		analysis_many_eyes()
+
 	wattle_csv_many_eyes()
 
 else:
@@ -51,3 +55,4 @@ else:
 	# create csv to upload to wattle
 	if (cfg['feedback_type']['course'] == 'true'):
 		feedback_course()
+

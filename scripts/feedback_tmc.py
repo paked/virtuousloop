@@ -58,6 +58,7 @@ def feedback_tmc():
     tm_cols_tmc.insert(0,'username')
     tm_cols_id = [w.replace('contribution', 'id') for w in tm_cols_tmc]
 
+
     f.pnt_info(c.msg["console_tmc"])
 
     # for each team 
@@ -73,6 +74,7 @@ def feedback_tmc():
         team_header=this_data[tm_cols_id].values.tolist()[0]
         team_header[0]='reviews'
 
+
         # get the tmc values matching the team
         # take tm_cols_tmc as the list
         team_data=this_data[tm_cols_tmc].values.tolist()
@@ -84,7 +86,6 @@ def feedback_tmc():
         this_conf_df=this_conf_df.rename(columns=lambda x: re.sub(' - .*','',x)).T
         this_anon_df=this_conf_df.rename(columns=lambda x: re.sub('u.*',cfg['tmc_chart']['anon_legend'],x))
         
-
         # get the shape of the dataframe to show the number of submissions
         shape=this_anon_df.shape
 
@@ -107,7 +108,8 @@ def feedback_tmc():
 def format_tmc_feedback(team, kind, shape, dataframe):
     cfg=f.config_exists()
     # NaNs as comments
-    dataframe.fillna('',inplace=True)
+    this_df=dataframe.copy() 
+    this_df.fillna('',inplace=True)
 
     this_out=team + "_tmc_" + kind
 
@@ -134,9 +136,10 @@ def format_tmc_feedback(team, kind, shape, dataframe):
         print('![](../../.' + this_chart + ')\n\n', file=out)
         print( cfg['tmc_pdf']['tmc_chart_caption'] + "\n\n", file=out )
     
+
         # print the comments for the team
         print("## " + cfg['pdf_messages']['tmc_header_2'] + "\n\n", file=out)
-        for i, df_row in dataframe.iterrows():
+        for i, df_row in this_df.iterrows():
             # if the field is empty
             if (df_row['teamcomments'] == ""):
                 # print messages if the comment is empty
@@ -154,7 +157,7 @@ def format_tmc_feedback(team, kind, shape, dataframe):
         # print confidential comments
         if ( kind == 'conf'):
             print("## " + cfg['pdf_messages']['tmc_confidential'] + "\n\n", file=out)
-            for i, df_row in dataframe.iterrows():
+            for i, df_row in this_df.iterrows():
                 # try encoding utf8
                 if (df_row['teamcomments'] == ""):
                     print(df_row['confidentialcomments'])

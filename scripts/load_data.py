@@ -44,7 +44,8 @@ def load_data():
         elif this_csv == 'marks':
             # rename fields
             f.rename_header(this_csv, 'username', 'marker_id')
-            f.rename_header(this_csv, 'user', 'marker_name')
+            f.rename_header(this_csv, 'user', 'marker')
+            c.df[this_csv]['marker_name'] = c.df[this_csv]['marker'].str.replace(' ', '_')
             # split the user - name column in c.df[this_csv]
             c.df[this_csv][['user','name']] = c.df[this_csv]['list_name'].str.split('\s+-\s+', expand=True)
             f.check_duplicates(this_csv, 'user')

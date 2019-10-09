@@ -45,8 +45,8 @@ def feedback_marks():
     
     # create distribution charts for later
     if cfg['crit_display']['graph'] == "true":
-        stats=f.make_crit_list(crit)
-        f.make_crit_chart(crit, stats)
+        stats=f.make_crit_list(crit, marks)
+        f.make_crit_chart(crit, stats, "na")
 
     #iterate through the marks file
     for i, m_row in marks.iterrows():

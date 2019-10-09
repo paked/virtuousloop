@@ -121,6 +121,10 @@ html {
     color: #000000;
   }
 
+  .new-page {
+    break-after: always;
+  }
+
   html body h1 {
     break-before: always;
   }
@@ -188,8 +192,7 @@ html {
             float: right; }
   html body article#columns section {
     columns: 2;
-    column-gap: 1cm;
-    padding-top: 1cm; }
+    column-gap: 1cm; }
     html body article#columns section p {
       text-align: justify; }
       html body article#columns section p:first-of-type {
@@ -375,7 +378,6 @@ html body article#contents #TOC {
 table {
     margin-bottom: 1rem;
     width: 95%;
-    font-size: 0.8rem;
     border: 1px solid #e5e5e5;
     border-collapse: collapse;
     table-layout: fixed
@@ -387,6 +389,19 @@ th {
     border: 1px solid #e5e5e5
     word-wrap: break-word;
     width: 16%;
+    white-space: nowrap;
+}
+
+.dataframe {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    border: 1px solid #e5e5e5;
+    border-collapse: collapse;
+    table-layout: auto;
+  }
+
+table td:last-child{
+    width:100%;
 }
 
 .name {
@@ -398,11 +413,11 @@ th {
 }
 
 td {
-    font-size: 0.7rem;
+    font-size: 0.9rem;
 }
 
 tbody th {
-    background-color: #f9f9f9
+    /*background-color: #f9f9f9*/
 }
 
 .flag50 {
@@ -412,3 +427,12 @@ tbody th {
 .flag100 {
     background-color: #AACCDC
 }
+
+strong {
+  font-weight: 800;
+}
+
+.two-columns { 
+  columns: 2;
+  page-break-after: always;
+   }
