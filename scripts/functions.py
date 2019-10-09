@@ -26,7 +26,6 @@ import subprocess
 import unicodedata
 import json
 import fileinput
-import pyjq
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
