@@ -159,7 +159,6 @@ def feedback_many_eyes():
 
         # now create the team chart
         this_team_ave_df.set_index("criterion",drop=True,inplace=True)
-        print(this_team_ave_df)
         f.make_audit_chart(this_team_ave_df, c.d['charts'] + team + "_audit.png")
     
         # run the format audit feedback for anon/conf as defined below
