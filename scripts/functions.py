@@ -22,7 +22,6 @@ from bs4 import BeautifulSoup
 from functools import reduce
 import syntok.segmenter as segmenter
 from aylienapiclient import textapi
-from jq import jq
 import subprocess
 import unicodedata
 import json
