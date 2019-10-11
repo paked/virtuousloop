@@ -60,6 +60,7 @@ def feedback_course():
                 this_tutor_crit.append(this_sum)
             this_crit_list.append(this_tutor_crit)
             this_crit_this_tutor = pd.DataFrame(this_tutor_crit, columns = this_header, index = crit_levels_list)
+
             f.make_feedback_chart(this_crit_this_tutor, c.d['charts'] + this_crit + "_" + tutor + ".png")
         this_crit_all_tutors = pd.DataFrame(this_crit_list, columns = crit_levels_list, index=tutor_list)
         this_crit_all_tutors = this_crit_all_tutors.T
@@ -156,7 +157,6 @@ def feedback_course():
                         this_text_clean = BeautifulSoup(this_text, features="html5lib")
                         print("**" + this_user + "**\n\n" + this_text_clean.get_text() + "\n\n", file=out)
             
-    print(confidential_files)
     with open(c.d['md'] + "all.md", 'w') as outfile:
         for fname in confidential_files:
             with open(fname) as infile:
