@@ -143,13 +143,13 @@ def print_results_header(loop_row, out):
     '''print the header for all fields'''
     cfg = load_config()
 
-    this_text = loop_row.text
     this_label = loop_row.label
+    this_description = loop_row.description
     
-    print("### " + this_text + "{-}\n\n", file=out)
+    print("### " + this_label + "{-}\n\n", file=out)
 
     if cfg['crit_display']['label'] and not this_label:
-        print(this_label + "\n\n", file=out)
+        print(this_description + "\n\n", file=out)
 
 
 def print_results_text(loop_row, record_row, out):
