@@ -691,7 +691,7 @@ def sentiment_table(columns, rows):
     sentiment_list = []
     # set up the columns
     for i, row in columns.iterrows():
-        field_text = row['text']
+        field_text = row['label']
         sentiment_columns.append(field_text)
 
     # work through the rows
