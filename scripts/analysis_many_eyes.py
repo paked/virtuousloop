@@ -28,50 +28,49 @@ import hashlib
 
 
 def analysis_many_eyes():
-    
-    # check that config exists
-    cfg=f.config_exists()
-    
+
+    cfg = f.load_config()
+
     # print message to console - starting!
-    f.pnt_notice(c.msg['console_start'],os.path.basename(__file__))
+    f.pnt_notice(c.msg['console_start'], os.path.basename(__file__))
 
     # print message to console
     f.pnt_info(c.msg["console_loading"])
-    
+
     # load in tsvs of needed fields
-    student=f.load_tsv('students')
+    student = f.load_tsv('students')
     student.drop_duplicates(keep='first', inplace=True)
     student.dropna(how='any', subset=['user'], inplace=True)
-    students=student.copy()
+    students = student.copy()
 
-    fields=f.load_tsv('fields')
-    crit_levels=f.load_tsv('crit_levels')
+    fields = f.load_tsv('fields')
+    crit_levels = f.load_tsv('crit_levels')
 
-    data_self=f.load_tsv('data_self')
-    data_shadow=f.load_tsv('data_shadow')
-    data_tutor=f.load_tsv('data_tutor')
-    data_client=f.load_tsv('data_client')
+    data_self = f.load_tsv('data_self')
+    data_shadow = f.load_tsv('data_shadow')
+    data_tutor = f.load_tsv('data_tutor')
+    data_client = f.load_tsv('data_client')
 
     # create a df of just the crit and the comments
-    crit=f.filter_row('fields', 'field', 'crit_')
-    comm=f.filter_row('fields', 'field', 'comment_')
+    crit = f.filter_row('fields', 'field', 'crit_')
+    comm = f.filter_row('fields', 'field', 'comment_')
 
     # print message to console
-    f.pnt_info(c.msg["console_creating_feedback_files"])
+    f.pnt_info(c.msg["console_reading_feedback_files"])
     
     # load data and create list of teams
-    teams=f.load_tsv('students')
+    teams = f.load_tsv('students')
     teams.drop_duplicates(subset=['group'], keep='first', inplace=True)
 
     # create a team list to iterate through
-    team_list=[]
+    team_list = []
     for i, row in teams.iterrows():
         this_team = row['group']
         team_list.append(this_team)
 
     # create a list of crit for access
-    crit_list=[]
-    crit_list_header=['team','role']
+    crit_list = []
+    crit_list_header = ['team','role']
     for j, row in crit.iterrows():
          crit_list.append(row['label'])
          crit_list_header.append(row['label'])
@@ -177,10 +176,8 @@ def analysis_many_eyes():
             this_team_crit_df = this_team_crit_df.iloc[1:].rename_axis(None, axis=1)
             this_team_crit_df['average']=this_team_crit_df.mean(axis=1)
             f.make_audit_crit_chart(this_team_crit_df, c.d['charts'] + team + "_" + this_crit_field + "_audit.png")
-        
-    # print(self_df.describe())
-    # print(shadow_df.describe())
-
+    
+    
     self_crit_val_diff_list=[]
     self_crit_val_abs_list=[]
     self_wps_list=[]
@@ -685,7 +682,7 @@ def analysis_many_eyes():
 
 
 # print message to console - complete!
-f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))
+f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))
 
 def local_text_analysis(dataframe, user, role):
 

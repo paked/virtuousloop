@@ -21,11 +21,11 @@ import subprocess
 
 def feedback_many_eyes():
     
-    # check that config exists
-    cfg=f.config_exists()
+    
+    cfg = f.load_config()
     
     # print message to console - starting!
-    f.pnt_notice(c.msg['console_start'],os.path.basename(__file__))
+    f.pnt_notice(c.msg['console_start'], os.path.basename(__file__))
 
     # print message to console
     f.pnt_info(c.msg["console_loading"])
@@ -153,6 +153,7 @@ def feedback_many_eyes():
         this_team_ave_df['shadow'] = crit_shadow_ave
         this_team_ave_df['tutor'] = crit_tutor_ave
         this_team_ave_df['client'] = crit_client_ave
+        
         # report the team ave and the class ave
         this_team_ave_df['team_ave'] = this_team_ave_df.mean(axis=1)
         this_team_ave_df['class_ave'] = class_ave_list
@@ -190,7 +191,7 @@ def feedback_many_eyes():
 
 # print feedback loop
 def format_audit_feedback(team, kind):
-    cfg=f.config_exists()
+    cfg = f.load_config()
 
     # open and create a file for the yaml
     with open(c.d['yaml'] + team + '.yaml', 'w') as out:
@@ -217,6 +218,7 @@ def format_audit_feedback(team, kind):
 
         self_df=f.load_tsv('data_self_sorted')
         shadow_df=f.load_tsv('data_shadow_sorted')
+        
         tutor_df=c.df['data_tutor']
         tutor_df.replace(cfg['audit_chart']['find_labels'], cfg['audit_chart']['replace_values'], inplace=True) 
         client_df=c.df['data_client']
@@ -241,7 +243,7 @@ def format_audit_feedback(team, kind):
             this_team_shadow_crit_df=this_team_shadow_df[this_team_shadow_df['crit_text'].str.contains(row['label'])]
 
             # loop through the comment columns
-            f.print_comment_header('field', row, out)
+            f.print_comment_header(row, out)
             for k, c_row in this_team_self_crit_df.iterrows():
                 this_text = str(c_row['crit_comment'])
                 if kind == 'conf':
@@ -274,7 +276,7 @@ def format_audit_feedback(team, kind):
         for j, row in comment.iterrows():
             this_field=row['field']
             if this_field != 'comment_confidential':
-                f.print_comment_header('field', row, out)
+                f.print_comment_header(row, out)
                 for k, c_row in this_team_tutor_df.iterrows():
                     this_text = str(c_row[this_field])
                     print("**Tutor**\n\n" + this_text + "\n\n", file=out)
@@ -296,4 +298,4 @@ def format_audit_feedback(team, kind):
                     print("**" + row['user'] + " (" + row['username'] + ")" + "**\n\n" + str(row['comment_confidential']) + "\n\n", file=out)
 
 # print message to console - complete!
-f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))
+f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))

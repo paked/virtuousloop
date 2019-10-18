@@ -389,7 +389,7 @@ th {
     border: 1px solid #e5e5e5
     word-wrap: break-word;
     width: 16%;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
 }
 
 .dataframe {

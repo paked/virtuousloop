@@ -17,10 +17,10 @@ import config as c
 import functions as f
 
 def wattle_csv():
-    cfg = f.config_exists()
+    cfg = f.load_config()
 
     # print message to console - complete!
-    f.pnt_notice(c.msg['console_start'],os.path.basename(__file__))
+    f.pnt_notice(c.msg['console_start'], os.path.basename(__file__))
 
     # organising the files for uploading to wattle
     # print message to console
@@ -77,4 +77,4 @@ def wattle_csv():
     wattle_out.to_csv(c.f['wattle'], index=False)
 
     # print message to console - complete!
-    f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))
+    f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))

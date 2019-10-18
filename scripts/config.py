@@ -6,7 +6,6 @@
 # ===========================================================
 
 '''is a module that stores values for the scripts'''
-# NOTE: there should be no need to adjust any of the values in this file
 
 
 d = {
@@ -87,8 +86,8 @@ df = {
 }
 
 h = {
-    "wkhtml_header": "./includes/pdf/header.html",
-    "wkhtml_footer": "./includes/pdf/footer.html",
+    "rubric_header": "./includes/pdf/rubric_header.html",
+    "rubric_footer": "./includes/pdf/rubric_footer.html",
 }
 
 msg = {
@@ -102,6 +101,7 @@ msg = {
     "console_app_config_check": "checking that ./files/app_config.yml exists..",
     "console_app_config_fail": "Can't locate the default config file. Please find it. The script will fail.",
     "console_creating_feedback_files": "Creating feedback files..",
+    "console_reading_feedback_files": "Reading feedback files...",
     "console_marks_tmc_conflict": "Both Marks and TMC are true is ./files/app_config.yml. Only one can be 'true'. The script will probably fail.",
     "check_dupes": "there are duplicates in the csv: ",
     "fail_warn": "Please find it. The script will fail.",

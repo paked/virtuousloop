@@ -27,41 +27,28 @@ import json
 
 def analysis_marks():
     
-    # check that config exists
-    cfg=f.config_exists()
-    print(cfg)
+    cfg = f.load_config()
 
-    print("****" + cfg['assignment']['assignment_title'])
-    
-    # print message to console - starting!
-    f.pnt_notice(c.msg['console_start'],os.path.basename(__file__))
-
-    # print message to console
+    f.pnt_notice(c.msg['console_start'], os.path.basename(__file__))
     f.pnt_info(c.msg["console_loading"])
-    
-    # load in tsvs of needed fields
-    #fields=f.load_tsv('fields')
-    marks_df=f.load_tsv('marks')
 
-    crit_levels=f.load_tsv('crit_levels')
+    marks_df = f.load_tsv('marks')
+    crit_levels = f.load_tsv('crit_levels')
 
     # create a df of just the crit and the comments
-    crit=f.filter_row('fields', 'field', 'crit_')
-    comm=f.filter_row('fields', 'field', 'comment_')
+    crit = f.filter_row('fields', 'field', 'crit_')
+    comm = f.filter_row('fields', 'field', 'comment_')
 
-    crit_list=f.create_list(crit, 'field')
-    comment_list=f.create_list(comm, 'field')
+    crit_list = f.create_list(crit, 'field')
+    comment_list = f.create_list(comm, 'field')
 
-    # print message to console
     f.pnt_info(c.msg["console_creating_feedback_files"])
 
     # clean up marks df
     c.df['marks'].loc[c.df['marks'].grade_calculated == 0, ['marker_name', 'marker_id']] = 'No_Submission', 'nil'
 
-    # create a new column with the text
-    for i, row in c.df['marks'].iterrows():
-        for comment in comment_list:
-            f.html_to_text('marks', row, i, comment, comment + "_txt")
+    for comment in comment_list:
+        c.df['marks'][comment + "_txt"] = c.df['marks'][comment].apply(f.html_to_text)
 
     # gather the readability stats from each comment
     for i, row in c.df['marks'].iterrows():
@@ -72,12 +59,13 @@ def analysis_marks():
 
     # generate a dataframe with the readability stats for each marker
     # then replace any nil submissions with 'no submission'
-    marker=c.df['marks']['grade_calculated'].groupby([c.df['marks']['marker_name']]).mean().reset_index()
-    marker=marker[marker.marker_name != 'No_Submission']
+    marker = c.df['marks']['grade_calculated'].groupby([c.df['marks']['marker_name']]).mean().reset_index()
+    marker = marker[marker.marker_name != 'No_Submission']
 
     # create a marker_list for iteration
-    marker_list=f.create_list(marker, 'marker_name')
+    marker_list = f.create_list(marker, 'marker_name')
 
+    f.pnt_info("Building crit graphs...")
     # work through each criterion
     for criterion in crit_list:
         # print to tho console
@@ -85,13 +73,13 @@ def analysis_marks():
         this_crit_df = crit_levels['index']
         for i, row in marker.iterrows():
             # create the stats for each marker
-            this_marker_name=row['marker_name']
+            this_marker_name = row['marker_name']
             # get only the rows for this marker
-            this_marker_df=f.filter_row('marks', 'marker_name', this_marker_name)
+            this_marker_df = f.filter_row('marks', 'marker_name', this_marker_name)
             # turn the stats for the marker into a df
-            this_marker_stats=f.make_crit_list(crit, this_marker_df)
+            this_marker_stats = f.make_crit_list(crit, this_marker_df)
             # get the sum of the column for the stats so that the value can be given as a percentage
-            this_col_sum=this_marker_stats[criterion].sum()
+            this_col_sum = this_marker_stats[criterion].sum()
             # add the column
             this_marker_stats[this_marker_name] = this_marker_stats[criterion].apply(lambda x: x/this_col_sum*100)
             # merge back to the crit_df
@@ -103,12 +91,12 @@ def analysis_marks():
         f.make_feedback_chart(this_crit_df, c.d['charts'] + criterion + ".png")
 
 
+    f.pnt_info("Analysing each marker...")
     # work through each marker
     for i, row in marker.iterrows():
-        this_marker_name=row['marker_name']
+        this_marker_name = row['marker_name']
         # print to the console
         print(this_marker_name)
-
         # get the relevant rows for the analysis
         this_group_df=f.filter_row('marks', 'marker_name', row['marker_name'])
 
@@ -136,7 +124,7 @@ def analysis_marks():
             # this is important only to reduce the numbers of calls on the api for local testing
             if not this_nlp_file.is_file():
                 # get the results from the api
-                this_nlp=f.text_analysis_api(this_comment, 'comment', row['marker_name'])
+                this_nlp = f.text_analysis_api(this_comment, 'comment', row['marker_name'])
                 with open(this_nlp_file, 'w') as out:
                     print(this_nlp, file=out)
 
@@ -151,16 +139,14 @@ def analysis_marks():
         # using enumerate to access list indices for name and title
         # work through the defined nlp endpoints
         for num, endpoint in enumerate(cfg['aylien']['endpoints'], start=0):
-            name=(cfg['aylien']['endpoint_name'][num])
-            title=(cfg['aylien']['endpoint_title'][num])
+            name = (cfg['aylien']['endpoint_name'][num])
+            title = (cfg['aylien']['endpoint_title'][num])
             
             # treat sentiment differently, as it is better presented in a table
             if endpoint != 'sentiment':
                 with open(c.d['md'] + this_marker_name + '.md', 'a') as out:
                     print("\n### Comment " + title + "\n\n", file=out)
                     print("\n*" + cfg['analytics']['nlp_source_comment']+  "*\n", file=out)
-                    # layout side-by-side (not working with weasyprint @ todo)
-                    print("<article id=\"columns\"><section>", file=out)
 
                     # loop through the analysis for each comment
                     for i, row in comm.iterrows():
@@ -183,9 +169,6 @@ def analysis_marks():
                             except:
                                 # if there's nothing there, print N/A
                                 print("* N/A", file=out)
-                    # close out the section (not working with weasyprint)
-                    print("</section></article>", file=out)
-    # done with marker
     
     # create a stat_chart for the marker means
     f.make_stat_chart(marker, 'marker_name', 'grade_mean', 'grade_mean')
@@ -193,12 +176,12 @@ def analysis_marks():
     # work through the readability stats to create a chart
     for readability_list in cfg['analytics']['readability_stats']:
         # geerate a df to te turn into a stat_chart
-        columns_old=['marker_name']
-        columns_new=['marker_name']
+        columns_old = ['marker_name']
+        columns_new = ['marker_name']
         # show results for different comments side-by-side
         for i, row in comm.iterrows():
-            field=row['field']
-            text=row['text']
+            field = row['field']
+            text = row['text']
             columns_old.append(field + "_" + readability_list[0])
             # get the human readabile value for titles in the chart
             columns_new.append(text)
@@ -226,18 +209,15 @@ def analysis_marks():
         marker_html.set_index('Marker', inplace=True)
         print(marker_html.to_html(), file=out)
         
-        # print the table to console for assurance
-        print(marker_html)
-
         # header for rubric data
         print("# " + cfg['analytics']['rubric_header'] + "\n\n", file=out)
 
         # iterate through the criteria
         for j, row in crit.iterrows():
             # display the fields according to app_config
-            f.print_results_header('crit', row, row, out)
+            f.print_results_header(row, out)
             print('*' + cfg['analytics']['rubric_comment']+ '*', file=out)
-            f.print_results_graph('crit', row, row, out)
+            f.print_results_graph(row, out)
 
         # header for readability data
         print("# " + cfg['analytics']['readability_header'] + "\n\n", file=out)
@@ -249,8 +229,7 @@ def analysis_marks():
         # header for sentiment_analysis
         print("\n\n# " + cfg['analytics']['sentiment_header'] + "\n\n", file=out)
 
-        # generate a table extracting sentiment analysis
-        # then print the sentiment
+
 
         sentiment_df = f.sentiment_table(comm, marker)
         sentiment_df.set_index('Name', inplace=True)
@@ -259,13 +238,17 @@ def analysis_marks():
         # header for data extracted
         print("# " + cfg['analytics']['summary_header']+ "\n\n", file=out)
 
+    
     # combine the individual marker files
     with open(c.d['md'] + cfg['analytics']['filename'] + '.md', 'a') as out_file:
         for i, row in marker.iterrows():
-            this_marker_name=row['marker_name']
+            this_marker_name = row['marker_name']
             print(this_marker_name)
             with open(c.d['md'] + this_marker_name + '.md') as in_file:
                 out_file.write(in_file.read())
+
+    with open(c.d['md'] + cfg['analytics']['filename'] + '.md', 'a') as out:
+        print("\n\n*** END OF ANALYSIS ***\n\n", file=out)
 
     # create the weasyprint variables
     with open(c.d['yaml'] + cfg['analytics']['filename'] + '.yaml', 'w') as out:
@@ -275,9 +258,7 @@ def analysis_marks():
     with open(c.d['css'] + cfg['analytics']['filename'] + ".css", 'w') as out:
         f.pandoc_css(out, cfg['analytics']['filename'], 'anon')
 
-    # turn the pandoc md to html to pdf
     f.pandoc_html_single(cfg['analytics']['filename'])
     f.pandoc_pdf(cfg['analytics']['filename'])
 
-    # print message to console - complete!
-    f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))
+    f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))

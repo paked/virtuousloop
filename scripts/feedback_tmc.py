@@ -31,10 +31,10 @@ plt.rcParams.update({'figure.max_open_warning': 0})
 def feedback_tmc():
     
     #check that config exists
-    cfg=f.config_exists()
+    cfg = f.load_config()
 
     # print message to console - starting!
-    f.pnt_notice(c.msg['console_start'],os.path.basename(__file__))
+    f.pnt_notice(c.msg['console_start'], os.path.basename(__file__))
 
     # print message to console
     f.pnt_info(c.msg["console_loading"])
@@ -102,11 +102,11 @@ def feedback_tmc():
         format_tmc_feedback(team, 'anon', shape, this_data)
 
     # print message to console - complete!
-    f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))
+    f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))
 
 # print feedback loop
 def format_tmc_feedback(team, kind, shape, dataframe):
-    cfg=f.config_exists()
+    cfg = f.load_config()
     # NaNs as comments
     this_df=dataframe.copy() 
     this_df.fillna('',inplace=True)

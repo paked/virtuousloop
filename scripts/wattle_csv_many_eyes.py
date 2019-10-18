@@ -8,19 +8,16 @@
 '''creates a file ready to upload to Wattle'''
 
 import os
-import csv
-import pandas as pd
-import yaml
-import hashlib
 from shutil import copyfile
+import pandas as pd
 import config as c
 import functions as f
 
 def wattle_csv_many_eyes():
-    cfg = f.config_exists()
+    cfg = f.load_config()
 
     # print message to console - complete!
-    f.pnt_notice(c.msg['console_start'],os.path.basename(__file__))
+    f.pnt_notice(c.msg['console_start'], os.path.basename(__file__))
 
     # organising the files for uploading to wattle
     # print message to console
@@ -30,7 +27,7 @@ def wattle_csv_many_eyes():
     f.load_tsv('data_tutor')
 
     # load data and create list of teams
-    teams=f.load_tsv('students')
+    teams = f.load_tsv('students')
     teams.drop_duplicates(subset=['group'], keep='first', inplace=True)
     for i, row in teams.iterrows():
         this_team = row['group']
@@ -40,20 +37,20 @@ def wattle_csv_many_eyes():
         copyfile(file_from, file_to)
 
     f.load_tsv('students')
-    students=f.filter_row('students', 'role', 'Student')
-    user_list=[]
-    comment_list=[]
+    students = f.filter_row('students', 'role', 'Student')
+    user_list = []
+    comment_list = []
 
     # loop through each row and create a secret for each student
     for i, row in students.iterrows():
         user = row['user']
         role = row['role']
         project_team = row['group']
-        team_row=f.filter_row('data_tutor', 'team', project_team)
+        team_row = f.filter_row('data_tutor', 'team', project_team)
         if not team_row.empty:
-            team_performance=team_row.iloc[0]['suggestedindicator']
+            team_performance = team_row.iloc[0]['suggestedindicator']
         else:
-            team_performance="TBA"
+            team_performance = "TBA"
 
         if role != 'student':
             project_team = row['group']
@@ -84,4 +81,4 @@ def wattle_csv_many_eyes():
 
 
     # print message to console - complete!
-    f.pnt_notice(c.msg['console_complete'],os.path.basename(__file__))
+    f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))

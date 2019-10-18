@@ -8,25 +8,22 @@ assignment:
 # what type of feedback is this running
 # at this stage, marks and tmc are not compatible (one should be true, one false)
 feedback_type:
-  json: 'false'      # generate the json team list for wattle
-  marks: 'false'     # straight grading from wattle database 
-  tmc: 'false'      # include a team member contribution?
-  group: 'false'    # include the group marking
-  wattle: 'false'    # create a csv to upload to Wattle
-  analysis: 'true' # create an analysis file for markers
-  many_eyes: 'false' # create a many eyes report
-  course: 'false' # where collecting course feedback
+  json: False      # generate the json team list for wattle
+  marks: False     # straight grading from wattle database 
+  tmc: False      # include a team member contribution?
+  group: False    # include the group marking
+  wattle: False    # create a csv to upload to Wattle
+  analysis: False # create an analysis file for markers
+  many_eyes: False # create a many eyes report
+  course: False # where collecting course feedback
 
 # how will the crit be displayed
 crit_display:
-  text: 'true'
-  label: 'true'
-  scale: 'false'
-  graph: 'true'
-  rubric: 'true'   # put rubric on the last page
-
-fields:
-  marks_field: list_name # create for each student
+  text: True
+  label: True
+  scale: False
+  graph: True
+  rubric: True   # put rubric on the last page
 
 # messages in the pdf
 pdf_messages:
@@ -118,3 +115,49 @@ analytics:
   readability_comment: "for all comments, extracted using the Aylien NLP API"
   sentiment_header: "Sentiment Analysis of comments"
   summary_header: "Data extracted on comments"
+
+load_file:
+  students:
+    rename: {"user id":"user", "uniid":"user", "first_name":"firstname", "first":"firstname", "surname":"lastname", "projectteam":"group"}
+    required: ["user", "firstname", "lastname", "group"]
+    index: "user"
+  marks:
+    rename: {"username":"marker_id", "user":"marker"}
+    required: ["user", "list_name"]
+    index: "user"
+  fields:
+    rename: {}
+    required: ["field", "label"]
+    index: "field"
+  crit_levels:
+    rename: {"level":"index"}
+    required: ["index", "text"]
+    index: "index"
+  data_tmc:
+    rename: {"teamdropdown":"list_team", "list":"list_team"}
+    required: ["list_team", "user"]
+    index: "username"
+  data_self:
+    rename: {"crita":"crit_a", "critb":"crit_b", "confidential_comments":"comment_confidential"}
+    required: ["team", "crit_a", "crit_b", "crita_text", "critb_text"]
+    index: "username"
+  data_shadow:
+    rename: {"crita":"crit_a", "critb":"crit_b", "confidential_comments":"comment_confidential"}
+    required: ["team", "crit_a", "crit_b", "crita_text", "critb_text"]
+    index: "username"
+  data_tutor:
+    rename: {"list":"team", "commentgood":"comment_a", "commentimprove":"comment_b"}
+    required: ["team", "username"]
+    index: 
+  data_client:
+    rename: {"crita":"crit_a", "critb":"crit_b", "critc":"crit_c", "critd":"crit_d", "crite":"crit_e", "critf":"crit_f", "commentgood":"comment_a", "commentimprove":"comment_b", "confidential":"comment_confidential", "q5":"team", "q1_1":"crit_a", "q1_2":"crit_b", "q1_3":"crit_c", "q1_4":"crit_d", "q1_5":"crit_e", "q1_6":"crit_f", "q2":"comment_a", "q3":"comment_b", "q4":"comment_confidential"}
+    required: ["team"]
+    index: 
+  data_conv:
+    rename: {}
+    required: []
+    index: 
+  feedback_course:
+    rename: {}
+    required: ["tutor_name"]
+    index: 
