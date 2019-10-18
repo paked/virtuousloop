@@ -173,6 +173,7 @@ def analysis_marks():
     # create a stat_chart for the marker means
     f.make_stat_chart(marker, 'marker_name', 'grade_mean', 'grade_mean')
 
+
     # work through the readability stats to create a chart
     for readability_list in cfg['analytics']['readability_stats']:
         # geerate a df to te turn into a stat_chart
