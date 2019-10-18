@@ -202,7 +202,7 @@ def print_results_rubric(record_row, record):
             # work through the crit fields
             this_field = field_row.field
             this_field_desc = this_field + "_desc"
-            this_field_text = field_row.text
+            this_field_text = field_row.label
             this_field_weight = str(field_row.weight)
 
             # check the entry for this marks row
