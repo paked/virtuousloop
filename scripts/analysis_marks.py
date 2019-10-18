@@ -151,7 +151,7 @@ def analysis_marks():
                     # loop through the analysis for each comment
                     for i, row in comm.iterrows():
                         comment = row['field']
-                        field_text = row['text']
+                        field_text = row['label']
 
                         # load the nlp json response to read from
                         with open(c.d['nlp'] + this_marker_name + "_" + comment + ".json") as json_file:
@@ -181,7 +181,7 @@ def analysis_marks():
         # show results for different comments side-by-side
         for i, row in comm.iterrows():
             field = row['field']
-            text = row['text']
+            text = row['label']
             columns_old.append(field + "_" + readability_list[0])
             # get the human readabile value for titles in the chart
             columns_new.append(text)
