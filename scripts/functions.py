@@ -279,6 +279,9 @@ def check_for_empty_cells(dataframe, required_columns):
         try:
             if c.df[dataframe][column].isnull().values.any():
                 pnt_error("WARNING: There are empty cells in " + dataframe + "/" + column + ". Please fix the csv or the script may not behave as expected.")
+                if dataframe != 'students':
+                    this_dataframe=c.df[dataframe][required_columns]
+                    print(this_dataframe[this_dataframe[column].isnull()])
         except Exception:
             pnt_fail("ERROR: The column '" + column + "'' does not exist in " + dataframe + ".csv. Please fix the csv or the script may fail.")
 
