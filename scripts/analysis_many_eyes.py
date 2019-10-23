@@ -125,7 +125,10 @@ def analysis_many_eyes():
                         this_crit_df=this_df[this_df['crit_text'].str.contains(row['label'])]
                         this_stats_list.append(this_crit_df['crit_val'].mean())
                     else:
-                        this_stats_list.append(this_crit_df[row['field']].mean())
+                        try:
+                            this_stats_list.append(this_crit_df[row['field']].mean())
+                        except:
+                            this_stats_list.append(0)
             
             team_stats_list.append(this_stats_list)
 
@@ -170,7 +173,10 @@ def analysis_many_eyes():
                             this_team_crit_list.append([eye, row['crit_val']])
                     else:
                         for j, row in this_team_df.iterrows():
-                            this_team_crit_list.append([eye, row[this_crit_field]])
+                            try:
+                                this_team_crit_list.append([eye, row[this_crit_field]])
+                            except:
+                                this_team_crit_list.append([eye, 0])
             this_team_crit_df = pd.DataFrame(this_team_crit_list, columns = this_team_crit_header).T
             this_team_crit_df.columns = this_team_crit_df.iloc[0]
             this_team_crit_df = this_team_crit_df.iloc[1:].rename_axis(None, axis=1)
@@ -178,44 +184,49 @@ def analysis_many_eyes():
             f.make_audit_crit_chart(this_team_crit_df, c.d['charts'] + team + "_" + this_crit_field + "_audit.png")
     
     
-    self_crit_val_diff_list=[]
-    self_crit_val_abs_list=[]
-    self_wps_list=[]
+    self_crit_val_diff_list = []
+    self_crit_val_abs_list = []
+    self_wps_list = []
     for i, row in self_df.iterrows():
-        this_crit_val=row['crit_val']
-        this_crit_text=row['crit_text']
-        this_team=row['team']
-        this_wc=row['wc']
-        this_sc=row['sc']
+        this_crit_val = row['crit_val']
+        this_crit_text = row['crit_text']
+        this_team = row['team']
+        this_wc = row['wc']
+        this_sc = row['sc']
 
-        this_team_row=team_stats_ave_df[team_stats_ave_df['team'].str.contains(team)]
-        this_crit_ave=this_team_row.iloc[0][this_crit_text]
+        this_team_row = team_stats_ave_df[team_stats_ave_df['team'].str.contains(this_team)]
+        # this_crit_ave = this_team_row.iloc[0][this_crit_text]
+        this_crit_ave = 0
         
-        this_diff=this_crit_val - this_crit_ave
-        this_diff_abs=abs(this_diff)
+        this_diff = this_crit_val - this_crit_ave
+        this_diff_abs = abs(this_diff)
         
         self_crit_val_diff_list.append(this_diff)
         self_crit_val_abs_list.append(this_diff_abs)
 
-        this_wps=this_wc / this_sc
+        this_wps = this_wc / this_sc
         self_wps_list.append(this_wps)
 
-    self_df['crit_val_diff']=self_crit_val_diff_list
-    self_df['crit_val_abs']=self_crit_val_abs_list
-    self_df['wps']=self_wps_list
+    self_df['crit_val_diff'] = self_crit_val_diff_list
+    self_df['crit_val_abs'] = self_crit_val_abs_list
+    self_df['wps'] = self_wps_list
 
-    shadow_crit_val_diff_list=[]
-    shadow_crit_val_abs_list=[]
-    shadow_wps_list=[]
+    shadow_crit_val_diff_list = []
+    shadow_crit_val_abs_list = []
+    shadow_wps_list = []
     for i, row in shadow_df.iterrows():
+        print(shadow_df)
         this_crit_val=row['crit_val']
         this_crit_text=row['crit_text']
         this_team=row['team']
         this_wc=row['wc']
         this_sc=row['sc']
 
-        this_team_row=team_stats_ave_df[team_stats_ave_df['team'].str.contains(team)]
-        this_crit_ave=this_team_row.iloc[0][this_crit_text]
+        this_team_row=team_stats_ave_df[team_stats_ave_df['team'].str.contains(this_team)]
+        if not this_team_row.empty:
+            this_crit_ave=this_team_row.iloc[0][this_crit_text]
+        else:
+            this_crit_ave=0
 
         this_diff=this_crit_val - this_crit_ave
         this_diff_abs=abs(this_diff)
@@ -291,7 +302,7 @@ def analysis_many_eyes():
         # report to the console
         this_user=str(row['user'])
         this_first=str(row['firstname'])
-        this_last=str(row['last'])
+        this_last=str(row['lastname'])
         self_team=str(row['group'])
         shadow_team=str(row['shadowteam'])
 

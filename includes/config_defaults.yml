@@ -121,43 +121,54 @@ load_file:
     rename: {"user id":"user", "uniid":"user", "first_name":"firstname", "first":"firstname", "surname":"lastname", "projectteam":"group"}
     required: ["user", "firstname", "lastname", "group"]
     index: "user"
+    expected: ""
   marks:
     rename: {"username":"marker_id", "user":"marker"}
     required: ["user", "list_name"]
     index: "user"
+    expected: "crit"
   fields:
     rename: {}
     required: ["field", "label"]
     index: "field"
+    expected: ""
   crit_levels:
     rename: {"level":"index"}
     required: ["index", "text"]
     index: "index"
+    expected: ""
   data_tmc:
     rename: {"teamdropdown":"list_team", "list":"list_team"}
     required: ["list_team", "user"]
     index: "username"
+    expected: ""
   data_self:
     rename: {"crita":"crit_a", "critb":"crit_b", "confidential_comments":"comment_confidential"}
     required: ["team", "crit_a", "crit_b", "crita_text", "critb_text"]
     index: "username"
+    expected: "labels"
   data_shadow:
     rename: {"crita":"crit_a", "critb":"crit_b", "confidential_comments":"comment_confidential"}
     required: ["team", "crit_a", "crit_b", "crita_text", "critb_text"]
     index: "username"
+    expected: "labels"
   data_tutor:
     rename: {"list":"team", "commentgood":"comment_a", "commentimprove":"comment_b"}
     required: ["team", "username"]
     index: 
+    expected: "crit"
   data_client:
     rename: {"crita":"crit_a", "critb":"crit_b", "critc":"crit_c", "critd":"crit_d", "crite":"crit_e", "critf":"crit_f", "commentgood":"comment_a", "commentimprove":"comment_b", "confidential":"comment_confidential", "q5":"team", "q1_1":"crit_a", "q1_2":"crit_b", "q1_3":"crit_c", "q1_4":"crit_d", "q1_5":"crit_e", "q1_6":"crit_f", "q2":"comment_a", "q3":"comment_b", "q4":"comment_confidential"}
     required: ["team"]
     index: 
+    expected: "crit"
   data_conv:
     rename: {}
     required: []
     index: 
+    expected: "crit"
   feedback_course:
     rename: {}
     required: ["tutor_name"]
     index: 
+    expected: "crit"

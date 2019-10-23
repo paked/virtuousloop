@@ -85,11 +85,15 @@ def feedback_many_eyes():
     for j, row in crit.iterrows():
         class_self_crit_df=self_df[self_df['crit_text'].str.contains(row['label'])]
         class_shadow_crit_df=shadow_df[shadow_df['crit_text'].str.contains(row['label'])]
-                
         class_self_ave.append(class_self_crit_df['crit_val'].mean())
         class_shadow_ave.append(class_shadow_crit_df['crit_val'].mean())
         class_tutor_ave.append(tutor_df[row['field']].mean())
-        class_client_ave.append(client_df[row['field']].mean())
+            
+        try:
+            class_client_ave.append(client_df[row['field']].mean())
+        except:
+            print("there was a key error")
+            class_client_ave.append(0)
 
     # build a df for class averages
     class_ave_df = pd.DataFrame()
@@ -144,7 +148,11 @@ def feedback_many_eyes():
                 crit_client_ave.append('0')
         else:
             for l, row in crit.iterrows():
-                crit_client_ave.append(this_team_client_df[row['field']].mean())
+                try:
+                    crit_client_ave.append(this_team_client_df[row['field']].mean())
+                except KeyError:
+                    crit_client_ave.append(0)
+
 
         # create a df for the team to generate a graph
         this_team_ave_df = pd.DataFrame()

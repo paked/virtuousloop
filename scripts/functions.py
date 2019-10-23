@@ -301,6 +301,63 @@ def col_to_lower(dataframe, column):
         c.df[dataframe][column] = c.df[dataframe][column].str.lower()
 
 
+def check_for_columns(this_csv):
+    load_csv('fields')
+    col_to_lower('fields', 'field')
+    crit_df = filter_row('fields', 'field', 'crit_')
+    crit_list = create_list(crit_df, 'field')
+    this_csv = c.df[this_csv]
+
+    for crit in crit_list:
+        if crit not in this_csv.columns:
+            this_csv[crit] = '0'
+
+
+def check_for_labels(this_csv):
+    load_csv('fields')
+    col_to_lower('fields', 'field')
+    crit_df = filter_row('fields', 'field', 'crit_')
+    crit_list = create_list(crit_df, 'label')
+    # load_csv('this_csv')
+    # print(c.df[this_csv])
+    this_list_a = create_list(c.df[this_csv], 'crita_text')
+    this_list_b = create_list(c.df[this_csv], 'critb_text')
+    this_list = this_list_a + this_list_b
+    this_list = set(this_list)
+    difference = diff_between_lists(crit_list, this_list)
+    
+    if difference:
+        for item in difference:
+            pnt_fail("FATAL ERROR: please fix " + this_csv + ".csv or fields.csv")
+            pnt_fail("\tThe value \"" + item + "\" exists in " + this_csv + " but not in fields.csv")
+        exit()
+
+
+
+def diff_between_lists (list1, list2):
+    union = set(list1).union(set(list2))
+    intersection = set(list1).intersection(set(list2))
+    return list(union - intersection)
+
+    # print(bool(result_a))
+    # if bool(result_a):
+    #     print("*** ERROR MISMATCH ***")
+    #     print(result_a)
+    # if bool(result_b):
+    #     print("*** ERROR MISMATCH ***")
+    #     print(result_b)
+    # print(this_list_a)
+    # print("result a = " + str(result_a))
+    # print("result b = " + str(result_b))
+
+    
+    this_csv = c.df[this_csv]
+
+    for crit in crit_list:
+        if crit not in this_csv.columns:
+            this_csv[crit] = '0'
+
+
 def many_eyes_dataframe_sort(dataframe):
     cfg = load_config()
     this_df = c.df[dataframe].copy()

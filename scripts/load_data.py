@@ -29,8 +29,12 @@ def load_data():
         this_rename = cfg['load_file'][this_csv]['rename']
         this_required = cfg['load_file'][this_csv]['required']
         this_index = cfg['load_file'][this_csv]['index']
+        this_expected = cfg['load_file'][this_csv]['expected']
 
         f.load_csv(this_csv)
+
+        # if this_csv == 'data_client':
+            # remove first two lines of the qualtrics default csv
 
         if this_csv == 'feedback_course':
             c.df[this_csv]['tutor_name'] = c.df[this_csv]['tutor'].str.replace(' ', '_')
@@ -40,7 +44,6 @@ def load_data():
 
         if this_rename:
             f.rename_header(this_csv, this_rename)
-        
         if this_csv == 'marks':
             c.df[this_csv]['marker_name'] = c.df[this_csv]['marker'].str.replace(' ', '_')
             c.df[this_csv][['user', 'name']] = c.df[this_csv]['list_name'].str.split('\s+-\s+', expand=True)
@@ -48,6 +51,13 @@ def load_data():
             f.check_for_duplicates(this_csv, this_index)
         if this_required:
             f.check_for_empty_cells(this_csv, this_required)
+        if this_expected == "crit":
+            f.check_for_columns(this_csv)
+        elif this_expected == "labels":
+            f.check_for_labels(this_csv)
+
+        ## add crit rows if not exist
+
 
         f.save_tsv(this_csv)
 
