@@ -31,7 +31,7 @@ def wattle_csv():
     f.load_tsv('marks')
 
     # decide whether to use the list_team or list_name field
-    if cfg['feedback_type']['group'] == 'false':
+    if not cfg['feedback_type']['group']:
         # print message to console - creating secrets
         f.pnt_info(c.msg['console_secrets'])
 
