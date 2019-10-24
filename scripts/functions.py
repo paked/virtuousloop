@@ -677,7 +677,7 @@ def make_feedback_chart(dataframe, out):
     ax.set_xlabel("", fontsize=8)
     x_tick_labels = dataframe.index.values
     ax.set_xticklabels(x_tick_labels, rotation=0)
-    ax.set_ylabel('Count', labelpad=20, size=8, weight='bold')    
+    ax.set_ylabel('Percentage', labelpad=20, size=8, weight='bold')    
     ax.axhline(0, color='black', lw=1)
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)

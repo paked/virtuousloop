@@ -26,7 +26,7 @@ import json
 
 
 def analysis_marks():
-    
+
     cfg = f.load_config()
 
     f.pnt_notice(c.msg['console_start'], os.path.basename(__file__))
@@ -45,7 +45,7 @@ def analysis_marks():
     f.pnt_info(c.msg["console_creating_feedback_files"])
 
     # clean up marks df
-    c.df['marks'].loc[c.df['marks'].grade_calculated == 0, ['marker_name', 'marker_id']] = 'No_Submission', 'nil'
+    c.df['marks'].loc[c.df['marks'].grade_final == 0, ['marker_name', 'marker_id']] = 'No_Submission', 'nil'
 
     for comment in comment_list:
         c.df['marks'][comment + "_txt"] = c.df['marks'][comment].apply(f.html_to_text)
@@ -57,11 +57,14 @@ def analysis_marks():
             for readability_list in cfg['analytics']['readability_stats']:
                 f.readability_stats('marks', row, i, comment + '_txt', comment + "_" + readability_list[0], readability_list[1], readability_list[2])
 
+    # c.df['marks']['calc_calc_diff'] = c.df['marks']['grade_final'] - c.df['marks']['grade_calculated'] / cfg['assignment']['grade_final_out_of']
+    # c.df['marks']['calc_sugg_diff'] = c.df['marks']['grade_final'] - c.df['marks']['grade_suggested'] / cfg['assignment']['grade_final_out_of']
+    # print(c.df['marks'])
+
     # generate a dataframe with the readability stats for each marker
     # then replace any nil submissions with 'no submission'
-    marker = c.df['marks']['grade_calculated'].groupby([c.df['marks']['marker_name']]).mean().reset_index()
+    marker = c.df['marks']['grade_final'].groupby([c.df['marks']['marker_name']]).mean().reset_index()
     marker = marker[marker.marker_name != 'No_Submission']
-
     # create a marker_list for iteration
     marker_list = f.create_list(marker, 'marker_name')
 
@@ -72,40 +75,36 @@ def analysis_marks():
         print(criterion)
         this_crit_df = crit_levels['index']
         for i, row in marker.iterrows():
-            # create the stats for each marker
             this_marker_name = row['marker_name']
-            # get only the rows for this marker
             this_marker_df = f.filter_row('marks', 'marker_name', this_marker_name)
-            # turn the stats for the marker into a df
             this_marker_stats = f.make_crit_list(crit, this_marker_df)
-            # get the sum of the column for the stats so that the value can be given as a percentage
+            
             this_col_sum = this_marker_stats[criterion].sum()
-            # add the column
             this_marker_stats[this_marker_name] = this_marker_stats[criterion].apply(lambda x: x/this_col_sum*100)
-            # merge back to the crit_df
             this_crit_df = pd.merge(this_crit_df, this_marker_stats[this_marker_name], on='index')
         
-        # provide a mean value for the graph
         this_crit_df['average'] = this_crit_df.mean(axis=1)
-        # generate a chart for the criterion
+        this_crit_df = this_crit_df.set_index('index')
+
         f.make_feedback_chart(this_crit_df, c.d['charts'] + criterion + ".png")
+
+        print(marker)
+
 
 
     f.pnt_info("Analysing each marker...")
     # work through each marker
     for i, row in marker.iterrows():
         this_marker_name = row['marker_name']
-        # print to the console
         print(this_marker_name)
-        # get the relevant rows for the analysis
         this_group_df=f.filter_row('marks', 'marker_name', row['marker_name'])
 
-        marker.at[i, 'grade_count'] = this_group_df['grade_calculated'].count()
-        marker.at[i, 'grade_mean'] = this_group_df['grade_calculated'].mean()
-        marker.at[i, 'grade_min'] = this_group_df['grade_calculated'].min()
-        marker.at[i, 'grade_max'] = this_group_df['grade_calculated'].max()
-        marker.at[i, 'grade_std'] = this_group_df['grade_calculated'].std()
-        marker.at[i, 'grade_skew'] = this_group_df['grade_calculated'].skew()
+        marker.at[i, 'grade_count'] = this_group_df['grade_final'].count()
+        marker.at[i, 'grade_mean'] = this_group_df['grade_final'].mean()
+        marker.at[i, 'grade_min'] = this_group_df['grade_final'].min()
+        marker.at[i, 'grade_max'] = this_group_df['grade_final'].max()
+        marker.at[i, 'grade_std'] = this_group_df['grade_final'].std()
+        marker.at[i, 'grade_skew'] = this_group_df['grade_final'].skew()
 
         # generate the readability stats
         for comment in comment_list:
@@ -162,12 +161,9 @@ def analysis_marks():
                             try: 
                                 item_out = ""
                                 for item in this_nlp[name]:
-                                    # replace hashes so that they are not interpreted in markdown
                                     item_out = item.replace("#", "\\#")
-                                    # print to out each item in a list
                                     print("* " + item_out, file=out)
                             except:
-                                # if there's nothing there, print N/A
                                 print("* N/A", file=out)
     
     # create a stat_chart for the marker means
@@ -176,21 +172,18 @@ def analysis_marks():
 
     # work through the readability stats to create a chart
     for readability_list in cfg['analytics']['readability_stats']:
-        # geerate a df to te turn into a stat_chart
+
         columns_old = ['marker_name']
         columns_new = ['marker_name']
-        # show results for different comments side-by-side
+
         for i, row in comm.iterrows():
             field = row['field']
             text = row['label']
             columns_old.append(field + "_" + readability_list[0])
-            # get the human readabile value for titles in the chart
             columns_new.append(text)
-        # make a copy of the the marker df to get start
+
         this_marker = marker[columns_old].copy()
-        # replace the columns with the human readable values
         this_marker.columns = columns_new
-        # generate the stat chart for the readability value
         f.make_stat_chart(this_marker, 'marker_name', columns_new, readability_list[0])
 
     # start by creating a file to compile everything into
@@ -205,11 +198,13 @@ def analysis_marks():
         print("*" + cfg['analytics']['grade_table_comment']+ "*\n\n", file=out)
 
         # create a summary table for display
-        marker_html = marker[['marker_name','grade_count','grade_calculated','grade_std','grade_min','grade_max','grade_skew']].round(1)
+        marker_html = marker[['marker_name','grade_count','grade_final','grade_std','grade_min','grade_max','grade_skew']].round(1)
         marker_html.columns = ['Marker', 'Count', 'Mean', 'StDev', 'Min', 'Max', 'Skew']
         marker_html.set_index('Marker', inplace=True)
         print(marker_html.to_html(), file=out)
         
+        # **HERE***
+
         # header for rubric data
         print("# " + cfg['analytics']['rubric_header'] + "\n\n", file=out)
 
@@ -231,7 +226,6 @@ def analysis_marks():
         print("\n\n# " + cfg['analytics']['sentiment_header'] + "\n\n", file=out)
 
 
-
         sentiment_df = f.sentiment_table(comm, marker)
         sentiment_df.set_index('Name', inplace=True)
         print(sentiment_df.to_html(), file=out)
@@ -249,7 +243,7 @@ def analysis_marks():
                 out_file.write(in_file.read())
 
     with open(c.d['md'] + cfg['analytics']['filename'] + '.md', 'a') as out:
-        print("\n\n*** END OF ANALYSIS ***\n\n", file=out)
+        print("\n\n\n\n*** **END OF ANALYSIS** ***\n\n", file=out)
 
     # create the weasyprint variables
     with open(c.d['yaml'] + cfg['analytics']['filename'] + '.yaml', 'w') as out:

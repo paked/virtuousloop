@@ -4,6 +4,7 @@ assignment:
   assignment_title: 'Assignment Title'
   assignment_short: 'Short Title'
   feedback_url: 'https://eng.anu.edu.au/courses/engnfeedback/ENGNXXXX/2019-SX/XXXX'
+  grade_final_out_of: 100
 
 # what type of feedback is this running
 # at this stage, marks and tmc are not compatible (one should be true, one false)
