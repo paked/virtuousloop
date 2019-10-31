@@ -73,7 +73,7 @@ def feedback_marks():
                 if cfg['crit_display']['scale']:
                     f.print_results_scale(loop_row, record_row, out)
                 if cfg['crit_display']['graph']:
-                    f.print_results_graph(loop_row, out)
+                    f.print_results_graph(loop_row, record_row, out)
 
             # loop through the comment columns according to app_config
             for loop_row in comm.itertuples():

@@ -134,6 +134,9 @@ def create_list(dataframe, column):
         this_list.append(this_val)
     return this_list
 
+def column_round(dataframe, column, dec_places):
+    dataframe[column].round(decimals=dec_places)
+
 # ===========================================================
 #  print messages
 # ===========================================================
@@ -171,10 +174,11 @@ def print_results_scale(field, loop_row, record_row, out):
         print("![](" + this_image_url + ")\n\n", file=out)
 
 
-def print_results_graph(loop_row, out):
+def print_results_graph(loop_row, record_row, out):
     '''option for displaying graphs'''
     this_field = loop_row.field
-    this_image = c.d['charts'] + this_field + ".png"
+    this_result = getattr(record_row, this_field)
+    this_image = c.d['charts'] + this_field + "_" + this_result + ".png"
     print("![](../../." + this_image + ")\n\n", file=out)
 
 
@@ -536,22 +540,41 @@ def make_crit_list(crit, dataframe):
 
 
 def make_crit_chart(crit, stats, name):
+    print(crit)
     cfg = load_config()
     for i, crit_row in crit.iterrows():
-        this_crit = crit_row['field']
-        ax = stats[[this_crit]].plot(kind='bar', title ="", figsize=(10, 2), width=0.9, legend=False, fontsize=8, colormap=cfg['tmc_chart']['colormap'])
-        ax.set_xlabel("", fontsize=8)
-        ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
-        ax.get_yaxis().set_ticks([])
-        ax.spines['right'].set_visible(False)
-        ax.spines['left'].set_visible(False)
-        ax.spines['top'].set_visible(False)
-        if name == "na":
-            out = c.d['charts'] + this_crit + ".png"
-        else:
-            out = c.d['charts'] + this_crit + "_" + name + ".png"
-        plt.savefig(out, bbox_inches='tight')
-        plt.clf()
+        this_crit = crit_row["field"]
+        for pos in range(len(stats)):
+            this_value = stats.text[pos]
+            ax = stats[[this_crit]].plot(kind="bar", title ="", figsize=(10, 2), width=0.9, legend=False, fontsize=8, color="#23537D")
+            ax.patches[pos].set_facecolor("#26AD63")
+            ax.set_xlabel("", fontsize=8)
+            ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
+            ax.get_yaxis().set_ticks([])
+            ax.spines["right"].set_visible(False)
+            ax.spines["left"].set_visible(False)
+            ax.spines["top"].set_visible(False)
+            if name == "na":
+                out = c.d["charts"] + this_crit + "_" + this_value + ".png"
+            else:
+                out = c.d["charts"] + this_crit + "_" + name + "_" + this_value + ".png"
+            plt.savefig(out, bbox_inches="tight")
+            plt.clf()
+
+def make_count_chart(dataframe, name):
+    cfg = load_config()
+    ax = dataframe.plot(kind='bar', title ="", figsize=(10, 2), width=0.9, legend=False, fontsize=8, colormap=cfg['tmc_chart']['colormap'])
+    ax.set_xlabel("", fontsize=8)
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
+    ax.get_yaxis().set_ticks([])
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    if name == "na":
+        out = c.d['charts'] + "count_" + ".png"
+    else:
+        out = c.d['charts'] + "count_" + name + ".png"
+    plt.savefig(out, bbox_inches='tight')
+    plt.clf()
 
 
 def make_col_chart(dataframe, col, role, chart_min, chart_max):

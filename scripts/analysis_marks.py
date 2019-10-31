@@ -23,6 +23,7 @@ from wordcloud import WordCloud
 import subprocess
 import matplotlib.pyplot as plt
 import json
+import numpy as np
 
 
 def analysis_marks():
@@ -43,23 +44,22 @@ def analysis_marks():
     comment_list = f.create_list(comm, 'field')
 
     f.pnt_info(c.msg["console_creating_feedback_files"])
-
     # clean up marks df
     c.df['marks'].loc[c.df['marks'].grade_final == 0, ['marker_name', 'marker_id']] = 'No_Submission', 'nil'
 
     for comment in comment_list:
         c.df['marks'][comment + "_txt"] = c.df['marks'][comment].apply(f.html_to_text)
 
-    # gather the readability stats from each comment
+    f.pnt_console("Processing the marks file")
     for i, row in c.df['marks'].iterrows():
-        print(row['user'])
         for comment in comment_list:
             for readability_list in cfg['analytics']['readability_stats']:
                 f.readability_stats('marks', row, i, comment + '_txt', comment + "_" + readability_list[0], readability_list[1], readability_list[2])
 
-    # c.df['marks']['calc_calc_diff'] = c.df['marks']['grade_final'] - c.df['marks']['grade_calculated'] / cfg['assignment']['grade_final_out_of']
-    # c.df['marks']['calc_sugg_diff'] = c.df['marks']['grade_final'] - c.df['marks']['grade_suggested'] / cfg['assignment']['grade_final_out_of']
-    # print(c.df['marks'])
+    c.df['marks']['grade_final_pct'] = ( c.df['marks']['grade_final'] / cfg['assignment']['grade_final_out_of'] * 100 )
+    c.df['marks']['diff_final_sugg'] = (c.df['marks']['grade_final_pct'] - c.df['marks']['grade_suggested']).round(decimals=1)
+    c.df['marks']['diff_calc_sugg'] = (c.df['marks']['grade_calculated'] - c.df['marks']['grade_suggested']).round(decimals=1)
+
 
     # generate a dataframe with the readability stats for each marker
     # then replace any nil submissions with 'no submission'
@@ -74,7 +74,9 @@ def analysis_marks():
         # print to tho console
         print(criterion)
         this_crit_df = crit_levels['index']
+        print(this_crit_df)
         for i, row in marker.iterrows():
+
             this_marker_name = row['marker_name']
             this_marker_df = f.filter_row('marks', 'marker_name', this_marker_name)
             this_marker_stats = f.make_crit_list(crit, this_marker_df)
@@ -85,15 +87,36 @@ def analysis_marks():
         
         this_crit_df['average'] = this_crit_df.mean(axis=1)
         this_crit_df = this_crit_df.set_index('index')
+        print(this_crit_df)
 
-        f.make_feedback_chart(this_crit_df, c.d['charts'] + criterion + ".png")
+    bin_values = [-10, -5.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 5.5, 10]
+    bin_labels = [-10, -5, -2, -1, 0, 1, 2, 5, 10]
 
-        print(marker)
+    calc_sugg_df = pd.DataFrame(bin_labels,columns=['bin'])
+    final_sugg_df = pd.DataFrame(bin_labels,columns=['bin'])
+
+    c.df['marks']['bin_calc_sugg'] = pd.cut(c.df['marks']['diff_calc_sugg'], bins=bin_values, labels=bin_labels)
+    c.df['marks']['bin_final_sugg'] = pd.cut(c.df['marks']['diff_final_sugg'], bins=bin_values, labels=bin_labels)
+
+    for i, row in marker.iterrows():
+        this_marker_name = row['marker_name']
+        this_marker_df = f.filter_row('marks', 'marker_name', this_marker_name)
+
+        this_marker_calc_df = pd.DataFrame(this_marker_df.bin_calc_sugg.value_counts()).reset_index()
+        this_marker_calc_df = this_marker_calc_df.rename(columns={'index': 'bin'})
+
+        this_col_sum = this_marker_calc_df['bin_calc_sugg'].sum()
+        this_marker_calc_df[this_marker_name] = this_marker_calc_df['bin_calc_sugg'].apply(lambda x: x/this_col_sum*100)
+        this_marker_calc_df = this_marker_calc_df.drop(['bin_calc_sugg'], axis=1)
+        diff_calc_sugg_df = pd.merge(calc_sugg_df, this_marker_calc_df, on='bin')
+
+    calc_sugg_df = diff_calc_sugg_df.set_index("bin")
+    f.make_count_chart(calc_sugg_df, 'suggested')
 
 
 
     f.pnt_info("Analysing each marker...")
-    # work through each marker
+
     for i, row in marker.iterrows():
         this_marker_name = row['marker_name']
         print(this_marker_name)
