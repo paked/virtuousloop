@@ -145,7 +145,6 @@ def column_round(dataframe, column, dec_places):
 def print_results_header(loop_row, out):
     '''print the header for all fields'''
     cfg = load_config()
-    print(loop_row)
     this_label = loop_row.label
     this_description = loop_row.description
     
