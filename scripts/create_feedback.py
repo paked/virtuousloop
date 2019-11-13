@@ -22,6 +22,8 @@ from feedback_course import feedback_course
 
 cfg = f.load_config()
 
+f.print_credit()
+
 # process the columns needed to run the scripts
 load_data()
 

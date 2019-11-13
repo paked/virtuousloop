@@ -1,8 +1,18 @@
-Docker install instructions.
+# VirtuousLoop
 
-apt-get update && apt-get upgrade -y
-apt-get install build-essential python3-dev python3-pip python3-setuptools python3-wheel python3-cffi libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info git pandoc wget fonts-roboto -y
-pip3 install WeasyPrint pypandoc pyyaml pandas matplotlib unidecode readability spacy subprocess bs4 jq aylien-apiclient
+The VirtuousLoop collection of scripts takes input from a Moodle database activity, and turns it into a PDF feedback report. These can then be shared with students.
 
-python -m spacy download en_core_web_sm
-oh, and Roboto
+Currently, the main features include:
+
+* Feedback, such as a tutor marking assignments or in a peer review process
+* Team Member Contributions, such as in a group assignment
+* Course/Peer Feedback, such as during semester for course improvement or feedback on a peer's work
+* Many Eyes Feedback, to collate the views of many perspectives
+* Analysis on Marker Feedback, to aid with moderation
+* Analysis on Student Feedback, to provide feedback on peer review
+
+Alongside these, it can:
+
+* Create a csv file to upload feedback to Moodle gradebook
+* Create a json file to upload to a Moodle database activity
+

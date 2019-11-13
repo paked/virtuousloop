@@ -145,7 +145,7 @@ def column_round(dataframe, column, dec_places):
 def print_results_header(loop_row, out):
     '''print the header for all fields'''
     cfg = load_config()
-
+    print(loop_row)
     this_label = loop_row.label
     this_description = loop_row.description
     
@@ -195,7 +195,7 @@ def print_results_rubric(record_row, record):
 
         with open(c.h['rubric_header'], "r") as header:
             print(header.read(), file=out)
-        
+
         for level_row in levels.itertuples():
             this_col_header = level_row.text
             print("<th>" + this_col_header + "</th>", file=out)
@@ -329,7 +329,7 @@ def check_for_labels(this_csv):
     this_list = this_list_a + this_list_b
     this_list = set(this_list)
     difference = diff_between_lists(crit_list, this_list)
-    
+
     if difference:
         for item in difference:
             pnt_fail("FATAL ERROR: please fix " + this_csv + ".csv or fields.csv")
@@ -338,22 +338,10 @@ def check_for_labels(this_csv):
 
 
 
-def diff_between_lists (list1, list2):
+def diff_between_lists(list1, list2):
     union = set(list1).union(set(list2))
     intersection = set(list1).intersection(set(list2))
     return list(union - intersection)
-
-    # print(bool(result_a))
-    # if bool(result_a):
-    #     print("*** ERROR MISMATCH ***")
-    #     print(result_a)
-    # if bool(result_b):
-    #     print("*** ERROR MISMATCH ***")
-    #     print(result_b)
-    # print(this_list_a)
-    # print("result a = " + str(result_a))
-    # print("result b = " + str(result_b))
-
     
     this_csv = c.df[this_csv]
 
@@ -540,7 +528,6 @@ def make_crit_list(crit, dataframe):
 
 
 def make_crit_chart(crit, stats, name):
-    print(crit)
     cfg = load_config()
     for i, crit_row in crit.iterrows():
         this_crit = crit_row["field"]
@@ -798,3 +785,7 @@ def sentiment_table(columns, rows):
                 sentiment_list.append(sentiment_rows)
     # return the result
     return pd.DataFrame(sentiment_list, columns=sentiment_columns)
+
+def print_credit():
+    with open("./includes/pdf/ascii.txt", "r") as credit:
+            print(credit.read())

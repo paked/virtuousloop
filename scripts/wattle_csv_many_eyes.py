@@ -16,17 +16,10 @@ import functions as f
 def wattle_csv_many_eyes():
     cfg = f.load_config()
 
-    # print message to console - complete!
     f.pnt_notice(c.msg['console_start'], os.path.basename(__file__))
-
-    # organising the files for uploading to wattle
-    # print message to console
     f.pnt_info(c.msg["console_wattle"])
-
-    # get the list of students
     f.load_tsv('data_tutor')
 
-    # load data and create list of teams
     teams = f.load_tsv('students')
     teams.drop_duplicates(subset=['group'], keep='first', inplace=True)
     for i, row in teams.iterrows():
@@ -41,7 +34,6 @@ def wattle_csv_many_eyes():
     user_list = []
     comment_list = []
 
-    # loop through each row and create a secret for each student
     for i, row in students.iterrows():
         user = row['user']
         role = row['role']
@@ -61,24 +53,14 @@ def wattle_csv_many_eyes():
             comment += "<ul><li><a href=\"" + cfg['assignment']['feedback_url'] + "/" + str(project_team) + ".pdf\">PDF Feedback for your team: " + str(project_team) + "</a></li>"
             comment += "<li><a href=\"" + cfg['assignment']['feedback_url'] + "/" + str(shadow_team) + ".pdf\">PDF Feedback for shadow team: " + str(shadow_team) + "</a></li></ul>"
 
-            # update the df
             user_list.append(user)
             comment_list.append(comment)
 
-
-    # print message to console - final csv for upload
     f.pnt_info(c.msg['console_upload'])
-    # print(comments)
-    
-    # create an output file
 
     this_out = pd.DataFrame()
     this_out['users']=user_list
     this_out['feedback']=comment_list
-
     this_out.to_csv(c.f['wattle'], index=False)
 
-
-
-    # print message to console - complete!
     f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))

@@ -36,6 +36,7 @@ pdf_messages:
   tmc_header_2: 'Feedback from your team members'
   tmc_confidential: 'Confidential feedback'
 
+
 # variables for the pdf
 tmc_pdf:
   eval_header: 'Peer evaluation of contribution by team members'
@@ -169,7 +170,7 @@ load_file:
     index: 
     expected: "crit"
   feedback_course:
-    rename: {}
+    rename: {"tutor"}
     required: ["tutor_name"]
     index: 
     expected: "crit"

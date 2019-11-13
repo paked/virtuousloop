@@ -56,9 +56,6 @@ def load_data():
         elif this_expected == "labels":
             f.check_for_labels(this_csv)
 
-        ## add crit rows if not exist
-
-
         f.save_tsv(this_csv)
 
     # print message to console - complete!
@@ -67,15 +64,14 @@ def load_data():
 
 def make_json():
     '''make a json file for the team'''
-    
-    f.load_tsv('students')
 
+    f.load_tsv('students')
 
     teams = c.df['students'].groupby(['group']).count().reset_index()
     max_member_count = teams['user'].max()
 
     c.df['students'].dropna(how='any', subset=['user'], inplace=True)
-    
+
     # add a column with user - first last
     for row in c.df['students'].itertuples():
         def list_name(row):
@@ -91,11 +87,11 @@ def make_json():
             this_team_df = f.filter_row('students', 'group', team)
             print("\'" + team + "\': ", file=out, end='')
             this_team_list = [''] * max_member_count
-            
+
             for i, row in enumerate(this_team_df.itertuples()):
                 this_team_list[i] = row.list_name
             print(str(this_team_list) + ",", file=out)
-    
+
     # remove the final comma
     with open(c.f['json'], 'rb+') as out:
         out.seek(-2, os.SEEK_END)
