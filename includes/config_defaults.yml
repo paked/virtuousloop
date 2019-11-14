@@ -28,13 +28,14 @@ crit_display:
 
 # messages in the pdf
 pdf_messages:
+  comment_title: 'Qualitative feedback on your work'
   indicator_title: 'Indication against the criteria'
   indicator_note: "*The indicators refer to categories described in the Assessment Guide.*"
   rubric_title: 'Indication against the rubric'
   rubric_note: '*Note: highlights indicate the level achieved for each criterion. Where multiple levels are highlighted, your work shows aspects of both.*'
   tmc_header_1: 'Team Member Contributions'
   tmc_header_2: 'Feedback from your team members'
-  tmc_confidential: 'Confidential feedback'
+  tmc_confidential: 'Confidential feedback' 
 
 
 # variables for the pdf

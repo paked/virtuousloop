@@ -56,10 +56,9 @@ def analysis_marks():
             for readability_list in cfg['analytics']['readability_stats']:
                 f.readability_stats('marks', row, i, comment + '_txt', comment + "_" + readability_list[0], readability_list[1], readability_list[2])
 
-    c.df['marks']['grade_final_pct'] = ( c.df['marks']['grade_final'] / cfg['assignment']['grade_final_out_of'] * 100 )
+    c.df['marks']['grade_final_pct'] = ( c.df['marks']['grade_final'] / int(cfg['assignment']['grade_final_out_of']) * 100 )
     c.df['marks']['diff_final_sugg'] = (c.df['marks']['grade_final_pct'] - c.df['marks']['grade_suggested']).round(decimals=1)
     c.df['marks']['diff_calc_sugg'] = (c.df['marks']['grade_calculated'] - c.df['marks']['grade_suggested']).round(decimals=1)
-
 
     # generate a dataframe with the readability stats for each marker
     # then replace any nil submissions with 'no submission'
@@ -74,7 +73,6 @@ def analysis_marks():
         # print to tho console
         print(criterion)
         this_crit_df = crit_levels['index']
-        print(this_crit_df)
         for i, row in marker.iterrows():
 
             this_marker_name = row['marker_name']
@@ -87,7 +85,6 @@ def analysis_marks():
         
         this_crit_df['average'] = this_crit_df.mean(axis=1)
         this_crit_df = this_crit_df.set_index('index')
-        print(this_crit_df)
 
     bin_values = [-10, -5.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 5.5, 10]
     bin_labels = [-10, -5, -2, -1, 0, 1, 2, 5, 10]
@@ -109,11 +106,10 @@ def analysis_marks():
         this_marker_calc_df[this_marker_name] = this_marker_calc_df['bin_calc_sugg'].apply(lambda x: x/this_col_sum*100)
         this_marker_calc_df = this_marker_calc_df.drop(['bin_calc_sugg'], axis=1)
         diff_calc_sugg_df = pd.merge(calc_sugg_df, this_marker_calc_df, on='bin')
+        print(diff_calc_sugg_df)
 
     calc_sugg_df = diff_calc_sugg_df.set_index("bin")
     f.make_count_chart(calc_sugg_df, 'suggested')
-
-
 
     f.pnt_info("Analysing each marker...")
 
@@ -226,17 +222,20 @@ def analysis_marks():
         marker_html.set_index('Marker', inplace=True)
         print(marker_html.to_html(), file=out)
         
-        # **HERE***
-
         # header for rubric data
         print("# " + cfg['analytics']['rubric_header'] + "\n\n", file=out)
 
+
+        for loop_row in crit.itertuples():
+            f.print_results_header(loop_row, out)
+            print('*' + cfg['analytics']['rubric_comment']+ '*\n\n', file=out)
+            f.print_results_graph(loop_row, out)
+
         # iterate through the criteria
-        for j, row in crit.iterrows():
-            # display the fields according to app_config
-            f.print_results_header(row, out)
-            print('*' + cfg['analytics']['rubric_comment']+ '*', file=out)
-            f.print_results_graph(row, out)
+        # for j, row in crit.iterrows():
+        #     f.print_results_header(row, out)
+            
+        #     
 
         # header for readability data
         print("# " + cfg['analytics']['readability_header'] + "\n\n", file=out)
@@ -245,18 +244,14 @@ def analysis_marks():
             print("![](../../." + c.d['charts']  + readability_list[0] + ".png)\n\n", file=out)
             print("*" + cfg['crit_chart'][readability_list[0]] + cfg['analytics']['readability_comment'] + "*\n\n", file=out)
         
-        # header for sentiment_analysis
         print("\n\n# " + cfg['analytics']['sentiment_header'] + "\n\n", file=out)
-
 
         sentiment_df = f.sentiment_table(comm, marker)
         sentiment_df.set_index('Name', inplace=True)
         print(sentiment_df.to_html(), file=out)
 
-        # header for data extracted
         print("# " + cfg['analytics']['summary_header']+ "\n\n", file=out)
 
-    
     # combine the individual marker files
     with open(c.d['md'] + cfg['analytics']['filename'] + '.md', 'a') as out_file:
         for i, row in marker.iterrows():
@@ -268,11 +263,9 @@ def analysis_marks():
     with open(c.d['md'] + cfg['analytics']['filename'] + '.md', 'a') as out:
         print("\n\n\n\n*** **END OF ANALYSIS** ***\n\n", file=out)
 
-    # create the weasyprint variables
     with open(c.d['yaml'] + cfg['analytics']['filename'] + '.yaml', 'w') as out:
         f.pandoc_yaml(out, cfg['analytics']['filename'])
         
-    # create the weasyprint stylesheet
     with open(c.d['css'] + cfg['analytics']['filename'] + ".css", 'w') as out:
         f.pandoc_css(out, cfg['analytics']['filename'], 'anon')
 

@@ -53,16 +53,20 @@ def feedback_marks():
 
         #open up a file to print to
         with open(c.d['md'] + this_record + '.md', 'w') as out:
+            print("## " + cfg['pdf_messages']['comment_title'] + "{-}\n\n", file=out)
+            for loop_row in comm.itertuples():
+                f.print_results_header(loop_row, out)
+                f.print_results_text(loop_row, record_row, out)
 
+            #loop through the crit columns according to app_config
             if cfg['crit_display']['text']\
                 or cfg['crit_display']['scale']\
                 or cfg['crit_display']['graph']:
                 
                 # start with indicator title and notes
-                print("## " + cfg['pdf_messages']['indicator_title'] + "{-}\n\n", file=out)
+                print("# " + cfg['pdf_messages']['indicator_title'] + "{-}\n\n", file=out)
                 print(cfg['pdf_messages']['indicator_note'] + "\n\n", file=out)
 
-            #loop through the crit columns according to app_config
             for loop_row in crit.itertuples():
                 if cfg['crit_display']['text'] \
                     or cfg['crit_display']['scale'] \
@@ -74,11 +78,6 @@ def feedback_marks():
                     f.print_results_scale(loop_row, record_row, out)
                 if cfg['crit_display']['graph']:
                     f.print_results_graph(loop_row, record_row, out)
-
-            # loop through the comment columns according to app_config
-            for loop_row in comm.itertuples():
-                f.print_results_header(loop_row, out)
-                f.print_results_text(loop_row, record_row, out)
 
             if cfg['crit_display']['rubric']:
                 print("# " + cfg['pdf_messages']['rubric_title'] + "{-}\n\n", file=out)
