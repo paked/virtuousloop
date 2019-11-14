@@ -85,7 +85,7 @@ def format_tmc_feedback(team, kind, shape, dataframe):
     with open(c.d['md'] + this_out + ".md", 'w') as out:
         this_chart=c.d['charts'] + team + "_tmc_" + kind + ".png"
 
-        print("\n\n# " + cfg['pdf_messages']['tmc_header_1'] + "\n\n", file=out)
+        print("\n\n## " + cfg['pdf_messages']['tmc_header_1'] + "\n\n", file=out)
         print("\n\n## " + cfg['tmc_pdf']['eval_header'] + "\n\n", file=out)
         if ( cfg['tmc_pdf']['team_count_message'] == "true" ):
             print("**" + str(shape[1]) + "**" + " out of **" + str(shape[0]) + "** " + cfg['tmc_pdf']['count_message'] + "\n\n", file=out)

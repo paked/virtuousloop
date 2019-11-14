@@ -85,6 +85,8 @@ def analysis_marks():
         
         this_crit_df['average'] = this_crit_df.mean(axis=1)
         this_crit_df = this_crit_df.set_index('index')
+        f.make_count_chart(this_crit_df, criterion)
+
 
     bin_values = [-10, -5.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 5.5, 10]
     bin_labels = [-10, -5, -2, -1, 0, 1, 2, 5, 10]
@@ -106,9 +108,8 @@ def analysis_marks():
         this_marker_calc_df[this_marker_name] = this_marker_calc_df['bin_calc_sugg'].apply(lambda x: x/this_col_sum*100)
         this_marker_calc_df = this_marker_calc_df.drop(['bin_calc_sugg'], axis=1)
         diff_calc_sugg_df = pd.merge(calc_sugg_df, this_marker_calc_df, on='bin')
-        print(diff_calc_sugg_df)
+        calc_sugg_df = diff_calc_sugg_df.set_index("bin")
 
-    calc_sugg_df = diff_calc_sugg_df.set_index("bin")
     f.make_count_chart(calc_sugg_df, 'suggested')
 
     f.pnt_info("Analysing each marker...")
@@ -222,22 +223,19 @@ def analysis_marks():
         marker_html.set_index('Marker', inplace=True)
         print(marker_html.to_html(), file=out)
         
-        # header for rubric data
+        print("## Difference between suggested and calculated grade \n\n", file=out)
+        print("*This highlights the tendancy of markers to drift from the suggested mark provided in the Database*\n\n", file=out)
+        print("![](../../." + c.d['charts'] + "count_suggested.png)\n\n", file=out)
+        print("*Y-axis values are normalised.*\n\n", file=out)
+
         print("# " + cfg['analytics']['rubric_header'] + "\n\n", file=out)
-
-
         for loop_row in crit.itertuples():
+            criterion = loop_row.field
             f.print_results_header(loop_row, out)
             print('*' + cfg['analytics']['rubric_comment']+ '*\n\n', file=out)
-            f.print_results_graph(loop_row, out)
+            print("![](../../." + c.d['charts'] + "count_" + criterion + ".png)\n\n", file=out)
+            print("*Y-axis values are normalised.*\n\n", file=out)
 
-        # iterate through the criteria
-        # for j, row in crit.iterrows():
-        #     f.print_results_header(row, out)
-            
-        #     
-
-        # header for readability data
         print("# " + cfg['analytics']['readability_header'] + "\n\n", file=out)
         for readability_list in cfg['analytics']['readability_stats']:
             print("\n\n### " + cfg['crit_chart'][readability_list[0]], file=out)

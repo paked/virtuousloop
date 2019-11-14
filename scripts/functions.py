@@ -549,12 +549,18 @@ def make_crit_chart(crit, stats, name):
 
 def make_count_chart(dataframe, name):
     cfg = load_config()
-    ax = dataframe.plot(kind='bar', title ="", figsize=(10, 2), width=0.9, legend=False, fontsize=8, colormap=cfg['tmc_chart']['colormap'])
+    ax = dataframe.plot(kind='bar', title ="", figsize=(10, 2), width=0.9, legend=True, fontsize=8, colormap=cfg['tmc_chart']['colormap'])
     ax.set_xlabel("", fontsize=8)
     ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
     ax.get_yaxis().set_ticks([])
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
+    leg = plt.legend( loc = 'lower center', ncol=8)
+    bb = leg.get_bbox_to_anchor().inverse_transformed(ax.transAxes)
+    yOffset = 0.4
+    bb.y0 -= yOffset
+    bb.y1 -= yOffset
+    leg.set_bbox_to_anchor(bb, transform = ax.transAxes)
     if name == "na":
         out = c.d['charts'] + "count_" + ".png"
     else:

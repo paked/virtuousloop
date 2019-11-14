@@ -112,7 +112,7 @@ analytics:
   grade_chart_comment: "Mean grade awarded by marker"
   grade_table_header: "Descriptive statistics"
   grade_table_comment: "Descriptive statistics of grades awarded by marker"
-  rubric_header: "Distribution by rubric"
+  rubric_header: "Distribution by criterion"
   rubric_comment: "Graph of rubric distribution"
   readability_header: " Readability Statistics on comments"
   readability_comment: "for all comments, extracted using the Aylien NLP API"
