@@ -50,8 +50,8 @@ def wattle_csv_many_eyes():
             comment = "Your Team's Progress Indicator:"
             comment += "<ul><li><strong>" + team_performance + "</strong></li></ul>"
             comment += "Feedback for Your Teams:"
-            comment += "<ul><li><a href=\"" + cfg['assignment']['feedback_url'] + "/" + str(project_team) + ".pdf\">PDF Feedback for your team: " + str(project_team) + "</a></li>"
-            comment += "<li><a href=\"" + cfg['assignment']['feedback_url'] + "/" + str(shadow_team) + ".pdf\">PDF Feedback for shadow team: " + str(shadow_team) + "</a></li></ul>"
+            comment += "<ul><li><a href=\"" + cfg['assignment']['feedback_url'] + "/" + str(project_team) + "_" + cfg['assignment']['assignment_short'] + ".pdf\">PDF Feedback for your team: " + str(project_team) + "</a></li>"
+            comment += "<li><a href=\"" + cfg['assignment']['feedback_url'] + "/" + str(shadow_team) + "_" + cfg['assignment']['assignment_short'] + ".pdf\">PDF Feedback for shadow team: " + str(shadow_team) + "</a></li></ul>"
 
             user_list.append(user)
             comment_list.append(comment)
