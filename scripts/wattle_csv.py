@@ -16,6 +16,7 @@ from shutil import copyfile
 import config as c
 import functions as f
 
+
 def wattle_csv():
     cfg = f.load_config()
 
@@ -35,55 +36,45 @@ def wattle_csv():
         # print message to console - creating secrets
         f.pnt_info(c.msg['console_secrets'])
 
-        if c.df['marks'].is_file():
         # loop through each row and create a secret for each student
-            for i, row in c.df['marks'].iterrows():
-                user = row['user']
-                secret = hashlib.sha1(row['user'].encode('utf-8')).hexdigest()
-                secret_file = user + "-" + secret + ".pdf"
-                comment = "<a href=\"" + cfg['assignment']['feedback_url'] + "/" + user + "-" + secret + ".pdf\">PDF Feedback</a>"
-                
-                # update the df
-                c.df['marks'].at[i,'secret'] = comment
-                
-                # cp pdf to secret here
-                file_from = c.d['pdf'] + user + ".pdf"
-                file_to = c.d['upload'] + secret_file
-                copyfile(file_from, file_to)
-            marks_out=c.df['marks'][['user','grade_final','secret']]
-            wattle_out = marks_out.merge(c.df['students'], on='user', how='left')[['user','grade_final','secret']]
+        for i, row in c.df['marks'].iterrows():
+            user = row['user']
+            secret = hashlib.sha1(row['user'].encode('utf-8')).hexdigest()
+            secret_file = user + "-" + secret + ".pdf"
+            comment = "<a href=\"" + cfg['assignment'][
+                'feedback_url'] + "/" + user + "-" + secret + ".pdf\">PDF Feedback</a>"
+
+            # update the df
+            c.df['marks'].at[i, 'secret'] = comment
+
+            # cp pdf to secret here
+            file_from = c.d['pdf'] + user + ".pdf"
+            file_to = c.d['upload'] + secret_file
+            copyfile(file_from, file_to)
+        marks_out = c.df['marks'][['user', 'grade_final', 'secret']]
+        wattle_out = marks_out.merge(c.df['students'], on='user', how='left')[['user', 'grade_final', 'secret']]
+
     else:
-        if cfg['feedback_type']['tmc']:
-            if c.df['students'].is_file():
-                for loop_row in c.df['students'].itertuples():
-                    user = loop_row.user
-                    group = loop_row.group
-                    secret = hashlib.sha1(user.encode('utf-8')).hexdigest()
-                    secret_file = group + "-" + secret + ".pdf"
-                    comment = "<a href=\"" + cfg['assignment']['feedback_url'] + "/" + secret_file + "\">Team Member Contribution for " + group + "</a>"
-                    c.df['students'].at[i,'secret'] = comment
+        # loop through each row and create a secret for each student
+        for i, row in c.df['marks'].iterrows():
+            user = row['user']
+            group = row['list_team']
 
-                    file_from = c.d['pdf'] + group + ".pdf"
-                    file_to = c.d['upload'] + secret_file + ".pdf"
-                    copyfile(file_from, file_to)
-        else:  
-            if c.df['marks'].is_file():  
-                # loop through each row and create a secret for each student
-                for i, row in c.df['marks'].iterrows():
-                    user = row['user']
-                    group = row['list_team']
+            comment = "<a href=\"" + cfg['assignment'][
+                'feedback_url'] + "/" + group + ".pdf\">PDF Feedback for " + group + "</a>"
 
-                    comment = "<a href=\"" + cfg['assignment']['feedback_url'] + "/" + group + ".pdf\">PDF Feedback for " + group + "</a>"
+            c.df['marks'].at[i, 'secret'] = comment
 
-                    c.df['marks'].at[i,'secret'] = comment
-                    
-                    file_from = c.d['pdf'] + group + ".pdf"
-                    file_to = c.d['upload'] + group + ".pdf"
-                    copyfile(file_from, file_to)
+            # cp pdf to secret here
+            file_from = c.d['pdf'] + group + ".pdf"
+            file_to = c.d['upload'] + group + ".pdf"
+            copyfile(file_from, file_to)
 
-                    marks_out=c.df['marks'][['list_team','grade_final','secret']]
-                    wattle_out = marks_out.merge(c.df['students'], left_on='list_team', right_on='group', how='left')[['user','grade_final','secret','group']]
-    
+        marks_out = c.df['marks'][['list_team', 'grade_final', 'secret']]
+        print(marks_out)
+        wattle_out = marks_out.merge(c.df['students'], left_on='list_team', right_on='group', how='left')[
+            ['user', 'grade_final', 'secret', 'group']]
+        print(wattle_out)
     # print message to console - final csv for upload
     f.pnt_info(c.msg['console_upload'])
     wattle_out.to_csv(c.f['wattle'], index=False)
