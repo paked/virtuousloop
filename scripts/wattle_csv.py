@@ -31,6 +31,26 @@ def wattle_csv():
     f.load_tsv('students')
     f.load_tsv('marks')
 
+    if cfg['feedback_type']['tmc']:
+        f.pnt_info(c.msg['console_secrets'])
+        # loop through each row and create a secret for each student
+        for i, row in c.df['students'].iterrows():
+            user = row['user']
+            secret = hashlib.sha1(row['user'].encode('utf-8')).hexdigest()
+            secret_file = user + "-" + secret + ".pdf"
+            comment = "<a href=\"" + cfg['assignment'][
+                'feedback_url'] + "/" + user + "-" + secret + ".pdf\">PDF Feedback</a>"
+
+            # update the df
+            c.df['students'].at[i, 'secret'] = comment
+
+            # cp pdf to secret here
+            file_from = c.d['pdf'] + user + ".pdf"
+            file_to = c.d['upload'] + secret_file
+            copyfile(file_from, file_to)
+        marks_out = c.df['students'][['user', 'secret']]
+        wattle_out = marks_out.merge(c.df['students'], on='user', how='left')[['user', 'secret']]
+
     # decide whether to use the list_team or list_name field
     if not cfg['feedback_type']['group']:
         # print message to console - creating secrets
