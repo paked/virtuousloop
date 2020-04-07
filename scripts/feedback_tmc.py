@@ -11,13 +11,13 @@ import os
 import re
 from pandas import DataFrame
 import matplotlib.pyplot as plt
-# from PyPDF2 import PdfFileMerger
 import glob
 import config as c
 import functions as f
 
 # silence matplot warnings
 plt.rcParams.update({'figure.max_open_warning': 0})
+
 
 # main loop
 def feedback_tmc():
