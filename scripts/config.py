@@ -45,6 +45,7 @@ f = {
     "wattle_analysis": "./feedback/wattle_analysis_upload.csv",
     "json": "./feedback/archive/json/database.json",
     "feedback_course": "./files/feedback_course.csv",
+    "all_conf": "./feedback/all_tmc_conf.pdf"
 }
 
 t = {

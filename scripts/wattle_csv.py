@@ -8,6 +8,7 @@
 '''creates a file ready to upload to Wattle'''
 
 import os
+from os import path
 import csv
 import pandas as pd
 import yaml
@@ -32,27 +33,29 @@ def wattle_csv():
     f.load_tsv('marks')
 
     if cfg['feedback_type']['tmc']:
-        f.pnt_info(c.msg['console_secrets'])
-        # loop through each row and create a secret for each student
         for i, row in c.df['students'].iterrows():
             user = row['user']
+            group = row['group']
             secret = hashlib.sha1(row['user'].encode('utf-8')).hexdigest()
             secret_file = user + "-" + secret + ".pdf"
-            comment = "<a href=\"" + cfg['assignment'][
-                'feedback_url'] + "/" + user + "-" + secret + ".pdf\">PDF Feedback</a>"
+
+            # cp pdf to secret here
+            file_from = c.d['pdf'] + group + "_tmc_anon.pdf"
+            file_to = c.d['upload'] + secret_file
+
+            if path.exists(file_from):
+                copyfile(file_from, file_to)
+                comment = "<a href=\"" + cfg['assignment'][
+                    'feedback_url'] + "/" + user + "-" + secret + ".pdf\">PDF Feedback</a>"
+            else:
+                comment = "No Team Member Contribution received from the team"
 
             # update the df
             c.df['students'].at[i, 'secret'] = comment
-
-            # cp pdf to secret here
-            file_from = c.d['pdf'] + user + ".pdf"
-            file_to = c.d['upload'] + secret_file
-            copyfile(file_from, file_to)
-        marks_out = c.df['students'][['user', 'secret']]
-        wattle_out = marks_out.merge(c.df['students'], on='user', how='left')[['user', 'secret']]
+        wattle_out = c.df['students'][['user', 'secret']]
 
     # decide whether to use the list_team or list_name field
-    if not cfg['feedback_type']['group']:
+    elif not cfg['feedback_type']['group']:
         # print message to console - creating secrets
         f.pnt_info(c.msg['console_secrets'])
 
