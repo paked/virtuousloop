@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import glob
 import config as c
 import functions as f
+from PyPDF2 import PdfFileMerger
 
 # silence matplot warnings
 plt.rcParams.update({'figure.max_open_warning': 0})
@@ -67,13 +68,13 @@ def feedback_tmc():
 
     f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))
 
-    # all_conf = glob.glob(c.d['pdf'] + '/*_conf.pdf')
-    # all_conf.sort()
-    # merger = PdfFileMerger()
-    # for pdf in all_conf:
-    #     merger.append(pdf)
-    # merger.write(c.f['all_conf'])
-    # merger.close()
+    all_conf = glob.glob(c.d['pdf'] + '/*_conf.pdf')
+    all_conf.sort()
+    merger = PdfFileMerger()
+    for pdf in all_conf:
+        merger.append(pdf)
+    merger.write(c.f['all_conf'])
+    merger.close()
 
 
 # print feedback loop
