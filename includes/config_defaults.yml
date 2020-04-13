@@ -25,6 +25,8 @@ crit_display:
   scale: False
   graph: True
   rubric: True   # put rubric on the last page
+
+rubric_display:
   rubric_new_page: True
 
 # messages in the pdf

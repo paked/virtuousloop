@@ -80,7 +80,7 @@ def feedback_marks():
                     f.print_results_graph(loop_row, record_row, out)
 
             if cfg['crit_display']['rubric']:
-                if cfg['crit_display']['rubric_new_page']:
+                if cfg['rubric_display']['rubric_new_page']:
                     print("# " + cfg['pdf_messages']['rubric_title'] + "{-}\n\n", file=out)
                 else:
                     print("## " + cfg['pdf_messages']['rubric_title'] + "{-}\n\n", file=out)
