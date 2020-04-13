@@ -532,7 +532,7 @@ def make_crit_chart(crit, stats, name):
         this_crit = crit_row["field"]
         for pos in range(len(stats)):
             this_value = stats.text[pos]
-            ax = stats[[this_crit]].plot(kind="bar", title ="", figsize=(10, 2), width=0.9, legend=False, fontsize=8, color="#23537D")
+            ax = stats[[this_crit]].plot(kind="bar", title ="", figsize=(10, 3), width=1.0, legend=False, fontsize=8, color="#23537D")
             ax.patches[pos].set_facecolor("#26AD63")
             ax.set_xlabel("", fontsize=8)
             ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
@@ -549,7 +549,7 @@ def make_crit_chart(crit, stats, name):
 
 def make_count_chart(dataframe, name):
     cfg = load_config()
-    ax = dataframe.plot(kind='bar', title ="", figsize=(10, 2), width=0.9, legend=True, fontsize=8, colormap=cfg['tmc_chart']['colormap'])
+    ax = dataframe.plot(kind='bar', title ="", figsize=(10, 3), width=1.0, legend=True, fontsize=8, colormap=cfg['tmc_chart']['colormap'])
     ax.set_xlabel("", fontsize=8)
     ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
     ax.get_yaxis().set_ticks([])
@@ -602,10 +602,16 @@ def make_stat_chart(dataframe, group_axis, count_axis, title):
     this_colormap = cm.get_cmap(cfg['tmc_chart']['colormap'], 512)
     limited_colormap = ListedColormap(this_colormap(np.linspace(0.25, 0.75, 256)))
     this_title = cfg['crit_chart'][title]
-    ax = this.plot(kind='barh', title ="", figsize=(10, 3), width=0.9, legend=True, fontsize=8, colormap=limited_colormap)
+    ax = this.plot(kind='barh', title ="", figsize=(10, 3), width=1.0, legend=True, fontsize=8, colormap=limited_colormap)
     ax.tick_params(axis="both", which="both", bottom="off", top="off", labelbottom="on", left="off", right="off", labelleft="on")
     ax.set_xlabel(this_title.replace("_", " ").capitalize(), labelpad=20, size=8, weight='bold')
-    ax.set_ylabel(group_axis.replace("_", " ").capitalize(), labelpad=20, size=8, weight='bold')    
+    ax.set_ylabel(group_axis.replace("_", " ").capitalize(), labelpad=20, size=8, weight='bold')
+    leg = plt.legend( loc = 'lower center', ncol=8)
+    bb = leg.get_bbox_to_anchor().inverse_transformed(ax.transAxes)
+    yOffset = 0.5
+    bb.y0 -= yOffset
+    bb.y1 -= yOffset
+    leg.set_bbox_to_anchor(bb, transform = ax.transAxes)
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
     out = c.d['charts'] + title + ".png"
