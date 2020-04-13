@@ -212,17 +212,36 @@ def analysis_marks():
         print("## " + cfg['analytics']['analytics_header'] + "\n\n", file=out)
         # header for summary data
         print("### " + cfg['analytics']['grade_table_header'] + "\n\n", file=out)
-        print("![](../../." + c.d['charts'] + "grade_mean.png)\n\n", file=out)
-        print("*" + cfg['analytics']['grade_chart_comment']+ "*\n\n", file=out)
-        print("### " + cfg['analytics']['grade_table_header'] + "\n\n", file=out)
-        print("*" + cfg['analytics']['grade_table_comment']+ "*\n\n", file=out)
-
+        print("*" + cfg['analytics']['grade_table_comment'] + "*\n\n", file=out)
         # create a summary table for display
-        marker_html = marker[['marker_name','grade_count','grade_final','grade_std','grade_min','grade_max','grade_skew']].round(1)
+
+        overall_grade_count = c.df['marks']['grade_final'].replace(0, np.NaN).count().round(1)
+        overall_grade_mean = c.df['marks']['grade_final'].replace(0, np.NaN).mean().round(1)
+        overall_grade_min = c.df['marks']['grade_final'].replace(0, np.NaN).min().round(1)
+        overall_grade_max = c.df['marks']['grade_final'].replace(0, np.NaN).max().round(1)
+        overall_grade_std = c.df['marks']['grade_final'].replace(0, np.NaN).std().round(1)
+        overall_grade_skew = c.df['marks']['grade_final'].replace(0, np.NaN).skew().round(1)
+
+
+        marker_html = marker[
+            ['marker_name', 'grade_count', 'grade_final', 'grade_std', 'grade_min', 'grade_max', 'grade_skew']].round(1)
+        overall_row = ["Overall", overall_grade_count, overall_grade_mean, overall_grade_std, overall_grade_min, overall_grade_max, overall_grade_skew]
+        marker_html.loc[0] = overall_row
+
+        last_row = len(marker_html.index)
+        no_submission_count = len(c.df['marks'][c.df['marks']['grade_final'] == 0])
+
+        no_submission_row = ["No_Submission", no_submission_count, 'NA', 'NA', 'NA', 'NA', 'NA']
+        marker_html.loc[last_row] = no_submission_row  # adding a row
+        marker_html = marker_html.sort_index()  # sorting by index
+
         marker_html.columns = ['Marker', 'Count', 'Mean', 'StDev', 'Min', 'Max', 'Skew']
         marker_html.set_index('Marker', inplace=True)
         print(marker_html.to_html(), file=out)
-        
+
+        print("*" + cfg['analytics']['grade_chart_comment'] + "*\n\n", file=out)
+        print("![](../../." + c.d['charts'] + "grade_mean.png)\n\n", file=out)
+
         print("## Difference between suggested and calculated grade \n\n", file=out)
         print("*This highlights the tendancy of markers to drift from the suggested mark provided in the Database*\n\n", file=out)
         print("![](../../." + c.d['charts'] + "count_suggested.png)\n\n", file=out)

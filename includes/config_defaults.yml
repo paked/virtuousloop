@@ -112,7 +112,7 @@ analytics:
   grade_chart_header: "Average grades by marker"
   grade_chart_comment: "Mean grade awarded by marker"
   grade_table_header: "Descriptive statistics"
-  grade_table_comment: "Descriptive statistics of grades awarded by marker"
+  grade_table_comment: "Descriptive statistics of grades awarded by marker. 'Overall' excludes 'No submission'"
   rubric_header: "Distribution by criterion"
   rubric_comment: "Graph of rubric distribution"
   readability_header: " Readability Statistics on comments"
