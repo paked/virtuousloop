@@ -128,6 +128,10 @@ html {
   html body h1 {
     break-before: always;
   }
+  html body hr {
+    break-after: always;
+    border-width: 0px;
+  }
   html body h2, html body h3, html body h4 {
     color: black;
     font-weight: 600; }
@@ -399,6 +403,10 @@ th {
     border-collapse: collapse;
     table-layout: auto;
   }
+
+hr.new-page {
+  page-break-after: always;
+}
 
 table td:last-child{
     width:100%;

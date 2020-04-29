@@ -66,6 +66,7 @@ def feedback_marks():
                 # start with indicator title and notes
                 print("# " + cfg['pdf_messages']['indicator_title'] + "{-}\n\n", file=out)
                 print(cfg['pdf_messages']['indicator_note'] + "\n\n", file=out)
+                print(cfg['pdf_messages']['chart_note'] + "\n\n", file=out)
 
             for loop_row in crit.itertuples():
                 if cfg['crit_display']['text'] \
@@ -78,6 +79,8 @@ def feedback_marks():
                     f.print_results_scale(loop_row, record_row, out)
                 if cfg['crit_display']['graph']:
                     f.print_results_graph(loop_row, record_row, out)
+                if cfg['crit_display']['rubric_new_page']:
+                    f.print_new_page(out)
 
             if cfg['crit_display']['rubric']:
                 if cfg['rubric_display']['rubric_new_page']:

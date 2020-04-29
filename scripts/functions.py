@@ -158,19 +158,17 @@ def print_results_text(loop_row, record_row, out):
     '''option for displaying text results'''
     this_field = loop_row.field
     this_result = getattr(record_row, this_field)
-
     this_text_clean = BeautifulSoup(this_result, features="html5lib").get_text()
     print(this_text_clean + "\n\n", file=out)
     
 
-def print_results_scale(field, loop_row, record_row, out):
+def print_results_scale(loop_row, record_row, out):
     '''option for displaying scales'''
-    this_field = row['field']
-    this_result = str(record_row[this_field])
-    this_image = filter_row('crit_levels', 'index', '^' + this_result + '$').img.to_string(index=False).lstrip()
-    this_image_url = "../../files/scales/" + this_image
-    if field == 'crit':
-        print("![](" + this_image_url + ")\n\n", file=out)
+    this_field = loop_row.field
+    this_result = getattr(record_row, this_field)
+    this_image_url = "../../../files/scales/" + this_result + ".png"
+    # if field == 'crit':
+    print("![](" + this_image_url + ")\n\n", file=out)
 
 
 def print_results_graph(loop_row, record_row, out):
@@ -178,8 +176,11 @@ def print_results_graph(loop_row, record_row, out):
     this_field = loop_row.field
     this_result = getattr(record_row, this_field)
     this_image = c.d['charts'] + this_field + "_" + this_result + ".png"
+    print("Your performance in relation to others:\n\n", file=out)
     print("![](../../." + this_image + ")\n\n", file=out)
 
+def print_new_page(out):
+    print("\n\n<hr class=\"new_page\"></hr>\n\n", file=out)
 
 def print_results_rubric(record_row, record):
     '''option for displaying rubric'''
@@ -532,7 +533,7 @@ def make_crit_chart(crit, stats, name):
         this_crit = crit_row["field"]
         for pos in range(len(stats)):
             this_value = stats.text[pos]
-            ax = stats[[this_crit]].plot(kind="bar", title ="", figsize=(10, 3), width=1.0, legend=False, fontsize=8, color="#23537D")
+            ax = stats[[this_crit]].plot(kind="bar", title ="", figsize=(10, 2), width=1.0, legend=False, fontsize=8, color="#23537D")
             ax.patches[pos].set_facecolor("#26AD63")
             ax.set_xlabel("", fontsize=8)
             ax.set_xticklabels(ax.get_xticklabels(), rotation=0)

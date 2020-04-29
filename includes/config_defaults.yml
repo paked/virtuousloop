@@ -38,7 +38,8 @@ pdf_messages:
   rubric_note: '*Note: highlights indicate the level achieved for each criterion. Where multiple levels are highlighted, your work shows aspects of both.*'
   tmc_header_1: 'Team Member Contributions'
   tmc_header_2: 'Feedback from your team members'
-  tmc_confidential: 'Confidential feedback' 
+  tmc_confidential: 'Confidential feedback'
+  chart_note: '*Note: charts show a histogram of your performance against criteria in relation to other teams in the class. This information is useful for benchmarking current progress, and planning future actions.*'
 
 
 # variables for the pdf

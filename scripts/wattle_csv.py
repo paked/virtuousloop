@@ -77,14 +77,14 @@ def wattle_csv():
         marks_out = c.df['marks'][['user', 'grade_final', 'secret']]
         wattle_out = marks_out.merge(c.df['students'], on='user', how='left')[['user', 'grade_final', 'secret']]
 
-    else:
+    else: # use the list_team
         # loop through each row and create a secret for each student
         for i, row in c.df['marks'].iterrows():
-            user = row['user']
             group = row['list_team']
-
-            comment = "<a href=\"" + cfg['assignment'][
-                'feedback_url'] + "/" + group + ".pdf\">PDF Feedback for " + group + "</a>"
+            if 'suggested_indicator' in c.df['marks']:
+                comment = "Team Progress Indicator: " + row['suggested_indicator'] + "<br /><a href=\"" + cfg['assignment']['feedback_url'] + "/" + group + ".pdf\">PDF Feedback for " + group + "</a>"
+            else:
+                comment = "<a href=\"" + cfg['assignment']['feedback_url'] + "/" + group + ".pdf\">PDF Feedback for " + group + "</a>"
 
             c.df['marks'].at[i, 'secret'] = comment
 
@@ -98,9 +98,7 @@ def wattle_csv():
         wattle_out = marks_out.merge(c.df['students'], left_on='list_team', right_on='group', how='left')[
             ['user', 'grade_final', 'secret', 'group']]
         print(wattle_out)
-    # print message to console - final csv for upload
+
     f.pnt_info(c.msg['console_upload'])
     wattle_out.to_csv(c.f['wattle'], index=False)
-
-    # print message to console - complete!
     f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))
