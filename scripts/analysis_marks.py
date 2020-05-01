@@ -8,22 +8,14 @@
 '''runs some basic analysis on the marks for moderation'''
 
 import os
-import csv
 import pandas as pd
-import yaml
-from shutil import copyfile
 from pathlib import Path
 import config as c
 import functions as f
-import pypandoc
-from weasyprint import HTML
-import readability
-from bs4 import BeautifulSoup as soup
-from wordcloud import WordCloud
 import subprocess
-import matplotlib.pyplot as plt
 import json
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def analysis_marks():
@@ -82,10 +74,8 @@ def analysis_marks():
             this_col_sum = this_marker_stats[criterion].sum()
             this_marker_stats[this_marker_name] = this_marker_stats[criterion].apply(lambda x: x/this_col_sum*100)
             this_crit_df = pd.merge(this_crit_df, this_marker_stats[this_marker_name], on='index')
-        
-        this_crit_df['average'] = this_crit_df.mean(axis=1)
-        this_crit_df = this_crit_df.set_index('index')
-        f.make_count_chart(this_crit_df, criterion)
+
+        f.make_stacked_chart(this_crit_df, criterion)
 
 
     bin_values = [-10, -5.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 5.5, 10]
@@ -208,9 +198,7 @@ def analysis_marks():
 
     # start by creating a file to compile everything into
     with open(c.d['md'] + cfg['analytics']['filename'] + ".md", 'w') as out:
-        # header 1
         print("## " + cfg['analytics']['analytics_header'] + "\n\n", file=out)
-        # header for summary data
         print("### " + cfg['analytics']['grade_table_header'] + "\n\n", file=out)
         print("*" + cfg['analytics']['grade_table_comment'] + "*\n\n", file=out)
         # create a summary table for display
@@ -226,11 +214,9 @@ def analysis_marks():
         marker_html = marker[
             ['marker_name', 'grade_count', 'grade_final', 'grade_std', 'grade_min', 'grade_max', 'grade_skew']].round(1)
         overall_row = ["Overall", overall_grade_count, overall_grade_mean, overall_grade_std, overall_grade_min, overall_grade_max, overall_grade_skew]
-        marker_html.loc[0] = overall_row
-
+        marker_html.loc[-1] = overall_row
         last_row = len(marker_html.index)
         no_submission_count = len(c.df['marks'][c.df['marks']['grade_final'] == 0])
-
         no_submission_row = ["No_Submission", no_submission_count, 'NA', 'NA', 'NA', 'NA', 'NA']
         marker_html.loc[last_row] = no_submission_row  # adding a row
         marker_html = marker_html.sort_index()  # sorting by index

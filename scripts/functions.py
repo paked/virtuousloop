@@ -569,6 +569,30 @@ def make_count_chart(dataframe, name):
     plt.savefig(out, bbox_inches='tight')
     plt.clf()
 
+def make_stacked_chart(dataframe, name):
+    cfg = load_config()
+    dataframe.fillna(0, inplace=True)
+    dataframe['average'] = dataframe.mean(axis=1)
+    dataframe = dataframe.set_index('index')
+    this_dataframe = dataframe.T
+    print(this_dataframe)
+    ax = this_dataframe.plot(kind='barh', stacked=True, title ="", figsize=(10, 3), width=1.0, legend=True, fontsize=8, colormap=cfg['tmc_chart']['colormap'])
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    leg = plt.legend( loc = 'lower center', ncol=8)
+    bb = leg.get_bbox_to_anchor().inverse_transformed(ax.transAxes)
+    yOffset = 0.4
+    bb.y0 -= yOffset
+    bb.y1 -= yOffset
+    leg.set_bbox_to_anchor(bb, transform = ax.transAxes)
+
+    if name == "na":
+        out = c.d['charts'] + "count_" + ".png"
+    else:
+        out = c.d['charts'] + "count_" + name + ".png"
+    plt.savefig(out, bbox_inches='tight')
+    plt.clf()
+
 
 def make_col_chart(dataframe, col, role, chart_min, chart_max):
     cfg = load_config()
