@@ -533,7 +533,7 @@ def make_crit_chart(crit, stats, name):
         this_crit = crit_row["field"]
         for pos in range(len(stats)):
             this_value = stats.text[pos]
-            ax = stats[[this_crit]].plot(kind="bar", title ="", figsize=(10, 2), width=1.0, legend=False, fontsize=8, color="#23537D")
+            ax = stats[[this_crit]].plot(kind="bar", title ="", figsize=(10, 3), width=1.0, legend=False, fontsize=8, color="#23537D")
             ax.patches[pos].set_facecolor("#26AD63")
             ax.set_xlabel("", fontsize=8)
             ax.set_xticklabels(ax.get_xticklabels(), rotation=0)

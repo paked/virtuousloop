@@ -241,11 +241,10 @@ def analysis_marks():
         marker_html.set_index('Marker', inplace=True)
         print(marker_html.to_html(), file=out)
 
-        print("*" + cfg['analytics']['grade_chart_comment'] + "*\n\n", file=out)
-        # print("![](../../." + c.d['charts'] + "grade_mean.png)\n\n", file=out)
+        print("## Boxplot of final grades \n\n", file=out)
         print("![](../../." + c.d['charts'] + "grade_final_pct_boxplot.png)\n\n", file=out)
 
-        print("### Histogram of final grades \n\n", file=out)
+        print("## Histogram of final grades \n\n", file=out)
         print("![](../../." + c.d['charts'] + "grade_final_pct.png)\n\n", file=out)
 
         print("<div class=\"no-break\">\n\n", file=out)
@@ -263,7 +262,7 @@ def analysis_marks():
             print("![](../../." + c.d['charts'] + "count_" + criterion + ".png)\n\n", file=out)
             print("</div>\n\n", file=out)
 
-        print("# " + cfg['analytics']['readability_header'] + "\n\n", file=out)
+        print("## " + cfg['analytics']['readability_header'] + "\n\n", file=out)
         for readability_list in cfg['analytics']['readability_stats']:
             print("<div class=\"no-break\">\n\n", file=out)
             print("\n\n### " + cfg['crit_chart'][readability_list[0]], file=out)
@@ -271,7 +270,7 @@ def analysis_marks():
             print("*" + cfg['crit_chart'][readability_list[0]] + cfg['analytics']['readability_comment'] + "*\n\n", file=out)
             print("</div>\n\n", file=out)
 
-        print("\n\n# " + cfg['analytics']['sentiment_header'] + "\n\n", file=out)
+        print("\n\n## " + cfg['analytics']['sentiment_header'] + "\n\n", file=out)
 
         sentiment_df = f.sentiment_table(comm, marker)
         sentiment_df.set_index('Name', inplace=True)
