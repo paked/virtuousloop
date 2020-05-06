@@ -569,10 +569,11 @@ def make_count_chart(dataframe, name):
     plt.savefig(out, bbox_inches='tight')
     plt.clf()
 
-def make_stacked_chart(dataframe, name):
+def make_stacked_chart(dataframe, name, boolean):
     cfg = load_config()
     dataframe.fillna(0, inplace=True)
-    dataframe['average'] = dataframe.mean(axis=1)
+    if boolean:
+        dataframe['average'] = dataframe.mean(axis=1)
     dataframe = dataframe.set_index('index')
     this_dataframe = dataframe.T
     print(this_dataframe)
@@ -585,7 +586,6 @@ def make_stacked_chart(dataframe, name):
     bb.y0 -= yOffset
     bb.y1 -= yOffset
     leg.set_bbox_to_anchor(bb, transform = ax.transAxes)
-
     if name == "na":
         out = c.d['charts'] + "count_" + ".png"
     else:

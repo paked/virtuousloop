@@ -75,8 +75,8 @@ def analysis_marks():
             this_marker_stats[this_marker_name] = this_marker_stats[criterion].apply(lambda x: x/this_col_sum*100)
             this_crit_df = pd.merge(this_crit_df, this_marker_stats[this_marker_name], on='index')
 
-        f.make_stacked_chart(this_crit_df, criterion)
-
+        print(this_crit_df)
+        f.make_stacked_chart(this_crit_df, criterion, True)
 
     bin_values = [-10, -5.5, -2.5, -1.5, -0.5, 0.5, 1.5, 2.5, 5.5, 10]
     bin_labels = [-10, -5, -2, -1, 0, 1, 2, 5, 10]
@@ -100,7 +100,10 @@ def analysis_marks():
         diff_calc_sugg_df = pd.merge(calc_sugg_df, this_marker_calc_df, on='bin')
         calc_sugg_df = diff_calc_sugg_df.set_index("bin")
 
-    f.make_count_chart(calc_sugg_df, 'suggested')
+    calc_sugg_df.reset_index(inplace=True)
+    calc_sugg_df = calc_sugg_df.rename(columns={'bin': 'index'})
+    print(calc_sugg_df)
+    f.make_stacked_chart(calc_sugg_df, 'suggested', False)
 
     f.pnt_info("Analysing each marker...")
 
@@ -145,6 +148,13 @@ def analysis_marks():
         with open(c.d['md'] + this_marker_name + '.md', 'w') as out:
             print("\n\n## Analysis of " + this_marker_name + "'s Feedback\n\n", file=out)
 
+            # loop through the analysis for each comment
+            for i, row in comm.iterrows():
+                comment = row['field']
+                field_text = row['label']
+                print("\n\n## Wordcloud for " + field_text + "\n\n", file=out)
+                print("![](../../." + c.d['wordcloud'] + this_marker_name + "_" + comment + ".png) \n\n", file=out)
+
         # using enumerate to access list indices for name and title
         # work through the defined nlp endpoints
         for num, endpoint in enumerate(cfg['aylien']['endpoints'], start=0):
@@ -161,6 +171,7 @@ def analysis_marks():
                     for i, row in comm.iterrows():
                         comment = row['field']
                         field_text = row['label']
+
 
                         # load the nlp json response to read from
                         with open(c.d['nlp'] + this_marker_name + "_" + comment + ".json") as json_file:
@@ -228,25 +239,29 @@ def analysis_marks():
         print("*" + cfg['analytics']['grade_chart_comment'] + "*\n\n", file=out)
         print("![](../../." + c.d['charts'] + "grade_mean.png)\n\n", file=out)
 
+        print("<div class=\"no-break\">\n\n", file=out)
         print("## Difference between suggested and calculated grade \n\n", file=out)
         print("*This highlights the tendancy of markers to drift from the suggested mark provided in the Database*\n\n", file=out)
         print("![](../../." + c.d['charts'] + "count_suggested.png)\n\n", file=out)
-        print("*Y-axis values are normalised.*\n\n", file=out)
+        print("</div>\n\n", file=out)
 
         print("# " + cfg['analytics']['rubric_header'] + "\n\n", file=out)
         for loop_row in crit.itertuples():
+            print("<div class=\"no-break\">\n\n", file=out)
             criterion = loop_row.field
             f.print_results_header(loop_row, out)
             print('*' + cfg['analytics']['rubric_comment']+ '*\n\n', file=out)
             print("![](../../." + c.d['charts'] + "count_" + criterion + ".png)\n\n", file=out)
-            print("*Y-axis values are normalised.*\n\n", file=out)
+            print("</div>\n\n", file=out)
 
         print("# " + cfg['analytics']['readability_header'] + "\n\n", file=out)
         for readability_list in cfg['analytics']['readability_stats']:
+            print("<div class=\"no-break\">\n\n", file=out)
             print("\n\n### " + cfg['crit_chart'][readability_list[0]], file=out)
             print("![](../../." + c.d['charts']  + readability_list[0] + ".png)\n\n", file=out)
             print("*" + cfg['crit_chart'][readability_list[0]] + cfg['analytics']['readability_comment'] + "*\n\n", file=out)
-        
+            print("</div>\n\n", file=out)
+
         print("\n\n# " + cfg['analytics']['sentiment_header'] + "\n\n", file=out)
 
         sentiment_df = f.sentiment_table(comm, marker)

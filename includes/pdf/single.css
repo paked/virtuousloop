@@ -370,9 +370,12 @@ img{
   max-width:100%;
 }
 
-/*@media print {
-  h1 { display: block; page-break-before: always; }
-}*/
+@media print
+{
+    .no-break{
+        page-break-inside: avoid;
+    }
+}
 
 html body article#contents #TOC {
   margin-top: 100px;
