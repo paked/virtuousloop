@@ -639,8 +639,7 @@ def make_hist_chart(dataframe, col):
     plt.clf()
 
 def make_boxplot_chart(dataframe, col):
-    this_color = "#23537D"
-    ax = dataframe.boxplot(column=col, by='marker', grid=False, figsize=(10,4), zorder=2)
+    ax = dataframe.boxplot(column=col, by='marker', grid=False, figsize=(10,4), zorder=2, vert=False)
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
     ax.spines['left'].set_visible(False)
@@ -650,8 +649,7 @@ def make_boxplot_chart(dataframe, col):
         ax.axhline(y=tick, linestyle='dashed', alpha=0.4, color='#eeeeee', zorder=1)
     ax.set_title("")
     ax.set_xlabel("", labelpad=20, weight='bold', size=12)
-    ax.set_ylabel("Frequency", labelpad=20, weight='bold', size=12)
-    # x.yaxis.set_major_formatter(StrMethodFormatter('{x:,g}'))
+    ax.set_ylabel("", labelpad=20, weight='bold', size=12)
     out = c.d['charts'] + col + "_boxplot.png"
     plt.savefig(out, bbox_inches='tight')
     plt.clf()

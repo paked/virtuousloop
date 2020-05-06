@@ -45,7 +45,8 @@ def load_data():
         if this_rename:
             f.rename_header(this_csv, this_rename)
         if this_csv == 'marks':
-            c.df[this_csv]['marker_name'] = c.df[this_csv]['marker'].str.replace(' ', '_')
+            c.df[this_csv]['marker_name'] = c.df[this_csv]['marker'].str.replace('\'', '').str.replace(' ', '_')
+            print(c.df[this_csv]['marker_name'])
             if not cfg['feedback_type']['group']:
                 c.df[this_csv][['user', 'name']] = c.df[this_csv]['list_name'].str.split('\s+-\s+', expand=True)
         if this_index:

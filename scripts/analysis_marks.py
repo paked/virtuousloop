@@ -242,7 +242,8 @@ def analysis_marks():
         print(marker_html.to_html(), file=out)
 
         print("*" + cfg['analytics']['grade_chart_comment'] + "*\n\n", file=out)
-        print("![](../../." + c.d['charts'] + "grade_mean.png)\n\n", file=out)
+        # print("![](../../." + c.d['charts'] + "grade_mean.png)\n\n", file=out)
+        print("![](../../." + c.d['charts'] + "grade_final_pct_boxplot.png)\n\n", file=out)
 
         print("### Histogram of final grades \n\n", file=out)
         print("![](../../." + c.d['charts'] + "grade_final_pct.png)\n\n", file=out)
