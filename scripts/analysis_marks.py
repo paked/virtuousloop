@@ -52,6 +52,11 @@ def analysis_marks():
     c.df['marks']['diff_final_sugg'] = (c.df['marks']['grade_final_pct'] - c.df['marks']['grade_suggested']).round(decimals=1)
     c.df['marks']['diff_calc_sugg'] = (c.df['marks']['grade_calculated'] - c.df['marks']['grade_suggested']).round(decimals=1)
 
+    print(c.df['marks']['grade_final'])
+    f.make_hist_chart(c.df['marks'], 'grade_final_pct')
+    f.make_boxplot_chart(c.df['marks'], 'grade_final_pct')
+
+
     # generate a dataframe with the readability stats for each marker
     # then replace any nil submissions with 'no submission'
     marker = c.df['marks']['grade_final'].groupby([c.df['marks']['marker_name']]).mean().reset_index()
@@ -238,6 +243,9 @@ def analysis_marks():
 
         print("*" + cfg['analytics']['grade_chart_comment'] + "*\n\n", file=out)
         print("![](../../." + c.d['charts'] + "grade_mean.png)\n\n", file=out)
+
+        print("### Histogram of final grades \n\n", file=out)
+        print("![](../../." + c.d['charts'] + "grade_final_pct.png)\n\n", file=out)
 
         print("<div class=\"no-break\">\n\n", file=out)
         print("## Difference between suggested and calculated grade \n\n", file=out)

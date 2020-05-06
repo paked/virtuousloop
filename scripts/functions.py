@@ -618,6 +618,43 @@ def make_col_chart(dataframe, col, role, chart_min, chart_max):
     plt.savefig(out, bbox_inches='tight')
     plt.clf()
 
+def make_hist_chart(dataframe, col):
+    this_color = "#23537D"
+    ax = dataframe.hist(column=col, color=this_color, bins=20, grid=False, figsize=(10,4), zorder=2, rwidth=0.9, range=(0, 100))
+    ax = ax[0]
+    for x in ax:
+        x.spines['right'].set_visible(False)
+        x.spines['top'].set_visible(False)
+        x.spines['left'].set_visible(False)
+        x.tick_params(axis="both", which="both", bottom="off", top="off", labelbottom="on", left="off", right="off", labelleft="on")
+        vals = x.get_yticks()
+        for tick in vals:
+            x.axhline(y=tick, linestyle='dashed', alpha=0.4, color='#eeeeee', zorder=1)
+        x.set_title("")
+        x.set_xlabel("", labelpad=20, weight='bold', size=12)
+        x.set_ylabel("Frequency", labelpad=20, weight='bold', size=12)
+        # x.yaxis.set_major_formatter(StrMethodFormatter('{x:,g}'))
+    out = c.d['charts'] + col + ".png"
+    plt.savefig(out, bbox_inches='tight')
+    plt.clf()
+
+def make_boxplot_chart(dataframe, col):
+    this_color = "#23537D"
+    ax = dataframe.boxplot(column=col, by='marker', color=this_color, grid=False, figsize=(10,4), zorder=2)
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+    ax.spines['left'].set_visible(False)
+    ax.tick_params(axis="both", which="both", bottom="off", top="off", labelbottom="on", left="off", right="off", labelleft="on")
+    vals = ax.get_yticks()
+    for tick in vals:
+        ax.axhline(y=tick, linestyle='dashed', alpha=0.4, color='#eeeeee', zorder=1)
+    ax.set_title("")
+    ax.set_xlabel("", labelpad=20, weight='bold', size=12)
+    ax.set_ylabel("Frequency", labelpad=20, weight='bold', size=12)
+    # x.yaxis.set_major_formatter(StrMethodFormatter('{x:,g}'))
+    out = c.d['charts'] + col + "_boxplot.png"
+    plt.savefig(out, bbox_inches='tight')
+    plt.clf()
 
 def make_stat_chart(dataframe, group_axis, count_axis, title):
     cfg = load_config()
