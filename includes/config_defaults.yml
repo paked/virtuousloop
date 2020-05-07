@@ -57,7 +57,7 @@ audit_chart:
   find_labels: ['Below Baseline', 'Baseline', 'Baseline-Acceptable', 'Acceptable', 'Acceptable-Exemplary', 'Exemplary']
   replace_values: [-2, 0.1, 1, 2, 3, 4]
   find_client_labels: ['Well below expectations', 'Below expectations', 'About expectations', 'Above expectations', 'Well above expectations']
-  replace_client_values: [-2, -0.5, 0.5, 2, 3.5]
+  replace_client_values: [-2, -0.5, 1, 2, 3]
   # x and y axis titles
   x_axis_title: 'Audit criteria'
   y_axis_title: 'Perceived performance'
