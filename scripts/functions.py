@@ -460,6 +460,7 @@ def pandoc_html(this_file, this_record, kind):
 
 
 def pandoc_html_single(this_file):
+    cfg = load_config()
     try:
         if cfg['page']['layout'] == "landscape":
             subprocess.call("pandoc -s -t html5 \
