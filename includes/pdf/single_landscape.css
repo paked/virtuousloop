@@ -9,7 +9,7 @@ margin-bottom: 1.5cm;
 background-position: 0 0;
 background-repeat: no-repeat;
 position: relative;
-/*size: A4 landscape;*/
+size: A4 landscape;
 
   @top-left {
     height: 1cm;
