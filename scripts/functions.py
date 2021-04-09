@@ -214,7 +214,6 @@ def print_results_rubric(record_row, record):
 
             this_result_class_1 = filter_row('crit_levels', 'index', '^' + this_marks_result + '$').class1.to_string(index=False).lstrip()
             this_result_class_2 = filter_row('crit_levels', 'index', '^' + this_marks_result + '$').class2.to_string(index=False).lstrip()
-            print(this_marks_result + " " + this_result_class_1 + " " + this_result_class_2)
             # choose the flag
 
             if (this_result_class_1 == this_result_class_2):
@@ -231,7 +230,7 @@ def print_results_rubric(record_row, record):
                 this_level_index = level_row.index
                 this_level_text = getattr(level_row, this_field_desc)
 
-                print(this_level_index)
+                print(this_level_index + " " + this_result_class_1 + " " + this_result_class_2)
 
                 # start the cell
                 print("<td", file=out)
