@@ -231,6 +231,8 @@ def print_results_rubric(record_row, record):
                 this_level_index = level_row.index
                 this_level_text = getattr(level_row, this_field_desc)
 
+                print(this_level_index)
+
                 # start the cell
                 print("<td", file=out)
                 # add the flag if the level matches
