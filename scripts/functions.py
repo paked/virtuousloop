@@ -212,8 +212,8 @@ def print_results_rubric(record_row, record):
             # check the entry for this marks row
             this_marks_result = getattr(record_row, this_field)
 
-            this_result_class_1 = filter_row('crit_levels', 'index', '^' + this_marks_result + '$').class1.to_string(index=False).lstrip()
-            this_result_class_2 = filter_row('crit_levels', 'index', '^' + this_marks_result + '$').class2.to_string(index=False).lstrip()
+            this_result_class_1 = filter_row('crit_levels', 'index', '^' + str(this_marks_result) + '$').class1.to_string(index=False).lstrip()
+            this_result_class_2 = filter_row('crit_levels', 'index', '^' + str(this_marks_result) + '$').class2.to_string(index=False).lstrip()
             print("before loop")
             print(this_marks_result + " " + this_result_class_1 + " " + this_result_class_2)
             # choose the flag
