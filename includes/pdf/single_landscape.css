@@ -147,7 +147,7 @@ html {
   html body article#cover {
     /*background-color: #C7DDE8;*/
     margin: 0px;
-    height: 210mm;
+    height: 297mm;
     text-align: center; }
     html body article#cover h1 {
       padding-top: 400px;
@@ -205,7 +205,7 @@ html {
     background: #fbc847;
     margin: 0 -3cm 1cm;
     padding: 1cm 1cm 1cm 3cm;
-    width: 297mm; }
+    width: 21cm; }
   html body article#competences section {
     padding: .5cm 0; }
     html body article#competences section#table-content::before {
@@ -289,7 +289,7 @@ html {
   html body article#chapter {
     align-items: center;
     display: flex;
-    height: 210mm;
+    height: 297mm;
     justify-content: center;
     page: chapter; }
   html body article#typography section {
