@@ -236,7 +236,7 @@ def print_results_rubric(record_row, record):
                 # start the cell
                 print("<td", file=out)
                 # add the flag if the level matches
-                if (this_result_class_1 == this_level_index) or (this_result_class_2 == this_level_index):
+                if (this_result_class_1 is this_level_index) or (this_result_class_2 is this_level_index):
                     print(" class=" + flag, file=out)
 
                 # finish the table
