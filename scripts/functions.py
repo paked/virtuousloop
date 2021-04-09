@@ -462,9 +462,8 @@ def pandoc_html(this_file, this_record, kind):
 def pandoc_html_single(this_file):
     cfg = load_config()
     try:
-        if cfg['page']['layout']:
-            if cfg['page']['layout'] == "landscape":
-                subprocess.call("pandoc -s -t html5 \
+        if cfg['page']['layout'] == "landscape":
+            subprocess.call("pandoc -s -t html5 \
                             -c ../../../includes/pdf/single_landscape.css \
                             -c ../../." + c.d["css"] + this_file + ".css \
                             --metadata-file=" + c.d["yaml"] + this_file + ".yaml \
