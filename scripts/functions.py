@@ -187,6 +187,7 @@ def print_results_rubric(record_row, record):
     print(record_row)
     print("record")
     print(record)
+
     '''option for displaying rubric'''
     cfg = load_config()
 
@@ -194,6 +195,11 @@ def print_results_rubric(record_row, record):
 
     levels = filter_row('crit_levels', 'rubric', 'show')
     fields = filter_row('fields', 'field', 'crit_')
+
+    print("fields")
+    print(fields)
+    print("levels")
+    print(levels)
 
     with open(this_rubric, 'w') as out:
 
@@ -218,8 +224,7 @@ def print_results_rubric(record_row, record):
 
             this_result_class_1 = filter_row('crit_levels', 'index', '^' + str(this_marks_result) + '$').class1.to_string(index=False).lstrip()
             this_result_class_2 = filter_row('crit_levels', 'index', '^' + str(this_marks_result) + '$').class2.to_string(index=False).lstrip()
-            print("before loop")
-            print(this_marks_result + " " + this_result_class_1 + " " + this_result_class_2)
+
             # choose the flag
 
             if (this_result_class_1 == this_result_class_2):
@@ -236,7 +241,7 @@ def print_results_rubric(record_row, record):
                 this_level_index = level_row.index
                 this_level_text = getattr(level_row, this_field_desc)
 
-                print(this_level_index + " " + this_result_class_1 + " " + this_result_class_2)
+
 
                 # start the cell
                 print("<td", file=out)
