@@ -230,6 +230,9 @@ def print_results_rubric(record_row, record):
             # check the entry for this marks row
             this_marks_result = getattr(record_row, this_field)
 
+            this_result_class_1 = ''
+            this_result_class_2 = ''
+
             for level_row in levels.itertuples():
                 if this_marks_result == level_row.class1:
                     this_result_class_1 = this_marks_result
