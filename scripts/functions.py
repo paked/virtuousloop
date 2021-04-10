@@ -232,9 +232,9 @@ def print_results_rubric(record_row, record):
 
             for level_row in levels.itertuples():
                 if this_marks_result == level_row.class1:
-                    this_result_class_1 == this_marks_result
+                    this_result_class_1 = this_marks_result
                 if this_marks_result == level_row.class2:
-                    this_result_class_2 == this_marks_result
+                    this_result_class_2 = this_marks_result
 
             if (this_result_class_1 == this_result_class_2):
                 flag = "flag100"
