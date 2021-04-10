@@ -233,7 +233,9 @@ def print_results_rubric(record_row, record):
             this_result_class_1 = ''
             this_result_class_2 = ''
 
-            for level_row in levels.itertuples():
+            crit_levels = load_tsv('crit_levels')
+
+            for level_row in crit_levels.itertuples():
                 if this_marks_result == level_row.class1:
                     this_result_class_1 = this_marks_result
                 if this_marks_result == level_row.class2:
