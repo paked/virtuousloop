@@ -236,10 +236,9 @@ def print_results_rubric(record_row, record):
             crit_levels = load_tsv('crit_levels')
 
             for level_row in crit_levels.itertuples():
-                if this_marks_result == level_row.class1:
-                    this_result_class_1 = this_marks_result
-                if this_marks_result == level_row.class2:
-                    this_result_class_2 = this_marks_result
+                if this_marks_result == level_row.index:
+                    this_result_class_1 = level_row.class1
+                    this_result_class_2 = level_row.class2
 
             if (this_result_class_1 == this_result_class_2):
                 flag = "flag100"
