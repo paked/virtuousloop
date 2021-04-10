@@ -183,10 +183,7 @@ def print_new_page(out):
     print("\n\n<hr class=\"new_page\"></hr>\n\n", file=out)
 
 def print_results_rubric(record_row, record):
-    print("record row")
-    print(record_row)
-    print("record")
-    print(record)
+
 
     '''option for displaying rubric'''
     cfg = load_config()
@@ -196,8 +193,19 @@ def print_results_rubric(record_row, record):
     levels = filter_row('crit_levels', 'rubric', 'show')
     fields = filter_row('fields', 'field', 'crit_')
 
+    # pandas record row
+    print("record row")
+    print(record_row)
+
+    # string
+    print("record")
+    print(record)
+
+    # crit description
     print("fields")
     print(fields)
+
+    # N/HD etc
     print("levels")
     print(levels)
 
@@ -222,10 +230,11 @@ def print_results_rubric(record_row, record):
             # check the entry for this marks row
             this_marks_result = getattr(record_row, this_field)
 
-            this_result_class_1 = filter_row('crit_levels', 'index', '^' + str(this_marks_result) + '$').class1.to_string(index=False).lstrip()
-            this_result_class_2 = filter_row('crit_levels', 'index', '^' + str(this_marks_result) + '$').class2.to_string(index=False).lstrip()
-
-            # choose the flag
+            for level_row in levels.itertuples():
+                if this_marks_result == level_row.class1:
+                    this_result_class_1 == this_marks_result
+                if this_marks_result == level_row.class2:
+                    this_result_class_2 == this_marks_result
 
             if (this_result_class_1 == this_result_class_2):
                 flag = "flag100"
@@ -241,15 +250,13 @@ def print_results_rubric(record_row, record):
                 this_level_index = level_row.index
                 this_level_text = getattr(level_row, this_field_desc)
 
-
-
                 # start the cell
                 print("<td", file=out)
                 # add the flag if the level matches
-                if (this_result_class_1 is this_level_index) or (this_result_class_2 is this_level_index):
+                if (this_result_class_1 == this_level_index) or (this_result_class_2 == this_level_index):
                     print(" class=" + flag, file=out)
 
-                # finish the table
+                # finish the cell
                 print(">" + this_level_text + "</td>", file=out)
             print("</tr>", file=out)
 
