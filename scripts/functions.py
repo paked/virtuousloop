@@ -183,6 +183,10 @@ def print_new_page(out):
     print("\n\n<hr class=\"new_page\"></hr>\n\n", file=out)
 
 def print_results_rubric(record_row, record):
+    print("record row")
+    print(record_row)
+    print("record")
+    print(record)
     '''option for displaying rubric'''
     cfg = load_config()
 
