@@ -46,13 +46,13 @@ def feedback_tmc():
         print(team)
 
         this_data=f.filter_row('data_tmc', 'list_team', team)
-        print(this_data)
         team_header=this_data[tm_cols_id].values.tolist()[0]
         team_header[0]='reviews'
 
         team_data=this_data[tm_cols_tmc].values.tolist()
         
         this_conf_df=DataFrame.from_records(team_data, columns=team_header).set_index('reviews').dropna(axis=1, how='all')
+        print(this_conf_df)
         this_conf_df=this_conf_df.rename(columns=lambda x: re.sub(' - .*','',x)).T
         print(this_conf_df)
         this_anon_df=this_conf_df.rename(columns=lambda x: re.sub('u.*',cfg['tmc_chart']['anon_legend'],x))
