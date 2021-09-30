@@ -53,6 +53,7 @@ def feedback_tmc():
         
         this_conf_df=DataFrame.from_records(team_data, columns=team_header).set_index('reviews').dropna(axis=1, how='all')
         this_conf_df=this_conf_df.rename(columns=lambda x: re.sub(' - .*','',x)).T
+        print(this_conf_df)
         this_anon_df=this_conf_df.rename(columns=lambda x: re.sub('u.*',cfg['tmc_chart']['anon_legend'],x))
         
         shape=this_anon_df.shape
