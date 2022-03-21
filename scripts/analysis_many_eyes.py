@@ -357,11 +357,11 @@ def analysis_many_eyes():
                     print("<div class=\"new-page\">.</div>", file=out)
                     print("## Difference in review evaluations\n\n", file=out)
                     print("The difference in review evaluations helps to compare how your reviews compare to the average reviews from the 'many eyes'.\n\n", file=out)
-                    print("A negative value likely indicates that your review was below the average of reviews (i.e. on the more pessimistic side of the reviewers). "
-                          "A positive value likely indicates that your review was above the average of reviews (i.e. on the more optimistic side of the reviewers).
-                          "'1' represents a 'half band', such as the difference between 'Baseline' and 'Baseline-Acceptable'. '2' represents a 'full band', such as the difference between 'Baseline' and 'Acceptable'."
-                          "It is common to see the Self Reviews as more positive than the Shadow Reviews. "
-                          "This could be a prompt for a discussion between the Team and Shadows to help reconcile opinions and develop better understanding of each other's work*\n\n", file=out)
+                    print("A negative value likely indicates that your review was below the average of reviews (i.e. on the more pessimistic side of the reviewers)."
+                          " A positive value likely indicates that your review was above the average of reviews (i.e. on the more optimistic side of the reviewers)."
+                          " '1' represents a 'half band', such as the difference between 'Baseline' and 'Baseline-Acceptable'. '2' represents a 'full band', such as the difference between 'Baseline' and 'Acceptable'."
+                          " It is common to see the Self Reviews as more positive than the Shadow Reviews. "
+                          " This could be a prompt for a discussion between the Team and Shadows to help reconcile opinions and develop better understanding of each other's work*\n\n", file=out)
 
                     this_head=["Team","Role"]
                     this_self_list=[self_team,"Self"]
@@ -411,8 +411,9 @@ def analysis_many_eyes():
                     print("## Word Count\n\n", file=out)
                     print("The course guide requests you to complete 250-500 words per review.\n\n", file=out)
                     print("These data are provided for information to help benchmark the quantity of feedback you are providing in the reviews."
-                          "Note that 'more' is not necessarily better, but 'enough' is needed to provide value in the process."
-                          "Locate on the histograms where your feedback is situated: if it falls on the lower end, then consider providing more feedback in the next audit; if it falls on the upper end, then you have likely been helpful in the audit.\n\n", file=out)
+                          " Note that 'more' is not necessarily better, but 'enough' is needed to provide value in the process."
+                          " Locate on the histograms where your feedback is situated: if it falls on the lower end, then consider providing more feedback in the next audit; if it falls on the upper end, then you have likely been helpful in the audit.\n\n", file=out)
+
                     print("*Table of your review word count statistics*\n\n", file=out)
 
                     this_head=["Team","Role"]
@@ -460,8 +461,8 @@ def analysis_many_eyes():
                     print("## Words per Sentence Count\n\n", file=out)
                     print("Generally, shorter sentences are easier to read.\n\n", file=out)
                     print("This is a descriptive statistic that might prompt you to consider how to write clearer feedback. "
-                          "If you find yourself at the higher end of the histogram, consider putting your feedback together in shorter sentences to help readability"
-                          "If you find yourself as an outlier at the lower end of the histogram, consider how to put together your feedback in fuller sentences.\n\n", file=out)
+                          " If you find yourself at the higher end of the histogram, consider putting your feedback together in shorter sentences to help readability"
+                          " If you find yourself as an outlier at the lower end of the histogram, consider how to put together your feedback in fuller sentences.\n\n", file=out)
                     print("*Table of your review words per sentence count statistics*\n\n", file=out)
 
                     this_head=["Team","Role"]
@@ -510,7 +511,7 @@ def analysis_many_eyes():
                     print("<div class=\"new-page\">.</div>", file=out)
                     print("## Flesch–Kincaid readability test\n\n", file=out)
                     print("Based on a score out of 100, lower scores are typically harder to read: scores below 50 are considered difficult to read. [More information on Wikipedia](https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests)\n\n", file=out)
-                    print("All readability tests are problematic and have limitations. If you would like to improve your readability score, consider reducing the number of words per sentence (i.e. shorter sentences) or reducing the number of syllables per word (i.e. shorter words).\n\n", file=out)
+                    print(" All readability tests are problematic and have limitations. If you would like to improve your readability score, consider reducing the number of words per sentence (i.e. shorter sentences) or reducing the number of syllables per word (i.e. shorter words).\n\n", file=out)
                     print("*Table of your Flesch–Kincaid readability score statistics*\n\n", file=out)
 
                     this_head=["Team","Role"]
