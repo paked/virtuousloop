@@ -370,7 +370,7 @@ def analysis_many_eyes():
                                 this_self_list.append("**N/A**")
                     this_head.append("Class Average")
                     try:
-                        this_self_list.append(str(int(round(this_self_df['crit_val_abs'].mean()*4)/4)) + " (self)")
+                        this_self_list.append(str(int(round(self_df['crit_val_abs'].mean()*4)/4)) + " (self)")
                     except:
                         this_self_list.append("**N/A**")
 
@@ -384,7 +384,7 @@ def analysis_many_eyes():
 
                     this_head.append("Class Average")
                     try:
-                        this_shadow_list.append(str(int(round(this_shadow_df['crit_val_abs'].mean()*4)/4))  + " (shadow)")
+                        this_shadow_list.append(str(int(round(shadow_df['crit_val_abs'].mean()*4)/4))  + " (shadow)")
                     except:
                         this_shadow_list.append("**N/A**")
 
@@ -418,9 +418,9 @@ def analysis_many_eyes():
                             except:
                                 this_self_list.append("**N/A**")
 
-                    this_head.append("Class Average")
+                    this_head.append("Your Average")
                     try:
-                        this_self_list.append(str(int(round(this_self_df['wc'].mean()))) + " (self)")
+                        this_self_list.append(str(int(round(self_df['wc'].mean()))) + " (self)")
                     except:
                         this_self_list.append("**N/A**")
 
@@ -432,9 +432,9 @@ def analysis_many_eyes():
                             except:
                                 this_shadow_list.append("**N/A**")
 
-                    this_head.append("Class Average")
+                    this_head.append("Your Average")
                     try:
-                        this_shadow_list.append(str(int(round(this_shadow_df['wc'].mean())))  + " (shadow)")
+                        this_shadow_list.append(str(int(round(shadow_df['wc'].mean())))  + " (shadow)")
                     except:
                         this_shadow_list.append("**N/A**")
                     this_html_df=pd.DataFrame(list(zip(this_head, this_self_list, this_shadow_list))).T
@@ -466,7 +466,7 @@ def analysis_many_eyes():
 
                     this_head.append("Class Average")
                     try:
-                        this_self_list.append(str(int(round(this_self_df['wps'].mean()))) + " (self)")
+                        this_self_list.append(str(int(round(self_df['wps'].mean()))) + " (self)")
                     except:
                         this_self_list.append("**N/A**")
 
@@ -480,7 +480,7 @@ def analysis_many_eyes():
 
                     this_head.append("Class Average")
                     try:
-                        this_shadow_list.append(str(int(round(this_shadow_df['wps'].mean())))  + " (shadow)")
+                        this_shadow_list.append(str(int(round(shadow_df['wps'].mean())))  + " (shadow)")
                     except:
                         this_shadow_list.append("**N/A**")
 
@@ -514,7 +514,7 @@ def analysis_many_eyes():
                     
                     this_head.append("Class Average")
                     try:
-                        this_self_list.append(str(int(round(this_self_df['flesch'].mean()))) + " (self)")
+                        this_self_list.append(str(int(round(self_df['flesch'].mean()))) + " (self)")
                     except:
                         this_self_list.append("**N/A**")
 
@@ -528,7 +528,7 @@ def analysis_many_eyes():
                     
                     this_head.append("Class Average")
                     try:
-                        this_shadow_list.append(str(int(round(this_shadow_df['flesch'].mean())))  + " (shadow)")
+                        this_shadow_list.append(str(int(round(shadow_df['flesch'].mean())))  + " (shadow)")
                     except:
                         this_shadow_list.append("**N/A**")
 
@@ -670,7 +670,7 @@ def analysis_many_eyes():
         shadow_crit_score=this_shadow_df['crit_val_score'].sum()
 
         this_text_score=self_wc_score + shadow_wc_score + self_wps_score + shadow_wps_score + self_flesch_score + shadow_flesch_score
-        this_crit_score=self_crit_score + shadow_crit_score 
+        this_crit_score=self_crit_score + shadow_crit_score
         students.loc[i,'text_score'] = this_text_score
         students.loc[i,'crit_score'] = this_crit_score
 
