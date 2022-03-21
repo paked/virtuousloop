@@ -324,9 +324,10 @@ def analysis_many_eyes():
                 with open(c.d["md"] + str(this_user) + '.md', 'w') as out:
                     print("## " + this_user + " - " + this_first + " " + this_last + "\n\n", file=out)
                     print("**This feedback report shows analytics on the feedback you gave in the review.**\n\n", file=out)
-                    print("By considering the analytics in this report, you should get a sense of how your feedback compares to others.\n\n", file=out)
+                    print("By considering the analytics in this report, you should get a sense of how your feedback compares to others. This is provided for information to help guide expectations around feedback.\n\n", file=out)
                     print("# Project Audits\n\n", file=out)
                     print("*Compare your review to others' perspectives.*\n\n", file=out)
+                    print("It is expected that there will be some differences between reviews. You should consider your review compared to others and whether the discrepancy is due to a difference of opinion or if you have not seen the whole picture when undertaking your review. Use these data as a prompt for discussion within your team and with your shadows.\n\n", file=out)
                     print("## Project Team: " + self_team + "\n\n", file=out)
                     if this_self_df.empty:
                         print("* No review submitted", file=out)
@@ -355,7 +356,12 @@ def analysis_many_eyes():
 
                     print("<div class=\"new-page\">.</div>", file=out)
                     print("## Difference in review evaluations\n\n", file=out)
-                    print("*A negative value means that your review was below the average of reviews; positive, above. '2' represents a 'full band', such as the difference between 'Baseline' and 'Acceptable'.*\n\n", file=out)
+                    print("The difference in review evaluations helps to compare how your reviews compare to the average reviews from the 'many eyes'.\n\n", file=out)
+                    print("A negative value likely indicates that your review was below the average of reviews (i.e. on the more pessimistic side of the reviewers). "
+                          "A positive value likely indicates that your review was above the average of reviews (i.e. on the more optimistic side of the reviewers).
+                          "'1' represents a 'half band', such as the difference between 'Baseline' and 'Baseline-Acceptable'. '2' represents a 'full band', such as the difference between 'Baseline' and 'Acceptable'."
+                          "It is common to see the Self Reviews as more positive than the Shadow Reviews. "
+                          "This could be a prompt for a discussion between the Team and Shadows to help reconcile opinions and develop better understanding of each other's work*\n\n", file=out)
 
                     this_head=["Team","Role"]
                     this_self_list=[self_team,"Self"]
@@ -404,6 +410,9 @@ def analysis_many_eyes():
                     print("# Descriptive statistics about your comments\n\n", file=out)
                     print("## Word Count\n\n", file=out)
                     print("The course guide requests you to complete 250-500 words per review.\n\n", file=out)
+                    print("These data are provided for information to help benchmark the quantity of feedback you are providing in the reviews."
+                          "Note that 'more' is not necessarily better, but 'enough' is needed to provide value in the process."
+                          "Locate on the histograms where your feedback is situated: if it falls on the lower end, then consider providing more feedback in the next audit; if it falls on the upper end, then you have likely been helpful in the audit.\n\n", file=out)
                     print("*Table of your review word count statistics*\n\n", file=out)
 
                     this_head=["Team","Role"]
@@ -418,7 +427,7 @@ def analysis_many_eyes():
                             except:
                                 this_self_list.append("**N/A**")
 
-                    this_head.append("Your Average")
+                    this_head.append("Class Average")
                     try:
                         this_self_list.append(str(int(round(self_df['wc'].mean()))) + " (self)")
                     except:
@@ -432,7 +441,7 @@ def analysis_many_eyes():
                             except:
                                 this_shadow_list.append("**N/A**")
 
-                    this_head.append("Your Average")
+                    this_head.append("Class Average")
                     try:
                         this_shadow_list.append(str(int(round(shadow_df['wc'].mean())))  + " (shadow)")
                     except:
@@ -450,6 +459,9 @@ def analysis_many_eyes():
                     print("<div class=\"new-page\">.</div>", file=out)
                     print("## Words per Sentence Count\n\n", file=out)
                     print("Generally, shorter sentences are easier to read.\n\n", file=out)
+                    print("This is a descriptive statistic that might prompt you to consider how to write clearer feedback. "
+                          "If you find yourself at the higher end of the histogram, consider putting your feedback together in shorter sentences to help readability"
+                          "If you find yourself as an outlier at the lower end of the histogram, consider how to put together your feedback in fuller sentences.\n\n", file=out)
                     print("*Table of your review words per sentence count statistics*\n\n", file=out)
 
                     this_head=["Team","Role"]
@@ -498,6 +510,7 @@ def analysis_many_eyes():
                     print("<div class=\"new-page\">.</div>", file=out)
                     print("## Flesch–Kincaid readability test\n\n", file=out)
                     print("Based on a score out of 100, lower scores are typically harder to read: scores below 50 are considered difficult to read. [More information on Wikipedia](https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests)\n\n", file=out)
+                    print("All readability tests are problematic and have limitations. If you would like to improve your readability score, consider reducing the number of words per sentence (i.e. shorter sentences) or reducing the number of syllables per word (i.e. shorter words).\n\n", file=out)
                     print("*Table of your Flesch–Kincaid readability score statistics*\n\n", file=out)
 
                     this_head=["Team","Role"]
@@ -546,7 +559,8 @@ def analysis_many_eyes():
                     role_list=["self", "shadow"]
 
                     print("# Analytics generated from your comments", file=out)
-                    print("\n*" + cfg['analytics']['nlp_source_comment']+  "*\n", file=out)
+                    print("\n*" + cfg['analytics']['nlp_source_comment']+  "*\n\n", file=out)
+                    print("These data are views on your reviews using a natural language (NLP) API. NLP can be imprecise and produce some strange results; however, it does give a view of how your feedback is interpreted by a machine, and may provide some insights into where you might wish to place emphasise in your feedback.\n\n", file=out)
 
                     # using enumerate to access list indices for name and title
                     # work through the defined nlp endpoints
@@ -598,6 +612,8 @@ def analysis_many_eyes():
                         print("</article>", file=out)
                     print("\n\n# Wordclouds generated from your comments\n", file=out)
 
+                    print("Wordclouds provide a simple visual representation of the frequency of words used in your feedback - words that appear larger were used more frequently. Wordclouds provide an indication of frequency; however are limited in providing context as to how the words are correlated or used in combination.\n\n",file=out)
+
                     # loop through the analysis for each comment
                     for role in role_list:
                         print("**Your " + role + " review**\n\n", file=out)
@@ -606,6 +622,8 @@ def analysis_many_eyes():
                         
 
                     print("\n\n# Record of submissions", file=out)
+
+                    print("*Below is a record of your review submissions.* These should be as per your submission via Wattle, but may have formatting differences. If no submission was recorded, the record will state 'No Comment'.\n\n", file=out)
 
                     if this_self_df.empty:
                         print("* No review submitted", file=out)
