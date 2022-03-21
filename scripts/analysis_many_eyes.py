@@ -356,12 +356,12 @@ def analysis_many_eyes():
 
                     print("<div class=\"new-page\">.</div>", file=out)
                     print("## Difference in review evaluations\n\n", file=out)
-                    print("The difference in review evaluations helps to compare how your reviews compare to the average reviews from the 'many eyes'.\n\n", file=out)
+                    print("*The difference in review evaluations helps to compare how your reviews compare to the average reviews from the 'many eyes'.*\n\n", file=out)
                     print("A negative value likely indicates that your review was below the average of reviews (i.e. on the more pessimistic side of the reviewers)."
                           " A positive value likely indicates that your review was above the average of reviews (i.e. on the more optimistic side of the reviewers)."
                           " '1' represents a 'half band', such as the difference between 'Baseline' and 'Baseline-Acceptable'. '2' represents a 'full band', such as the difference between 'Baseline' and 'Acceptable'."
                           " It is common to see the Self Reviews as more positive than the Shadow Reviews. "
-                          " This could be a prompt for a discussion between the Team and Shadows to help reconcile opinions and develop better understanding of each other's work*\n\n", file=out)
+                          " This could be a prompt for a discussion between the Team and Shadows to help reconcile opinions and develop better understanding of each other's work.\n\n", file=out)
 
                     this_head=["Team","Role"]
                     this_self_list=[self_team,"Self"]
@@ -411,7 +411,7 @@ def analysis_many_eyes():
                     print("## Word Count\n\n", file=out)
                     print("The course guide requests you to complete 250-500 words per review.\n\n", file=out)
                     print("These data are provided for information to help benchmark the quantity of feedback you are providing in the reviews."
-                          " Note that 'more' is not necessarily better, but 'enough' is needed to provide value in the process."
+                          " Note that 'more' is not necessarily better, but 'enough' is needed to provide value in the Many Eyes process."
                           " Locate on the histograms where your feedback is situated: if it falls on the lower end, then consider providing more feedback in the next audit; if it falls on the upper end, then you have likely been helpful in the audit.\n\n", file=out)
 
                     print("*Table of your review word count statistics*\n\n", file=out)
@@ -460,8 +460,8 @@ def analysis_many_eyes():
                     print("<div class=\"new-page\">.</div>", file=out)
                     print("## Words per Sentence Count\n\n", file=out)
                     print("Generally, shorter sentences are easier to read.\n\n", file=out)
-                    print("This is a descriptive statistic that might prompt you to consider how to write clearer feedback. "
-                          " If you find yourself at the higher end of the histogram, consider putting your feedback together in shorter sentences to help readability"
+                    print("This is a descriptive statistic that might prompt you to consider how to write clearer feedback. It may not interpret structured text accurately, such as a list of suggestions that do not include full stops."
+                          " If you find yourself at the higher end of the histogram, consider putting your feedback together in shorter sentences to help readability."
                           " If you find yourself as an outlier at the lower end of the histogram, consider how to put together your feedback in fuller sentences.\n\n", file=out)
                     print("*Table of your review words per sentence count statistics*\n\n", file=out)
 
