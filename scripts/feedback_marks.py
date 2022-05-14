@@ -10,7 +10,7 @@
 import os
 import config as c
 import functions as f
-from jinja2 import Environment, PackageLoader
+from jinja2 import Environment, FileSystemLoader
 
 templateLoader = FileSystemLoader(searchpath="")
 env = Environment(loader=templateLoader)
