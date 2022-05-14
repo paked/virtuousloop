@@ -37,23 +37,21 @@ def feedback_marks():
         f.make_crit_chart(crit, stats, "na")
 
     # iterate through the marks file
-    for record_row in marks_dict.values():
+    for record in marks_dict.values():
 
-        print(record_row)
+        print(record)
         print(cfg)
 
 
         # decide whether to use the list_team or list_name field
         if cfg['feedback_type']['group']:
-            this_record = record_row.list_team
-            this_record_name = record_row.list_team
+            this_record = record['list_team']
+            this_record_name = record['list_team']
         else:
-            this_record = record_row.user
-            this_record_name = record_row.list_name
+            this_record = record['user']
+            this_record_name = record['list_name']
 
         f.pnt_console(this_record)
-
-
 
         options = ["anon"]
 
