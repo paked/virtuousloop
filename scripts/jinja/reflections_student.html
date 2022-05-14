@@ -1,0 +1,62 @@
+{% extends "pdf.html" %}
+{% block content %}
+<h1>{{ row.name }} - {{ options_dict.assignment_title[0] }}</h1>
+{% if reflections_dict %}
+    <h2>Summary of entries</h2>
+        <table class="dataframe">
+            <tr>
+                <th>Week</th><th>Reflection</th><th>Word count</th><th>Contribution</th><th>Word count</th>
+            </tr>
+            {% for key, entry in reflections_dict.items() %}
+            <tr>
+                <td>{{ entry.week|replace("k0", "k ") }}</td>
+                <td>
+                    {{ entry.reflection_wc_description }}
+                </td>
+                <td>
+                    {% if entry.reflection_wc > 2 %}
+                        {{ entry.reflection_wc }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    {{ entry.contribution_wc_description }}
+                </td>
+                <td>
+                    {% if entry.contribution_wc > 2 %}
+                        {{ entry.contribution_wc }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+
+        {% endfor %}
+        </table>
+
+    <p class="strong">{{ stats.total_word_count }} words over {{ stats.total_entries }} entries. {{ stats.desc }}</p>
+    <p class="">Notes, caveats, etc.:<ul>
+    <li>contributions as recorded here not expected weeks 1, 10, 11, nor in the breaks</li>
+    <li>most tutorials skipped a week, this is OK</li>
+    <li>where a submission was late, and included in the following week, this may not display correctly. Sorry.</li>
+    <li>you're probably right - word counts do not really measure the quality of your work</li></ul></p>
+
+    {{ chart_url }}
+
+    <h2>Popular Topics in Reflections</h2>
+    <h3>Your Reflections/Contributions</h3>
+    {{ user_network_url }}
+    <h3>The Whole Class's Reflections/Contributions</h3>
+    {{ class_network_url }}
+    <p class="note">The nodes (circles) represent common words extracted from reflections over the semester, and are sized according to their frequency. The edge (connecting line) widths show the frequency of the 'co-occurance' of these topics. A small number of common 'stop words' and some plurals have been removed/replaced from the corpus to aid visualisation.</p>
+    </h1>
+
+
+    <h1>Record of submissions</h1>
+    {% for key, entry in reflections_dict.items() %}
+    <h2>{{ entry.week|replace("k0", "k ") }}</h2>
+        {{ entry.comment_a }}
+    {% endfor %}
+{% endif %}
+{% endblock %}

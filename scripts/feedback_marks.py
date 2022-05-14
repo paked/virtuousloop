@@ -10,10 +10,9 @@
 import os
 import config as c
 import functions as f
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, PackageLoader
 
-templateLoader = FileSystemLoader()
-env = Environment(loader=templateLoader)
+env = Environment(loader=PackageLoader('jinja'))
 
 def feedback_marks():
     cfg = f.load_config()
