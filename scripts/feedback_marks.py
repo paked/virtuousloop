@@ -51,7 +51,7 @@ def feedback_marks():
         options_dict = {}
 
         for option in options:
-            template = env.get_template("templates/feedback_marks.html")
+            template = env.get_template("feedback_marks.html")
             with open(c.d['html'] + this_record + "-" + record.secret + "-" + option + '.html', 'w') as out:
                 out.write(template.render(
                     record=record,
