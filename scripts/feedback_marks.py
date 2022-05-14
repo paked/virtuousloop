@@ -34,6 +34,10 @@ def feedback_marks():
     # iterate through the marks file
     for record_row in marks_df.itertuples():
 
+        print(record_row)
+        print(crit)
+        print(comm)
+
         # decide whether to use the list_team or list_name field
         if cfg['feedback_type']['group']:
             this_record = record_row.list_team
