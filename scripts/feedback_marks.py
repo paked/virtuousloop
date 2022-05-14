@@ -18,8 +18,6 @@ env = Environment(loader=templateLoader)
 print(templateLoader)
 print(env)
 
-env = Environment(loader=PackageLoader('jinja'))
-
 def feedback_marks():
     cfg = f.load_config()
     f.pnt_notice(c.msg['console_start'], os.path.basename(__file__))
