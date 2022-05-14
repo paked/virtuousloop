@@ -6,11 +6,14 @@
 # ===========================================================
 
 '''turns the marks spreadsheet into pdf feedback'''
+'''expects one submission per row'''
 
 import os
 import config as c
 import functions as f
 from jinja2 import Template
+
+default_template = c.d['jinja'] + 'feedback_marks.html'
 
 def feedback_marks():
     cfg = f.load_config()
@@ -18,7 +21,8 @@ def feedback_marks():
     f.pnt_info(c.msg["console_loading"])
     
     # load in tsvs of needed fields
-    marks_df = f.load_tsv('marks')
+    marks_df = f.load_tsv('marks').to_dict()
+    marks_dict = marks_df.to_dict()
 
     # create a df of just the crit and the comments
     crit = f.filter_row('fields', 'field', 'crit_')
@@ -32,11 +36,7 @@ def feedback_marks():
         f.make_crit_chart(crit, stats, "na")
 
     # iterate through the marks file
-    for record_row in marks_df.itertuples():
-
-        print(record_row)
-        print(crit)
-        print(comm)
+    for record_row in marks_dict:
 
         # decide whether to use the list_team or list_name field
         if cfg['feedback_type']['group']:
@@ -48,18 +48,20 @@ def feedback_marks():
 
         f.pnt_console(this_record)
 
+        print(record_row)
+        print(cfg)
+
         options = ["anon"]
-        options_dict = {}
 
         for option in options:
-            with open(c.d['jinja'] + 'feedback_marks.html') as this_template:
+            with open(default_template) as this_template:
                 template = Template(this_template.read())
             with open(c.d['html'] + this_record + "-" + option + '.html', 'w') as out:
                 out.write(template.render(
                     record=record,
                     record_name=this_record_name,
                     option=option,
-                    options_dict=options_dict,
+                    options_dict=cfg,
                 ))
 
             f.pandoc_pdf(this_record + "-" + option)
