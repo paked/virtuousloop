@@ -15,6 +15,9 @@ import jinja2
 templateLoader = jinja2.FileSystemLoader(searchpath="")
 env = jinja2.Environment(loader=templateLoader)
 
+print(templateLoader)
+print(env)
+
 
 def feedback_marks():
     cfg = f.load_config()
