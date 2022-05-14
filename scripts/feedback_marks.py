@@ -10,13 +10,7 @@
 import os
 import config as c
 import functions as f
-from jinja2 import Environment, FileSystemLoader
-
-templateLoader = FileSystemLoader(searchpath="")
-env = Environment(loader=templateLoader)
-
-print(templateLoader)
-print(env)
+from jinja2 import Template
 
 def feedback_marks():
     cfg = f.load_config()
@@ -54,7 +48,8 @@ def feedback_marks():
         options_dict = {}
 
         for option in options:
-            template = env.get_template("feedback_marks.html")
+            with open('feedback_marks.html') as file_:
+                template = Template(file_.read())
             with open(c.d['html'] + this_record + "-" + record.secret + "-" + option + '.html', 'w') as out:
                 out.write(template.render(
                     record=record,
