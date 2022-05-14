@@ -26,6 +26,7 @@ d = {
     "txt": "./feedback/archive/txt/",
     "files": "./files/",
     "scales": "./files/scales/",
+    "jinja": "./jinja/",
 }
 
 f = {

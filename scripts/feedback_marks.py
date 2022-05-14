@@ -48,8 +48,8 @@ def feedback_marks():
         options_dict = {}
 
         for option in options:
-            with open('feedback_marks.html') as file_:
-                template = Template(file_.read())
+            with open(c.d['jinja'] + 'feedback_marks.html') as this_template:
+                template = Template(this_template.read())
             with open(c.d['html'] + this_record + "-" + record.secret + "-" + option + '.html', 'w') as out:
                 out.write(template.render(
                     record=record,
