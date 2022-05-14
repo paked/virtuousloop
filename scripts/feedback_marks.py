@@ -21,7 +21,7 @@ def feedback_marks():
     f.pnt_info(c.msg["console_loading"])
     
     # load in tsvs of needed fields
-    marks_df = f.load_tsv('marks').to_dict()
+    marks_df = f.load_tsv('marks')
     marks_dict = marks_df.to_dict()
 
     # create a df of just the crit and the comments
