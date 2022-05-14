@@ -12,8 +12,9 @@ import config as c
 import functions as f
 from jinja2 import Environment, PackageLoader, FileSystemLoader
 
+
 env = Environment(
-    loader=jinja2.FileSystemLoader('%s/templates/' % os.path.dirname(__file__))
+    loader=FileSystemLoader('%s/templates/' % os.path.dirname(__file__))
 )
 
 def feedback_marks():
