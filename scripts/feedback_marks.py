@@ -11,9 +11,7 @@
 import os
 import config as c
 import functions as f
-from jinja2 import Template
-
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Template, Environment, FileSystemLoader
 
 default_template = c.d['jinja'] + 'feedback_marks.html'
 
