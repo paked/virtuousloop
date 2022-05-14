@@ -10,6 +10,7 @@
 import os
 import config as c
 import functions as f
+import templates
 from jinja2 import Environment, PackageLoader
 
 env = Environment(loader=PackageLoader('templates'))
