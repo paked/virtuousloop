@@ -12,7 +12,7 @@ import config as c
 import functions as f
 from jinja2 import Environment, PackageLoader
 
-env = Environment()
+env = Environment(loader=PackageLoader('templates'))
 
 def feedback_marks():
     cfg = f.load_config()
