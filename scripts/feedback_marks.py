@@ -23,6 +23,7 @@ def feedback_marks():
     # load in tsvs of needed fields
     marks_df = f.load_tsv('marks')
     marks_dict = marks_df.to_dict()
+    print(marks_dict)
 
     # create a df of just the crit and the comments
     crit = f.filter_row('fields', 'field', 'crit_')
@@ -41,7 +42,7 @@ def feedback_marks():
         print(record_row)
         print(cfg)
 
-        
+
         # decide whether to use the list_team or list_name field
         if cfg['feedback_type']['group']:
             this_record = record_row.list_team
