@@ -14,6 +14,8 @@ import functions as f
 from jinja2 import Template, Environment, FileSystemLoader
 
 default_template = c.d['jinja'] + 'feedback_marks.html'
+print(default_template)
+print(FileSystemLoader(default_template))
 env = Environment(loader=FileSystemLoader(default_template))
 
 def feedback_marks():
