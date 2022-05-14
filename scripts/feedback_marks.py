@@ -18,6 +18,7 @@ env = Environment(loader=FileSystemLoader(default_template))
 
 def feedback_marks():
 
+    os.listdir(c.d['jinja'])
     print(default_template)
     print(FileSystemLoader(default_template))
 
