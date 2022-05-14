@@ -12,7 +12,7 @@ import config as c
 import functions as f
 from jinja2 import Environment, PackageLoader
 
-env = Environment(loader=PackageLoader('jinja'))
+env = Environment()
 
 def feedback_marks():
     cfg = f.load_config()
@@ -48,7 +48,6 @@ def feedback_marks():
 
         options = ["anon"]
         options_dict = {}
-
 
         for option in options:
             template = env.get_template("feedback_marks.html")
