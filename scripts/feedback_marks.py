@@ -12,8 +12,8 @@ import config as c
 import functions as f
 from jinja2 import Environment, FileSystemLoader
 
-templateLoader = jinja2.FileSystemLoader(searchpath="./templates/")
-env = jinja2.Environment(loader=templateLoader)
+templateLoader = FileSystemLoader(searchpath="./templates/")
+env = Environment(loader=templateLoader)
 
 print(outputText)
 
