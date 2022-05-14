@@ -50,7 +50,7 @@ def feedback_marks():
         for option in options:
             with open(c.d['jinja'] + 'feedback_marks.html') as this_template:
                 template = Template(this_template.read())
-            with open(c.d['html'] + this_record + "-" + record.secret + "-" + option + '.html', 'w') as out:
+            with open(c.d['html'] + this_record + "-" + option + '.html', 'w') as out:
                 out.write(template.render(
                     record=record,
                     record_name=this_record_name,
