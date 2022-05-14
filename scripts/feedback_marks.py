@@ -38,6 +38,10 @@ def feedback_marks():
     # iterate through the marks file
     for record_row in marks_dict:
 
+        print(record_row)
+        print(cfg)
+
+        
         # decide whether to use the list_team or list_name field
         if cfg['feedback_type']['group']:
             this_record = record_row.list_team
@@ -48,8 +52,7 @@ def feedback_marks():
 
         f.pnt_console(this_record)
 
-        print(record_row)
-        print(cfg)
+
 
         options = ["anon"]
 
