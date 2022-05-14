@@ -37,9 +37,9 @@ def feedback_marks():
         f.make_crit_chart(crit, stats, "na")
 
     # iterate through the marks file
-    for record_row in marks_dict:
+    for record_row in marks_dict.values():
 
-        print(record_row.values())
+        print(record_row)
         print(cfg)
 
 
