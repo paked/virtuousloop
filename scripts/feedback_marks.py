@@ -39,7 +39,7 @@ def feedback_marks():
     # iterate through the marks file
     for record_row in marks_dict:
 
-        print(record_row)
+        print(record_row.values())
         print(cfg)
 
 
