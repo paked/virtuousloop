@@ -18,7 +18,7 @@ env = Environment(loader=FileSystemLoader(default_template))
 
 def feedback_marks():
 
-    os.listdir(c.d['jinja'])
+    print(os.listdir(c.d['jinja']))
     print(default_template)
     print(FileSystemLoader(default_template))
 
@@ -29,7 +29,7 @@ def feedback_marks():
     # load in tsvs of needed fields
     marks_df = f.load_tsv('marks')
     marks_dict = marks_df.to_dict(orient='index')
-    print(marks_dict)
+    # print(marks_dict)
 
     # create a df of just the crit and the comments
     crit = f.filter_row('fields', 'field', 'crit_')
