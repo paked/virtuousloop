@@ -12,7 +12,7 @@ import config as c
 import functions as f
 import jinja2
 
-templateLoader = jinja2.FileSystemLoader(searchpath="./")
+templateLoader = jinja2.FileSystemLoader(searchpath="")
 env = jinja2.Environment(loader=templateLoader)
 
 
