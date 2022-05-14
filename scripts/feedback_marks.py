@@ -13,7 +13,7 @@ import config as c
 import functions as f
 from jinja2 import Template, Environment, FileSystemLoader
 
-default_template = c.d['jinja'] + 'feedback_marks.html'
+default_template = c.d['jinja']
 env = Environment(loader=FileSystemLoader(default_template))
 
 def feedback_marks():
