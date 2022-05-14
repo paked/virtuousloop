@@ -58,7 +58,7 @@ def feedback_marks():
                     options_dict=options_dict,
                 ))
 
-            f.pandoc_pdf(this_record + "-" + record.secret + "-" + option)
+            f.pandoc_pdf(this_record + "-" + option)
 
     f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))
 
