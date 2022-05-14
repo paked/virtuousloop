@@ -1,0 +1,29 @@
+
+**Feedback for:** {{ this_topic }}
+
+## Perceived Quality of Tutorial
+Below is a chart of perceived quality of the tutorial against the criteria.
+
+{{ chart_url }}
+
+*Note: a small amount of 'jitter' has been added to the data to aid visualisation - look for the clumps.*
+
+## Peer Review Feedback Given To You
+{% for key, value in topic_fb_dict.items() %}
+### Reviewer's Feedback
+{% if value.comment_confidential %}
+{{ value.comment_confidential }}
+{% else %}
+No comment
+{% endif %}
+{% endfor %}
+
+## Peer Review Feedback You Gave
+{% for key, value in student_fb_dict.items() %}
+## Your Feedback on {{ value.topic }}
+{% if value.comment_confidential %}
+{{ value.comment_confidential }}
+{% else %}
+No comment
+{% endif %}
+{% endfor %}

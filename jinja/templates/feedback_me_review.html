@@ -1,0 +1,52 @@
+{% extends "pdf.html" %}
+{% block title %}{{ student.topic }}{% endblock %}
+{% block author %}{% endblock %}
+{% block date %}{% endblock %}"/>
+{% block assignment_title %}{% endblock %}"/>
+{% block content %}
+<h1>Feedback for: {{ student.topic }}</h1>
+<h2>Perceived Quality of Your Primer</h2>
+<p>Below is a chart of perceived quality of the primer against the criteria.</p>
+<img src="../charts/{{ student.user }}.png" alt="student.user" />
+<p class="note">Note: a small amount of 'jitter' has been added to the data to aid visualisation - look for the clumps.</p>
+<p class="note">Remember, the peer review was on your draft, the self and tutor review was on your final. Self evaluation was relative to expectations; tutor evaluation was against marking criteria and normalised for the graph.</p>
+<h2>Tutor Feedback</h2>
+{% if topic_tutor_dict %}
+{% for key, value in topic_tutor_dict.items() %}
+{% if value.comment_a %}
+<p class="note">Note - marking was randomly assigned between tutors. If you have any concerns about your feedback below, please contact Chris.Browne@anu.edu.au and I'll chase up.</p>
+{{ value.comment_a }}
+{% else %}
+No comment
+{% endif %}
+{% endfor %}
+{% else %}
+<p class="note">It looks like you haven't received any feedback.</p>
+{% endif %}
+<h2>Your Self Review</h2>
+{% if topic_self_dict %}
+{% for key, value in topic_self_dict.items() %}
+{% if value.comment_confidential %}
+{{ value.comment_confidential }}
+{% else %}
+No comment
+{% endif %}
+{% endfor %}
+{% else %}
+<p class="note">It looks like you haven't received any feedback. Was this in error? Please contact Chris.Browne@anu.edu.au to help chase some reviews for you.</p>
+{% endif %}
+<h2>Peer Review Feedback Given To You</h2>
+{% if topic_peer_dict %}
+<p class="note">You received {{ topic_peer_dict|length }} out of an expected 2 reviews.</p>
+{% for key, value in topic_peer_dict.items() %}
+<h3>Reviewer's Feedback</h3>
+{% if value.comment_confidential %}
+{{ value.comment_confidential }}
+{% else %}
+No comment
+{% endif %}
+{% endfor %}
+{% else %}
+<p class="note">It looks like you haven't received any feedback. Was this in error? Please contact Chris.Browne@anu.edu.au to help chase some reviews for you.</p>
+{% endif %}
+{% endblock %}

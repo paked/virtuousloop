@@ -1,0 +1,15 @@
+{% extends "pdf.html" %}
+{% block title %}{{ record_name|replace("_", " ") }}{% endblock %}
+{% block author %}{% endblock %}
+{% block date %}{% endblock %}"/>
+{% block assignment_title %}{% endblock %}"/>
+{% block content %}
+    <h1>Feedback for {{ record_name|replace("_", " ") }}</h1>
+    <p>Perceived performance on this task against the criteria.</p>
+    {{  chart_url }}
+    <h2>General feedback</h2>
+        {% for key, entry in record.items() %}
+            <h3>Tutor</h3>
+            {{ entry.comment_a }}
+        {% endfor %}
+{% endblock %}

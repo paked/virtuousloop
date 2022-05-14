@@ -1,0 +1,22 @@
+{% extends "pdf.html" %}
+{% block content %}
+<h1>{{ options_dict.course[0] }} - {{ week|replace("Week", "Week ")|replace(" 0"," ") }} {{ options_dict.assignment_title[0] }}</h1>
+    <h2>Popular Topics in Reflections</h2>
+    {{ network_url }}
+    <p class="note">The nodes (circles) represent words extracted from all reflections on this topic, and are sized according to their frequency. The edge (connecting line) widths show the frequency of the 'co-occurance' of these topics. A small number of common 'stop words' and some plurals have been removed/replaced from the corpus to aid visualisation.</p>
+    <h1>Reflections from students</h1>
+{% if reflections_dict %}
+{% for key, value in reflections_dict.items() %}
+{% if option == "anon" %}
+    <h3>Student</h3>
+{% else %}
+<h3>{{ value.user }}</h3>
+{% endif %}
+{% if value.comment_a %}
+<p>{{ value.comment_a }}</p>
+{% else %}
+No comment
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endblock %}

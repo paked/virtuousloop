@@ -1,0 +1,44 @@
+
+**Facilitated by:** {% for key, value in topics_dict.items() %} *{{ value.name }}* {%  endfor %}
+
+**Primer Topics:** {% for key, value in topics_dict.items() %} *{{ value.topic }}* {%  endfor %}
+
+## Perceived Quality of Tutorial
+Below is a chart of perceived quality of the tutorial against the criteria.
+
+{{ chart_url }}
+
+*Note: a small amount of 'jitter' has been added to the data to aid visualisation - look for the clumps.*
+
+## Facilitator Feedback
+{% for key, value in facilitator_fb_dict.items() %}
+**{{ value.name }} - {{ value.user }}**
+{% if value.comment_confidential %}
+{{ value.comment_confidential }}
+{% else %}
+No comment
+{% endif %}
+{% endfor %}
+
+## Participant Feedback
+{% for key, value in participant_fb_dict.items() %}
+
+**{{ value.name }} - {{ value.user }}**
+{% if value.comment_confidential %}
+{{ value.comment_confidential }}
+{% else %}
+No comment
+{% endif %}
+{% endfor %}
+
+## Tutor Feedback
+
+**Things done well**
+{% for key, value in tutor_fb_dict.items() %}
+{{ value.comment_a }}
+{% endfor %}
+
+**Things that could be improved**
+{% for key, value in tutor_fb_dict.items() %}
+{{ value.comment_b }}
+{% endfor %}

@@ -10,7 +10,9 @@
 import os
 import config as c
 import functions as f
+from jinja2 import Environment, PackageLoader
 
+env = Environment(loader=PackageLoader('jinja'))
 
 def feedback_marks():
     cfg = f.load_config()
@@ -43,65 +45,85 @@ def feedback_marks():
             this_record_name = record_row.list_name
 
         f.pnt_console(this_record)
-                
-        # create the pandoc header
-        with open(c.d['yaml'] + this_record + '.yaml', 'w') as out:
-            f.pandoc_yaml(out, this_record_name)
 
-        with open(c.d['css'] + this_record + '.css', 'w') as out:
-            f.pandoc_css(out, this_record_name, 'anon')
+        options = ["anon"]
+        options_dict = {}
 
-        #open up a file to print to
-        with open(c.d['md'] + this_record + '.md', 'w') as out:
-            print("## " + cfg['pdf_messages']['comment_title'] + "{-}\n\n", file=out)
-            for loop_row in comm.itertuples():
-                f.print_results_header(loop_row, out)
-                f.print_results_text(loop_row, record_row, out)
 
-            #loop through the crit columns according to app_config
-            if cfg['crit_display']['text']\
-                or cfg['crit_display']['scale']\
-                or cfg['crit_display']['graph']:
-                
-                # start with indicator title and notes
-                print("# " + cfg['pdf_messages']['indicator_title'] + "{-}\n\n", file=out)
-                print(cfg['pdf_messages']['indicator_note'] + "\n\n", file=out)
-                print(cfg['pdf_messages']['chart_note'] + "\n\n", file=out)
+        for option in options:
+            template = env.get_template("feedback_marks.html")
+            with open(c.d['html'] + this_record + "-" + record.secret + "-" + option + '.html', 'w') as out:
+                out.write(template.render(
+                    record=record,
+                    record_name=this_record_name,
+                    option=option,
+                    options_dict=options_dict,
+                ))
 
-            for loop_row in crit.itertuples():
-                if cfg['crit_display']['text'] \
-                    or cfg['crit_display']['scale'] \
-                    or cfg['crit_display']['graph']:
-                    f.print_results_header(loop_row, out)
-                if cfg['crit_display']['text']:
-                    f.print_results_text(loop_row, record_row, out)
-                if cfg['crit_display']['scale']:
-                    f.print_results_scale(loop_row, record_row, out)
-                if cfg['crit_display']['graph']:
-                    f.print_results_graph(loop_row, record_row, out)
-                # if cfg['crit_display']['rubric_new_page']:
-                #     f.print_new_page(out)
+            f.pandoc_pdf(this_record + "-" + record.secret + "-" + option)
 
-            if cfg['crit_display']['rubric']:
-                if cfg['rubric_display']['rubric_new_page']:
-                    print("# " + cfg['pdf_messages']['rubric_title'] + "{-}\n\n", file=out)
-                else:
-                    print("## " + cfg['pdf_messages']['rubric_title'] + "{-}\n\n", file=out)
-                print(cfg['pdf_messages']['rubric_note'] + "\n", file=out)
-                f.print_results_rubric(record_row, this_record)
-                print("\n", file=out)
-
-        f.pandoc_html_single(this_record)
-
-        # add the rubric
-        if cfg['crit_display']['rubric']:
-            files = [c.d['rubric'] + this_record + ".html"]
-            with open(c.d['html'] + this_record + '.html', 'a') as outfile:
-                for fname in files:
-                    with open(fname) as infile:
-                        outfile.write(infile.read())
-
-        f.pandoc_pdf(this_record)
- 
-    # print message to console - complete!
     f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))
+
+    #
+    #
+    #     # # create the pandoc header
+    #     # with open(c.d['yaml'] + this_record + '.yaml', 'w') as out:
+    #     #     f.pandoc_yaml(out, this_record_name)
+    #     #
+    #     # with open(c.d['css'] + this_record + '.css', 'w') as out:
+    #     #     f.pandoc_css(out, this_record_name, 'anon')
+    #
+    #     #open up a file to print to
+    #     with open(c.d['md'] + this_record + '.md', 'w') as out:
+    #         print("## " + cfg['pdf_messages']['comment_title'] + "{-}\n\n", file=out)
+    #         for loop_row in comm.itertuples():
+    #             f.print_results_header(loop_row, out)
+    #             f.print_results_text(loop_row, record_row, out)
+    #
+    #         #loop through the crit columns according to app_config
+    #         if cfg['crit_display']['text']\
+    #             or cfg['crit_display']['scale']\
+    #             or cfg['crit_display']['graph']:
+    #
+    #             # start with indicator title and notes
+    #             print("# " + cfg['pdf_messages']['indicator_title'] + "{-}\n\n", file=out)
+    #             print(cfg['pdf_messages']['indicator_note'] + "\n\n", file=out)
+    #             print(cfg['pdf_messages']['chart_note'] + "\n\n", file=out)
+    #
+    #         for loop_row in crit.itertuples():
+    #             if cfg['crit_display']['text'] \
+    #                 or cfg['crit_display']['scale'] \
+    #                 or cfg['crit_display']['graph']:
+    #                 f.print_results_header(loop_row, out)
+    #             if cfg['crit_display']['text']:
+    #                 f.print_results_text(loop_row, record_row, out)
+    #             if cfg['crit_display']['scale']:
+    #                 f.print_results_scale(loop_row, record_row, out)
+    #             if cfg['crit_display']['graph']:
+    #                 f.print_results_graph(loop_row, record_row, out)
+    #             # if cfg['crit_display']['rubric_new_page']:
+    #             #     f.print_new_page(out)
+    #
+    #         if cfg['crit_display']['rubric']:
+    #             if cfg['rubric_display']['rubric_new_page']:
+    #                 print("# " + cfg['pdf_messages']['rubric_title'] + "{-}\n\n", file=out)
+    #             else:
+    #                 print("## " + cfg['pdf_messages']['rubric_title'] + "{-}\n\n", file=out)
+    #             print(cfg['pdf_messages']['rubric_note'] + "\n", file=out)
+    #             f.print_results_rubric(record_row, this_record)
+    #             print("\n", file=out)
+    #
+    #     f.pandoc_html_single(this_record)
+    #
+    #     # add the rubric
+    #     if cfg['crit_display']['rubric']:
+    #         files = [c.d['rubric'] + this_record + ".html"]
+    #         with open(c.d['html'] + this_record + '.html', 'a') as outfile:
+    #             for fname in files:
+    #                 with open(fname) as infile:
+    #                     outfile.write(infile.read())
+    #
+    #     f.pandoc_pdf(this_record)
+    #
+    # # print message to console - complete!
+    # f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))
