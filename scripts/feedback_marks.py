@@ -58,7 +58,7 @@ def feedback_marks():
 
         for option in options:
             template = env.get_template("feedback_marks.html")
-            with open(c.d['html'] + this_record + "-" + option + '.html', 'w') as out:
+            with open(c.d['html'] + this_record + '.html', 'w') as out:
                 out.write(template.render(
                     record=record,
                     record_name=this_record_name,
