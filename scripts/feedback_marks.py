@@ -33,6 +33,9 @@ def feedback_marks():
     field = f.filter_row_not('fields', 'field', 'crit_')
     field_dict = field.to_dict(orient='index')
 
+    print(crit)
+    print(field)
+
     print(field_dict)
 
     f.pnt_info(c.msg["console_creating_feedback_files"])
