@@ -29,9 +29,9 @@ def feedback_marks():
     # create a df of just the crit for manipulation
     crit_df = f.filter_row('fields', 'field', 'crit_')
 
-    field_df = f.delete_duplicates('fields', crit_df)\
-    field_df_clean = field_df.fillna('', inplace=True)
-    field_dict = field_df_clean.to_dict(orient='index')
+    field_df = f.delete_duplicates('fields', crit_df)
+    field_df2 = field_df.replace(np.nan, '', regex=True)
+    field_dict = field_df2.to_dict(orient='index')
 
     f.pnt_info(c.msg["console_creating_feedback_files"])
     
