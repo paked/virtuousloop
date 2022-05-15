@@ -27,26 +27,23 @@ def feedback_marks():
     marks_dict = marks_df.to_dict(orient='index')
 
     # create a df of just the crit for manipulation
-    crit = f.filter_row('fields', 'field', 'crit_')
+    crit_df = f.filter_row('fields', 'field', 'crit_')
 
-    field = f.delete_duplicates('fields', crit)
-
-
-
-
-    print(crit)
-    print(field)
-
-    print(field_dict)
+    field_df = f.delete_duplicates('fields', crit)
+    field_dict = field_df.to_dict(orient='index')
 
     f.pnt_info(c.msg["console_creating_feedback_files"])
     
     # create distribution charts for later
     if cfg['crit_display']['graph']:
-        stats = f.make_crit_list(crit, marks_df)
+        stats = f.make_crit_list(crit_df, marks_df)
         f.make_crit_chart(crit, stats, "na")
 
+    print("cfg")
     print(cfg)
+    print("field")
+    print(field_dict)
+
 
     # iterate through the marks file
     for record in marks_dict.values():
@@ -70,8 +67,7 @@ def feedback_marks():
                 record=record,
                 record_name=this_record_name,
                 options_dict=cfg,
-                crit_dict=crit_dict,
-                comm_dict=comm_dict,
+                field_dict=field_dict,
             ))
 
         f.weasy_pdf(this_record)
