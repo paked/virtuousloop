@@ -8,13 +8,11 @@
     <p>Perceived performance on this task against the criteria.</p>
     <img src="../charts/{{ record.user|replace("_", " ") }}.png" alt="record"/>
 
-    {% for field_key, field_val in field_dict %}
-        {{ field_val.label }}<br />
+    {% for field in field_dict %}
+        {{ field }}<br />
     {% endfor %}
 
-    {% for record_key, record_val in record %}}
-        {{ record_val }}<br />
-    {% endfor %}
+    {{ record.list_name }}<br />
 
 
 {% endblock %}
