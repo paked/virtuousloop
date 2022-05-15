@@ -1,0 +1,44 @@
+# variables for the audit_graphs
+audit_chart:
+  find_labels: ['Below Baseline', 'Baseline', 'Baseline-Acceptable', 'Acceptable', 'Acceptable-Exemplary', 'Exemplary']
+  replace_values: [-2, 0.1, 1, 2, 3, 4]
+  find_client_labels: ['Well below expectations', 'Below expectations', 'About expectations', 'Above expectations', 'Well above expectations']
+  replace_client_values: [-2, -0.5, 1, 2, 3]
+  x_axis_title: 'Audit criteria'
+  y_axis_title: 'Perceived performance'
+  y_tick_values: [-2,-0,2,4]
+  y_tick_labels: ["Below Baseline", "Baseline" ,"Acceptable", "Exemplary",]
+  anon_legend: 'reviewer' # the anon label shown in the legend
+  colormap: 'viridis' # colormap to use in the graph
+
+# variables for the tmc_graphs
+tmc_chart:
+  find_labels: ['At expectations', 'Meets expectations', 'Well above expectations', 'Well below expectations', 'Above expectations', 'Below expectations', 'Absent']
+  replace_values: [0.1, 0.1, 1.5, -1.5, 0.75, -0.75, -2]
+  x_axis_title: 'Team members'
+  y_axis_title: 'Contributions to the team'
+  y_tick_values: [-2,-1.5,-0.75,0,0.75,1.5]
+  y_tick_labels: ["absent", "well below" ,"below", "about", "above", "well above"]
+  anon_legend: 'reviewer' # the anon label shown in the legend
+  colormap: 'viridis' # colormap to use in the graph
+
+tutorial_feedback_graph:
+  find_labels: ["Satisfactory", "Satisfactory-Good", "S-G", "Good", "Good-Superior", "G-S", "Superior", "Superior-Exceptional", "S-E", "Exceptional", "Exemplary", "Well below expectations", "Below expectations", "About expectations", "Above expectations", "Well above expectations"]
+  replace_values: [0.125, 0.2, 0.2, 0.3, 0.4, 0.4, 0.5, 0.65, 0.65, 0.8, 0.9, 0, 0.2, 0.45, 0.7, 0.9]
+  x_axis_title: 'Audit criteria'
+  y_axis_title: 'Perceived performance'
+  y_tick_values: [-2,-0,2,4]
+  y_tick_labels: ["Below Baseline", "Baseline" ,"Acceptable", "Exemplary",]
+  anon_legend: 'reviewer' # the anon label shown in the legend
+  colormap: 'viridis' # colormap to use in the graph
+
+stripplot:
+  find_labels: ["Well-below expectations", "Below expectations", "About expectations", "Above expectations", "Well-above expectations"]
+  replace_values: [-2, -1, 0, 1, 2]
+  x_axis_title: 'Perceived performance'
+  y_axis_title: 'Criteria'
+  x_tick_values: [-2,-0,2]
+  x_tick_labels: ["Well-below expectations", "About expectations" ,"Well-above expectations"]
+  x_axis_lim: [-2.5, 2.5]
+  anon_legend: 'reviewer' # the anon label shown in the legend
+  colormap: 'viridis'

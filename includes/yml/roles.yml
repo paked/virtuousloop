@@ -1,0 +1,27 @@
+# order in roles_list determines comment print order
+# palette refers to colour in graph
+roles_list:
+  0:
+    title: "ANU Supervisor"
+    palette: "#FDE825"
+  1:
+    title: "Host Organisation Supervisor"
+    palette: "#3CBC76"
+  2:
+    title: "Student"
+    palette: "#3F4788"
+  3:
+    title: "Team Member"
+    palette: "#414487"
+  4:
+    title: "Shadow"
+    palette: "#2A788E"
+  5:
+    title: "Tutor"
+    palette: "#7AD151"
+  6:
+    title: "Client"
+    palette: "#22A884"
+  7:
+    title: "Average"
+    palette: "#FDE725"

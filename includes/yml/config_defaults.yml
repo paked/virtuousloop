@@ -1,0 +1,419 @@
+assignment_config:
+  course:
+    type: "text"
+    label: 'Course'
+    default: "Unravelling Complexity"
+    helper: ""
+  semester:
+    type: "select"
+    label: 'Semester'
+    default: "Semester 1, 2021"
+    helper: ""
+    options:
+      Summer 2021: "Summer, 2021"
+      Semester 1 2021: "Semester 1, 2021"
+      Winter 2021: "Winter, 2021"
+      Semester 2 2021: "Semester 2, 2021"
+      Summer 2022: "Summer, 2022"
+  assignment_title:
+    type: "text"
+    label: 'Assignment Title'
+    default: "Reflection Task"
+    helper: ""
+  assignment_short:
+    type: "text"
+    label: 'Short Title'
+    default: "RT1"
+    helper: "Ensure no spaces in this name"
+  feedback_url:
+    type: "text"
+    label: 'URL'
+    default: "https://eng.anu.edu.au/courses/engnfeedback/course/year/assignment"
+    helper: "Where the files will be uploaded"
+  grade_final_out_of:
+    type: "text"
+    label: "Grade out of"
+    default: "100"
+    helper: "The grade calculated in the Wattle csv"
+  audience:
+    type: "select"
+    label: "Audience"
+    default: "anon"
+    helper: "Create anonymous/confidential versions"
+    options:
+      anon: "Anonymous"
+      conf: "Confidential"
+      both: "Anonymous and Confidential"
+  grouping:
+    type: "select"
+    label: "Grouping"
+    default: "individual"
+    helper: "Is this an individual or group/team activity"
+    options:
+      individial: "Individual"
+      team: "Team/Group"
+
+# what type of feedback is this running
+# at this stage, marks and tmc are not compatible (one should be true, one false)
+feedback_type:
+  json:
+    label: "JSON"
+    helper: "Generate the json team list for a Wattle database."
+  marks:
+    label: "Marks"
+    helper: "Straight grading from Wattle database."
+  tmc:
+    label: "TMC"
+    helper: "Run a Team Member Contribution from a Wattle database."
+  wattle:
+    label: "Wattle CSV"
+    helper: "Generate a CSV for upload into Wattle."
+  analysis:
+    label: "Analysis"
+    helper: "Include an analysis of the data."
+  many_eyes:
+    label: "Many Eyes"
+    helper: "Create a many eyes report."
+  course:
+    label: "Course Feedback"
+    helper: "Run a course feedback report."
+  reflection:
+    label: "Reflection"
+    helper: "Run a Reflection compilation."
+  tutorial:
+    label: "Tutorial"
+    helper: "Run a Tutorial Feedback compilation."
+  peer_review:
+    label: "Peer Review"
+    helper: "Run Peer Review compilation."
+  me_review:
+    label: "Many Eyes Review"
+    helper: "Run Many Eyes compilation."
+  group:
+    label: "Group"
+    helper: "Group Project."
+  many_marks:
+    label: "Many Markers"
+    helper: "Many markers"
+  compass:
+    label: "Compass"
+    helper: "Compass"
+  internship:
+    label: "Internship"
+    helper: "Internship"
+  expectations:
+    label: "Expectations"
+    helper: "Internship"
+
+helper:
+  analysis: "Get started by adjusting the configuration, uploading the required files then click 'Build'."
+  reflection: "Get started by adjusting the configuration, uploading the required files then click 'Build'."
+  tutorial: "Get started by adjusting the configuration, uploading the required files then click 'Build'."
+  peer_review: "Get started by adjusting the configuration, uploading the required files then click 'Build'."
+  me_review: "Get started by adjusting the configuration, uploading the required files then click 'Build'."
+  internship: "Get started by adjusting the configuration, uploading the required files then click 'Build'."
+  marks: "Get started by adjusting the configuration, uploading the required files then click 'Build'."
+  tmc: "Get started by adjusting the configuration, uploading the required files then click 'Build'."
+  compass: "Get started by adjusting the configuration, uploading the required files then click 'Build'."
+  expectations: "Get started by adjusting the configuration, uploading the required files then click 'Build'."
+
+# how will the crit be displayed
+crit_display:
+  text: True
+  label: True
+  scale: False
+  graph: False
+  rubric: False   # put rubric on the last page
+
+rubric_display:
+  rubric_new_page: True
+
+# messages in the pdf
+pdf_messages:
+  comment_title: 'Qualitative feedback on your work'
+  indicator_title: 'Indication against the criteria'
+  indicator_note: "*The indicators refer to categories described in the Assessment Guide.*"
+  rubric_title: 'Indication against the rubric'
+  rubric_note: '*Note: highlights indicate the level achieved for each criterion. Where multiple levels are highlighted, your work shows aspects of both.*'
+  tmc_header_1: 'Team Member Contributions'
+  tmc_header_2: 'Feedback from your team members'
+  tmc_confidential: 'Confidential feedback'
+  chart_note: '*Note: charts show a histogram of your performance against criteria in relation to other teams in the class. This information is useful for benchmarking current progress, and planning future actions.*'
+
+# variables for the pdf
+tmc_pdf:
+  eval_header: 'Peer evaluation of contribution by team members'
+  team_count_message: 'true'
+  count_message: 'team members submitted reviews.'
+  member_header: "Team member"
+  member_no_comment: "No comment"
+  tmc_chart_caption: "*Note: the values have been generated by members of your team. These are not 'marks', instead given for 'information'.*"
+
+# variables for the audit_graphs
+audit_chart:
+  find_labels: ['Below Baseline', 'Baseline', 'Baseline-Acceptable', 'Acceptable', 'Acceptable-Exemplary', 'Exemplary']
+  replace_values: [-2, 0.1, 1, 2, 3, 4]
+  find_client_labels: ['Well below expectations', 'Below expectations', 'About expectations', 'Above expectations', 'Well above expectations']
+  replace_client_values: [-2, -0.5, 1, 2, 3]
+  x_axis_title: 'Audit criteria'
+  y_axis_title: 'Perceived performance'
+  y_tick_values: [-2,-0,2,4]
+  y_tick_labels: ["Below Baseline", "Baseline" ,"Acceptable", "Exemplary",]
+  anon_legend: 'reviewer' # the anon label shown in the legend
+  colormap: 'viridis' # colormap to use in the graph
+
+# variables for the tmc_graphs
+tmc_chart:
+  find_labels: ['At expectations', 'Meets expectations', 'Well above expectations', 'Well below expectations', 'Above expectations', 'Below expectations', 'Absent']
+  replace_values: [0.1, 0.1, 1.5, -1.5, 0.75, -0.75, -2]
+  x_axis_title: 'Team members'
+  y_axis_title: 'Contributions to the team'
+  y_tick_values: [-2,-1.5,-0.75,0,0.75,1.5]
+  y_tick_labels: ["absent", "well below" ,"below", "about", "above", "well above"]
+  anon_legend: 'reviewer' # the anon label shown in the legend
+  colormap: 'viridis' # colormap to use in the graph
+
+tutorial_feedback_graph:
+  find_labels: ["Satisfactory", "Satisfactory-Good", "S-G", "Good", "Good-Superior", "G-S", "Superior", "Superior-Exceptional", "S-E", "Exceptional", "Exemplary", "Well below expectations", "Below expectations", "About expectations", "Above expectations", "Well above expectations"]
+  replace_values: [0.125, 0.2, 0.2, 0.3, 0.4, 0.4, 0.5, 0.6, 0.6, 0.7, 0.8, 0, 0.2, 0.45, 0.7, 0.9]
+  x_axis_title: 'Audit criteria'
+  y_axis_title: 'Perceived performance'
+  y_tick_values: [-2,-0,2,4]
+  y_tick_labels: ["Below Baseline", "Baseline" ,"Acceptable", "Exemplary",]
+  anon_legend: 'reviewer' # the anon label shown in the legend
+  colormap: 'viridis' # colormap to use in the graph
+
+internship_feedback_graph:
+  find_labels: ["Well-below expectations", "Below expectations", "About expectations", "Above expectations", "Well-above expectations"]
+  replace_values: [-2, -1, 0, 1, 2]
+  x_axis_title: 'Perceived performance'
+  y_axis_title: 'Criteria'
+  x_tick_values: [-2,-0,2]
+  x_tick_labels: ["Well-below expectations", "About expectations" ,"Well-above expectations"]
+  x_axis_lim: [-2.5, 2.5]
+  anon_legend: 'reviewer' # the anon label shown in the legend
+  colormap: 'viridis'
+
+stripplot:
+  find_labels: ["Well-below expectations", "Below expectations", "About expectations", "Above expectations", "Well-above expectations"]
+  replace_values: [-2, -1, 0, 1, 2]
+  x_axis_title: 'Perceived performance'
+  y_axis_title: 'Criteria'
+  x_tick_values: [-2,-0,2]
+  x_tick_labels: ["Well-below expectations", "About expectations" ,"Well-above expectations"]
+  x_axis_lim: [-2.5, 2.5]
+  anon_legend: 'reviewer' # the anon label shown in the legend
+  colormap: 'viridis'
+
+stripplot_2:
+  x_axis_title: 'Perceived performance'
+  y_axis_title: 'Criteria'
+  x_tick_values: [-2,-0,2]
+  x_tick_labels: ["Well-below expectations", "About expectations" ,"Well-above expectations"]
+  x_axis_lim: [-2.5, 2.5]
+  anon_legend: 'reviewer' # the anon label shown in the legend
+  colormap: 'viridis'
+
+
+# order in roles_list determines comment print order
+# palette refers to colour in graph
+roles_list:
+  0:
+    title: "ANU Supervisor"
+    palette: "#FDE825"
+  1:
+    title: "Host Organisation Supervisor"
+    palette: "#3CBC76"
+  2:
+    title: "Student"
+    palette: "#3F4788"
+  3:
+    title: "Team Member"
+    palette: "#414487"
+  4:
+    title: "Shadow"
+    palette: "#2A788E"
+  5:
+    title: "Tutor"
+    palette: "#7AD151"
+  6:
+    title: "Client"
+    palette: "#22A884"
+  7:
+    title: "Average"
+    palette: "#FDE725"
+
+
+crit_chart:
+  grade_mean: "Mean Grade"
+  wc: "word count"
+  sc: "sentences"
+  flesch: "FleschReadingEase"
+
+many_eyes:
+  eyes: ['self', 'shadow', 'tutor', 'client']
+
+# variables for the pdf
+audit_pdf:
+  audit_chart_header: 'Indication of performance by stakeholders'
+  audit_chart_caption: ''
+
+# front_matter in the pdf read into the file
+pdf_front_matter:
+  copyright: 'Created with VirtuousLoop'
+
+aylien:
+  api_key: 'f68794f5973dcc7201e3bbf2d65f0928'
+  api_id: 'da338871'
+  endpoints: ["sentiment", "entities", "hashtags", "summarize"]
+  endpoint_name: ["polarity", "entities", "hashtags", "sentences"]
+  endpoint_title: ["Sentiment", "Keywords", "Hashtags", "Sentences"]
+
+# variables for the analysis
+analytics:
+  readability_stats: [['wc', 'sentence info', 'words'],['sc', 'sentence info', 'sentences'],['flesch', 'readability grades', 'FleschReadingEase']]
+  nlp_source_comment: "Extracted using the Aylien NLP API"
+  filename: "marker_analytics" # the output name for the file
+  analytics_header: "Analytics for all markers"
+  grade_chart_header: "Average grades by marker"
+  grade_chart_comment: "Mean grade awarded by marker"
+  grade_table_header: "Descriptive statistics"
+  grade_table_comment: "Descriptive statistics of grades awarded by marker. 'Overall' excludes 'No submission'"
+  rubric_header: "Distribution by criterion"
+  rubric_comment: "Graph of rubric distribution"
+  readability_header: " Readability Statistics on comments"
+  readability_comment: "for all comments, extracted using the Aylien NLP API"
+  sentiment_header: "Sentiment Analysis of comments"
+  summary_header: "Data extracted on comments"
+
+load_file:
+  students:
+    rename: {"user id":"user", "uniid":"user", "first_name":"firstname", "first":"firstname", "surname":"lastname", "projectteam":"group"}
+    required: ["user", "firstname", "lastname", "group"]
+    index: "user"
+    expected: ""
+  marks:
+    rename: {"username":"marker_id", "user":"marker"}
+    required: ["user", "list_name"]
+    index: "user"
+    expected: "crit"
+  many_marks:
+    rename: { "username": "marker_id", "user": "marker" }
+    required: [ "list_name" ]
+    index: "list_name"
+    expected: "crit"
+  fields:
+    rename: {}
+    required: ["field", "label"]
+    index: "field"
+    expected: ""
+  crit_levels:
+    rename: {"level":"index"}
+    required: ["index", "text"]
+    index: "index"
+    expected: ""
+  data_tmc:
+    rename: {"teamdropdown":"list_team", "list":"list_team", "user":"name", "username":"user"}
+    required: ["list_team", "user"]
+    index: "user"
+    expected: ""
+  data_self:
+    rename: {"crita":"crit_a", "critb":"crit_b", "confidential_comments":"comment_confidential"}
+    required: ["team", "crit_a", "crit_b", "crita_text", "critb_text"]
+    index: "username"
+    expected: "labels"
+  data_shadow:
+    rename: {"crita":"crit_a", "critb":"crit_b", "confidential_comments":"comment_confidential"}
+    required: ["team", "crit_a", "crit_b", "crita_text", "critb_text"]
+    index: "username"
+    expected: "labels"
+  data_tutor:
+    rename: {"list":"team", "commentgood":"comment_a", "commentimprove":"comment_b"}
+    required: ["team", "username"]
+    index: 
+    expected: "crit"
+  data_client:
+    rename: {"crita":"crit_a", "critb":"crit_b", "critc":"crit_c", "critd":"crit_d", "crite":"crit_e", "critf":"crit_f", "commentgood":"comment_a", "commentimprove":"comment_b", "confidential":"comment_confidential", "q5":"team", "q1_1":"crit_a", "q1_2":"crit_b", "q1_3":"crit_c", "q1_4":"crit_d", "q1_5":"crit_e", "q1_6":"crit_f", "q2":"comment_a", "q3":"comment_b", "q4":"comment_confidential"}
+    required: ["team"]
+    index: 
+    expected: "crit"
+  data_tutor_eye:
+    rename: {"list":"team", "commentgood":"comment_a", "commentimprove":"comment_b"}
+    required: ["team", "username"]
+    index:
+    expected: "crit"
+  data_self_eye:
+    rename: {"list":"team", "commentgood":"comment_a", "commentimprove":"comment_b"}
+    required: ["team", "username"]
+    index:
+    expected: "crit"
+  data_shadow_eye:
+    rename: {"list":"team", "commentgood":"comment_a", "commentimprove":"comment_b"}
+    required: ["team", "username"]
+    index:
+    expected: "crit"
+  data_conv:
+    rename: {}
+    required: []
+    index: 
+    expected: "crit"
+  feedback_course:
+    rename: {"tutor"}
+    required: ["tutor_name"]
+    index: 
+    expected: "crit"
+  reflections:
+    rename: {"user":"name", "username":"user"}
+    required: []
+    index:
+    expected:
+  data_peer_review:
+    rename: {"user":"name", "username":"user"}
+    required: []
+    index:
+    expected:
+  data_self_review:
+    rename: {"user":"name", "username":"user"}
+    required: []
+    index:
+    expected:
+  data_tutor_review:
+    rename: {"username":"marker_id", "user":"marker"}
+    required: ["user", "list_name"]
+    index: "user"
+    expected: "crit"
+  eye_tutors:
+    rename: {"list":"team", "commentgood":"comment_a", "commentimprove":"comment_b"}
+    required: ["username"]
+    index:
+    expected: "crit"
+  eye_students:
+    rename: {"list":"team", "user":"name", "username":"user"}
+    required: ["username"]
+    index:
+    expected: "crit"
+  eye_participants:
+    rename: {"user id":"user", "uniid":"user", "first_name":"firstname", "first":"firstname", "surname":"lastname", "projectteam":"group"}
+    required: ["user", "name", "tutorial", "week", "role"]
+    index: "user"
+    expected: ""
+  data_many_eyes:
+    rename: {"q2":"name", "q3":"role", "q4_1":"crit_a", "q4_2":"crit_b", "q4_3":"crit_c", "q4_4":"crit_d", "q5":"comment_a", "q6":"comment_b", "q7":"comment_confidential", "team":"list_team", "crit_grid_1":"crit_a", "crit_grid_2":"crit_b", "crit_grid_3":"crit_c", "crit_grid_4":"crit_d", "crit_grid_5":"crit_e"}
+    required: []
+    index:
+    expected: "crit"
+  data_compass:
+    rename: {  }
+    required: [ ]
+    index:
+    expected: "name"
+  data_internship:
+    rename: { }
+    required: [ ]
+    index:
+    expected: "name"
+  data_expectations:
+    rename: { }
+    required: [ ]
+    index:
+    expected: "name"

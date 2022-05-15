@@ -1,0 +1,27 @@
+feedback_type:
+  label: "Many Eyes"
+  helper_text: "Create a many eyes report using a single file."
+  web_text: "Get started by adjusting the configuration, uploading the required files then click 'Build'."
+  required_file: "data_many_eyes.csv"
+  expected_fields: ["name/list_team", "role", "crit_a/b/c/..", "comment_a/b/c/.../confidential"]
+
+load_file:
+  rename: {"q2":"name",
+           "q3":"role",
+           "q4_1":"crit_a",
+           "q4_2":"crit_b",
+           "q4_3":"crit_c",
+           "q4_4":"crit_d",
+           "q5":"comment_a",
+           "q6":"comment_b",
+           "q7":"comment_confidential",
+           "team":"list_team",
+           "crit_grid_1":"crit_a",
+           "crit_grid_2":"crit_b",
+           "crit_grid_3":"crit_c",
+           "crit_grid_4":"crit_d",
+           "crit_grid_5":"crit_e"}
+  required: []
+  index:
+  expected: "crit"
+

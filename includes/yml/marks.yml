@@ -1,0 +1,199 @@
+assignment_config:
+  course:
+    label: 'Course'
+    default: "Unravelling Complexity"
+    helper: ""
+  semester:
+    label: 'Semester'
+    default: "Semester 2, 2020"
+    helper: ""
+  assignment_title:
+    label: 'Assignment Title'
+    default: "Reflection Task"
+    helper: ""
+  assignment_short:
+    label: 'Short Title'
+    default: "RT1"
+    helper: "Ensure no spaces in this name"
+  feedback_url:
+    label: 'URL'
+    default: "https://eng.anu.edu.au/courses/engnfeedback/course/year/assignment"
+    helper: "Where the files will be uploaded"
+  grade_final_out_of:
+    label: "Grade out of"
+    default: "100"
+    helper: "The grade calculated in the Wattle csv"
+
+# what type of feedback is this running
+feedback_type:
+  label: "Marks"
+  descripition: "Straight grading from Wattle database."
+  helper: "Get started by adjusting the configuration, uploading the required files then click 'Build'."
+
+# how will the crit be displayed on the
+pdf_crit_display:
+  text: True
+  label: True
+  scale: False
+  graph: False
+  rubric: False   # put rubric on the last page
+  rubric_new_page: True
+
+# messages in the pdf
+pdf_messages:
+  comment_title: 'Qualitative feedback on your work'
+  indicator_title: 'Indication against the criteria'
+  indicator_note: "*The indicators refer to categories described in the Assessment Guide.*"
+  rubric_title: 'Indication against the rubric'
+  rubric_note: '*Note: highlights indicate the level achieved for each criterion. Where multiple levels are highlighted, your work shows aspects of both.*'
+  tmc_header_1: 'Team Member Contributions'
+  tmc_header_2: 'Feedback from your team members'
+  tmc_confidential: 'Confidential feedback'
+  chart_note: '*Note: charts show a histogram of your performance against criteria in relation to other teams in the class. This information is useful for benchmarking current progress, and planning future actions.*'
+
+# variables for the audit_graphs
+pdf_chart:
+  # these values are the values in the Wattle file. Find labels will replaced with Replace values for the graph
+  find_labels: ['Below Baseline', 'Baseline', 'Baseline-Acceptable', 'Acceptable', 'Acceptable-Exemplary', 'Exemplary']
+  replace_values: [-2, 0.1, 1, 2, 3, 4]
+  find_client_labels: ['Well below expectations', 'Below expectations', 'About expectations', 'Above expectations', 'Well above expectations']
+  replace_client_values: [-2, -0.5, 1, 2, 3]
+  # x and y axis titles
+  x_axis_title: 'Audit criteria'
+  y_axis_title: 'Perceived performance'
+  # corresponding values for display on the tmc graph. min = -2, max = +2
+  y_tick_values: [-2,-0,2,4]
+  y_tick_labels: ["Below Baseline", "Baseline" ,"Acceptable", "Exemplary",]
+  anon_legend: 'reviewer' # the anon label shown in the legend
+  colormap: 'viridis' # colormap to use in the graph
+
+internship_feedback_graph:
+    find_labels: ["Well-below expectations", "Below expectations", "About expectations", "Above expectations", "Well-above expectations"]
+    replace_values: [-2, -1, 0, 1, 2]
+
+crit_chart:
+  grade_mean: "Mean Grade"
+  wc: "word count"
+  sc: "sentences"
+  flesch: "FleschReadingEase"
+
+many_eyes:
+  eyes: ['self', 'shadow', 'tutor', 'client']
+
+# variables for the pdf
+audit_pdf:
+  audit_chart_header: 'Indication of performance by stakeholders'
+  audit_chart_caption: ''
+
+
+load_file:
+  students:
+    rename: {"user id":"user", "uniid":"user", "first_name":"firstname", "first":"firstname", "surname":"lastname", "projectteam":"group"}
+    required: ["user", "firstname", "lastname", "group"]
+    index: "user"
+    expected: ""
+  marks:
+    rename: {"username":"marker_id", "user":"marker"}
+    required: ["user", "list_name"]
+    index: "user"
+    expected: "crit"
+  fields:
+    rename: {}
+    required: ["field", "label"]
+    index: "field"
+    expected: ""
+  crit_levels:
+    rename: {"level":"index"}
+    required: ["index", "text"]
+    index: "index"
+    expected: ""
+  data_tmc:
+    rename: {"teamdropdown":"list_team", "list":"list_team"}
+    required: ["list_team", "user"]
+    index: "username"
+    expected: ""
+  data_self:
+    rename: {"crita":"crit_a", "critb":"crit_b", "confidential_comments":"comment_confidential"}
+    required: ["team", "crit_a", "crit_b", "crita_text", "critb_text"]
+    index: "username"
+    expected: "labels"
+  data_shadow:
+    rename: {"crita":"crit_a", "critb":"crit_b", "confidential_comments":"comment_confidential"}
+    required: ["team", "crit_a", "crit_b", "crita_text", "critb_text"]
+    index: "username"
+    expected: "labels"
+  data_tutor:
+    rename: {"list":"team", "commentgood":"comment_a", "commentimprove":"comment_b"}
+    required: ["team", "username"]
+    index: 
+    expected: "crit"
+  data_client:
+    rename: {"crita":"crit_a", "critb":"crit_b", "critc":"crit_c", "critd":"crit_d", "crite":"crit_e", "critf":"crit_f", "commentgood":"comment_a", "commentimprove":"comment_b", "confidential":"comment_confidential", "q5":"team", "q1_1":"crit_a", "q1_2":"crit_b", "q1_3":"crit_c", "q1_4":"crit_d", "q1_5":"crit_e", "q1_6":"crit_f", "q2":"comment_a", "q3":"comment_b", "q4":"comment_confidential"}
+    required: ["team"]
+    index: 
+    expected: "crit"
+  data_tutor_eye:
+    rename: {"list":"team", "commentgood":"comment_a", "commentimprove":"comment_b"}
+    required: ["team", "username"]
+    index:
+    expected: "crit"
+  data_self_eye:
+    rename: {"list":"team", "commentgood":"comment_a", "commentimprove":"comment_b"}
+    required: ["team", "username"]
+    index:
+    expected: "crit"
+  data_shadow_eye:
+    rename: {"list":"team", "commentgood":"comment_a", "commentimprove":"comment_b"}
+    required: ["team", "username"]
+    index:
+    expected: "crit"
+  data_conv:
+    rename: {}
+    required: []
+    index: 
+    expected: "crit"
+  feedback_course:
+    rename: {"tutor"}
+    required: ["tutor_name"]
+    index: 
+    expected: "crit"
+  reflections:
+    rename: {}
+    required: []
+    index:
+    expected:
+  data_peer_review:
+    rename: {"user":"name", "username":"user"}
+    required: []
+    index:
+    expected:
+  data_self_review:
+    rename: {"user":"name", "username":"user"}
+    required: []
+    index:
+    expected:
+  data_tutor_review:
+    rename: {"username":"marker_id", "user":"marker"}
+    required: ["user", "list_name"]
+    index: "user"
+    expected: "crit"
+  eye_tutors:
+    rename: {"list":"team", "commentgood":"comment_a", "commentimprove":"comment_b"}
+    required: ["username"]
+    index:
+    expected: "crit"
+  eye_students:
+    rename: {"list":"team", "user":"name", "username":"user"}
+    required: ["username"]
+    index:
+    expected: "crit"
+  eye_participants:
+    rename: {"user id":"user", "uniid":"user", "first_name":"firstname", "first":"firstname", "surname":"lastname", "projectteam":"group"}
+    required: ["user", "name", "tutorial", "week", "role"]
+    index: "user"
+    expected: ""
+  data_internship:
+    rename: {"q2":"name", "q3":"role", "q4_1":"crit_a", "q4_2":"crit_b", "q4_3":"crit_c", "q4_4":"crit_d", "q5":"comment_a", "q6":"comment_b", "q7":"comment_confidential"}
+    required: ["name"]
+    index:
+    expected: "crit"
