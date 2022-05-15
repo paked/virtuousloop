@@ -26,9 +26,14 @@ def feedback_marks():
     marks_df = f.load_tsv('marks')
     marks_dict = marks_df.to_dict(orient='index')
 
-    # create a df of just the crit and the comments
+    # create a df of just the crit for manipulation
     crit = f.filter_row('fields', 'field', 'crit_')
-    comm = f.filter_row('fields', 'field', 'comment_')
+    crit_dict = crit.to_dict(orient='index')
+
+    field = f.filter_row_not('fields', 'field', 'crit_')
+    field_dict = field.to_dict(orient='index')
+
+    print(field_dict)
 
     f.pnt_info(c.msg["console_creating_feedback_files"])
     
@@ -52,21 +57,19 @@ def feedback_marks():
             this_record = record['user']
             this_record_name = record['list_name']
 
-        f.pnt_console(this_record)
+        f.pnt_console(cfg)
 
-        options = ["anon"]
+        template = env.get_template("feedback_marks.html")
+        with open(c.d['html'] + this_record + '.html', 'w') as out:
+            out.write(template.render(
+                record=record,
+                record_name=this_record_name,
+                options_dict=cfg,
+                crit_dict=crit_dict,
+                comm_dict=comm_dict,
+            )
 
-        for option in options:
-            template = env.get_template("feedback_marks.html")
-            with open(c.d['html'] + this_record + '.html', 'w') as out:
-                out.write(template.render(
-                    record=record,
-                    record_name=this_record_name,
-                    option=option,
-                    options_dict=cfg,
-                ))
-
-            f.weasy_pdf(this_record)
+        f.weasy_pdf(this_record)
 
     f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))
 

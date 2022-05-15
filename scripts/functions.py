@@ -285,6 +285,9 @@ def print_comment_header(row, out):
 def filter_row(dataframe, column, key):
     return c.df[dataframe][c.df[dataframe][column].str.contains(key)]
 
+def filter_row_not(dataframe, column, key):
+    return ~c.df[dataframe][c.df[dataframe][column].str.contains(key)]
+
 
 def rename_header(dataframe, rename):
     '''used to standardise headers in a dataframe'''
