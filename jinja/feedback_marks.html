@@ -8,12 +8,11 @@
     <p>Perceived performance on this task against the criteria.</p>
     <img src="../charts/{{ record.user|replace("_", " ") }}.png" alt="record"/>
 
-    {% for field_items in field_dict.items() %}
-    {{ field_items }}
-    {% for k, field_item in field_items %}
-    <h3>{{ field_item.label }}</h3>>
-    <em>{{ field_item.description}}</em>
-        {{ record[field_item]}}
+    {% for field_item in field_dict.items() %}
+    {% for k, field in field_item %}
+    <h3>{{ field.label }}</h3>>
+    <em>{{ field.description}}</em>
+        {{ record[field]}}
     {% endfor %}
     {% endfor %}
 
