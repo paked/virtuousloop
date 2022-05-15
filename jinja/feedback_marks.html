@@ -10,7 +10,7 @@
 
     {% for field_items in field_dict.items() %}
     {{ field_items }}
-    {% for k, field_item in field_items.items() %}
+    {% for k, field_item in field_items %}
     <h3>{{ field_item.label }}</h3>>
     <em>{{ field_item.description}}</em>
         {{ record[field_item]}}
