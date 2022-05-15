@@ -8,6 +8,8 @@
     <p>Perceived performance on this task against the criteria.</p>
     <img src="../charts/{{ record.user|replace("_", " ") }}.png" alt="record"/>
 
+    {{ field_dict }}
+
     {% for field in field_dict %}
     <h2>{{ field }}</h2>>
     {% endfor %}
