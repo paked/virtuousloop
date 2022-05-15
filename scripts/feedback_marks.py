@@ -66,7 +66,7 @@ def feedback_marks():
                     options_dict=cfg,
                 ))
 
-            f.weasy_pdf(this_record + "-" + option)
+            f.weasy_pdf(this_record)
 
     f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))
 
