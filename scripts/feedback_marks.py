@@ -23,13 +23,13 @@ def feedback_marks():
     f.pnt_info(c.msg["console_loading"])
     
     # load in tsvs of needed fields
-    marks_df = f.load_tsv('marks')
+    marks_df = f.load_tsv('marks').fillna('', inplace=True)
     marks_dict = marks_df.to_dict(orient='index')
 
     # create a df of just the crit for manipulation
     crit_df = f.filter_row('fields', 'field', 'crit_')
 
-    field_df = f.delete_duplicates('fields', crit_df)
+    field_df = f.delete_duplicates('fields', crit_df).fillna('', inplace=True)
     field_dict = field_df.to_dict(orient='index')
 
     f.pnt_info(c.msg["console_creating_feedback_files"])
@@ -39,16 +39,10 @@ def feedback_marks():
         stats = f.make_crit_list(crit_df, marks_df)
         f.make_crit_chart(crit_df, stats, "na")
 
-    print("cfg")
-    print(cfg)
-    print("field")
-    print(field_dict)
-
+    ## need to figure out display of the rubric if applicable - probably html->pdf here
 
     # iterate through the marks file
     for record in marks_dict.values():
-
-        print(record)
 
         # evaluate whether to use the list_team or list_name field
         if cfg['feedback_type']['group']:
