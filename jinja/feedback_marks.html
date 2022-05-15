@@ -5,19 +5,17 @@
 {% block assignment_title %}{% endblock %}"/>
 {% block content %}
     <h1>Feedback for {{ record.name|replace("_", " ") }} ({{ record.user }})</h1>
-    <p>Perceived performance on this task against the criteria.</p>
-    <img src="../charts/{{ record.user|replace("_", " ") }}.png" alt="record"/>
+    <img src="../charts/{{ record.user|replace("_", " ") }}.png" alt=""/>
 
     {% for field_item in field_dict.items() %}
-    {% for field in field_item %}
-    <h3>{{ field.label }}</h3>>
-    <em>{{ field.description}}</em>
-        {{ record[field.field]}}
+        {% for field in field_item %}
+        <h3>{{ field.label }}</h3>
+        {% if field.label %}
+            <em>{{ field.description}}</em>
+        {% endif %}
+            {{ record[field.field]}}
+        {% endfor %}
     {% endfor %}
-    {% endfor %}
-
-    {{ record.list_name }}<br />
-    {{ record['list_name'] }}<br />
 
 
 {% endblock %}
