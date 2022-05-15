@@ -286,7 +286,7 @@ def filter_row(dataframe, column, key):
     return c.df[dataframe][c.df[dataframe][column].str.contains(key)]
 
 def delete_duplicates(df1, df2):
-    df0 = f.load_tsv(df1)
+    df0 = load_tsv(df1)
     df = pd.concat([df0, df2])
     df.drop_duplicates(keep=False)
     return df
