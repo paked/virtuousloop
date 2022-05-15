@@ -9,7 +9,7 @@
     <img src="../charts/{{ record.user|replace("_", " ") }}.png" alt="record"/>
 
     {% for field_items in field_dict.items() %}
-    {{ for field_items }}
+    {{ field_items }}
     {% for k, field_item in field_items.items() %}
     <h3>{{ field_item.label }}</h3>>
     <em>{{ field_item.description}}</em>
