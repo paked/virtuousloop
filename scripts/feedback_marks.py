@@ -29,10 +29,9 @@ def feedback_marks():
     # create a df of just the crit for manipulation
     crit = f.filter_row('fields', 'field', 'crit_')
 
-    field_df = f.load_tsv('fields')
-    field = pd.concat([crit, field_df])
-    field.drop_duplicates(keep=False)
-    field_dict = field.to_dict(orient='index')
+    field = f.delete_duplicates('fields', crit)
+
+
 
 
     print(crit)

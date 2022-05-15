@@ -285,8 +285,11 @@ def print_comment_header(row, out):
 def filter_row(dataframe, column, key):
     return c.df[dataframe][c.df[dataframe][column].str.contains(key)]
 
-def filter_row_not(dataframe, column, key):
-    return ~c.df[dataframe][c.df[dataframe][column].str.contains(key)]
+def filter_row_not(df1, df2):
+    df0 = f.load_tsv(df1)
+    df = pd.concat([df0, df2])
+    df.drop_duplicates(keep=False)
+    return df
 
 
 def rename_header(dataframe, rename):
