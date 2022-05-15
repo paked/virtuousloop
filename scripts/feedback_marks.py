@@ -24,7 +24,7 @@ def feedback_marks():
     
     # load in tsvs of needed fields
     marks_df = f.load_tsv('marks')
-    marks_dict = marks_df.to_dict(orient='field')
+    marks_dict = marks_df.to_dict(orient='index')
 
     # create a df of just the crit for manipulation
     crit_df = f.filter_row('fields', 'field', 'crit_')
