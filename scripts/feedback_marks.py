@@ -58,9 +58,6 @@ def feedback_marks():
             this_record = record['user']
             this_record_name = record['list_name']
 
-        f.pnt_console(cfg)
-
-
         template = env.get_template("feedback_marks.html")
         with open(c.d['html'] + this_record + '.html', 'w') as out:
             out.write(template.render(
