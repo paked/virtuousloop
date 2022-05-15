@@ -59,6 +59,7 @@ def feedback_marks():
 
         f.pnt_console(cfg)
 
+
         template = env.get_template("feedback_marks.html")
         with open(c.d['html'] + this_record + '.html', 'w') as out:
             out.write(template.render(
@@ -67,7 +68,7 @@ def feedback_marks():
                 options_dict=cfg,
                 crit_dict=crit_dict,
                 comm_dict=comm_dict,
-            )
+            ))
 
         f.weasy_pdf(this_record)
 
