@@ -10,7 +10,7 @@
 
     {{ field_dict }}
 
-    {% for field in field_dict %}
+    {% for field in field_dict.items() %}
     <h2>{{ field }}</h2>>
     {% endfor %}
 
