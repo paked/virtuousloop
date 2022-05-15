@@ -497,6 +497,13 @@ def pandoc_html_single(this_file):
 
 
 def pandoc_pdf(this_file):
+    '''Old function, outdates name, replaced by weasy_pdf'''
+    try:
+        weasy(c.d["html"] + this_file + ".html").write_pdf(c.d["pdf"] + this_file + ".pdf")
+    except Exception:
+        print(this_file + " cannot be converted")
+
+def weasy_pdf(this_file):
     try:
         weasy(c.d["html"] + this_file + ".html").write_pdf(c.d["pdf"] + this_file + ".pdf")
     except Exception:

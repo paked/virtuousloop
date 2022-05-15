@@ -13,14 +13,10 @@ import config as c
 import functions as f
 from jinja2 import Template, Environment, FileSystemLoader
 
-default_template = c.d['jinja']
-env = Environment(loader=FileSystemLoader(default_template))
+template_dir = c.d['jinja']
+env = Environment(loader=FileSystemLoader(template_dir))
 
 def feedback_marks():
-
-    print(os.listdir(c.d['jinja']))
-    print(default_template)
-    print(FileSystemLoader(default_template))
 
     cfg = f.load_config()
     f.pnt_notice(c.msg['console_start'], os.path.basename(__file__))
@@ -29,7 +25,6 @@ def feedback_marks():
     # load in tsvs of needed fields
     marks_df = f.load_tsv('marks')
     marks_dict = marks_df.to_dict(orient='index')
-    # print(marks_dict)
 
     # create a df of just the crit and the comments
     crit = f.filter_row('fields', 'field', 'crit_')
@@ -42,14 +37,14 @@ def feedback_marks():
         stats = f.make_crit_list(crit, marks_df)
         f.make_crit_chart(crit, stats, "na")
 
+    print(cfg)
+
     # iterate through the marks file
     for record in marks_dict.values():
 
         print(record)
-        print(cfg)
 
-
-        # decide whether to use the list_team or list_name field
+        # evaluate whether to use the list_team or list_name field
         if cfg['feedback_type']['group']:
             this_record = record['list_team']
             this_record_name = record['list_team']
@@ -62,9 +57,6 @@ def feedback_marks():
         options = ["anon"]
 
         for option in options:
-            # with open(default_template) as this_template:
-            #     template = Template(this_template.read())
-
             template = env.get_template("feedback_marks.html")
             with open(c.d['html'] + this_record + "-" + option + '.html', 'w') as out:
                 out.write(template.render(
@@ -74,7 +66,7 @@ def feedback_marks():
                     options_dict=cfg,
                 ))
 
-            f.pandoc_pdf(this_record + "-" + option)
+            f.weasy_pdf(this_record + "-" + option)
 
     f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))
 
