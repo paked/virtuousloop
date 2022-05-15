@@ -20,7 +20,6 @@ import readability
 from bs4 import BeautifulSoup
 import syntok.segmenter as segmenter
 from aylienapiclient import textapi
-import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.colors import ListedColormap
@@ -290,7 +289,7 @@ def delete_duplicates(df1, df2):
     df0 = load_tsv(df1)
     df = pd.concat([df0, df2])
     df.drop_duplicates(keep=False)
-    df.replace(np.nan, '')
+    df.replace(pd.np.nan, '', regex=True, inplace=True)
     return df
 
 
