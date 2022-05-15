@@ -29,7 +29,7 @@ def feedback_marks():
     # create a df of just the crit for manipulation
     crit_df = f.filter_row('fields', 'field', 'crit_')
 
-    field_df = f.delete_duplicates('fields', crit)
+    field_df = f.delete_duplicates('fields', crit_df)
     field_dict = field_df.to_dict(orient='index')
 
     f.pnt_info(c.msg["console_creating_feedback_files"])
@@ -37,7 +37,7 @@ def feedback_marks():
     # create distribution charts for later
     if cfg['crit_display']['graph']:
         stats = f.make_crit_list(crit_df, marks_df)
-        f.make_crit_chart(crit, stats, "na")
+        f.make_crit_chart(crit_df, stats, "na")
 
     print("cfg")
     print(cfg)
