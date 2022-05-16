@@ -144,7 +144,7 @@ html {
   }
 
   .new-page {
-    break-before: always;
+    break-after: always;
   }
 
   html body h1 {
