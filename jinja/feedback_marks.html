@@ -47,12 +47,12 @@
                     {% else %}
                         {% set class = "flag0" %}
                     {% endif %}
-                    {{ this_level }}
-                    {{ this_record_level }}
-                    {{ this_class }}
-                    {% if level['rubric'] == "show" %}
-                        <td class="{{class}}">{{ level[this_field] }}</td>
-                    {% endif %}
+                    this_level {{ this_level }} | 
+                    this_record_level {{ this_record_level }} | 
+                    level_class1 {{ level['class1'] }}
+                    level_class2 {{ level['class2'] }}
+                    this_class {{ this_class }}
+                    <br />
                 {% endfor %}
             </tr>
             {% endfor %}
