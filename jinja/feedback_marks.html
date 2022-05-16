@@ -34,9 +34,9 @@
                 {% for k, level in levels_dict.items() %}
                 {% set this_field = crit['field'] + "_desc" %}
                 {% if level['class1'] == level['class2'] %}
-                    {% set this_flag == "flag100" %}
+                    {% set this_flag = "flag100" %}
                 {% else %}
-                    {% set this_flag == "flag50" %}
+                    {% set this_flag = "flag50" %}
                 {% endif %}
 
                 <td>{{ level[this_field] }}</td>
