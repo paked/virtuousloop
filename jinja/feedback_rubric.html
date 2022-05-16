@@ -1,5 +1,8 @@
 <table>
-    <tr><th>Criteria</th>
-
-
+    <tr>
+        <th>Criteria</th>
+        {% for level in levels_dict.items() %}
+        <th>level.text</th>
+        {% endfor %}
+    </tr>
 </table>
