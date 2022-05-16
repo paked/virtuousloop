@@ -30,6 +30,9 @@ def feedback_marks():
     crit_df = f.filter_row('fields', 'field', 'crit_')
     crit_dict = crit_df.to_dict(orient='index')
 
+    lvls_df = f.filter_row('crit_levels', 'rubric', 'show')
+    lvls_dict = crit_df.to_dict(orient='index')
+
     field_df = f.delete_duplicates('fields', crit_df)
     field_dict = field_df.to_dict(orient='index')
 
@@ -42,7 +45,9 @@ def feedback_marks():
 
     ## need to figure out display of the rubric if applicable - probably html->pdf here
 
+    print(cfg)
     print(crit_dict)
+    print(lvls_dict)
 
     # iterate through the marks file
     for record in marks_dict.values():
@@ -63,6 +68,7 @@ def feedback_marks():
                 options_dict=cfg,
                 field_dict=field_dict,
                 crit_dict=crit_dict,
+                lvls_dict=lvls_dict,
             ))
 
         f.weasy_pdf(this_record)
