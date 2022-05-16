@@ -28,9 +28,9 @@ def feedback_marks():
 
     # create a df of just the crit for manipulation
     crit_df = f.filter_row('fields', 'field', 'crit_')
+    crit_dict = crit_df.to_dict(orient='index')
 
     field_df = f.delete_duplicates('fields', crit_df)
-    print(field_df)
     field_dict = field_df.to_dict(orient='index')
 
     f.pnt_info(c.msg["console_creating_feedback_files"])
@@ -42,7 +42,7 @@ def feedback_marks():
 
     ## need to figure out display of the rubric if applicable - probably html->pdf here
 
-    print(cfg)
+    print(crit_dict)
 
     # iterate through the marks file
     for record in marks_dict.values():
@@ -62,6 +62,7 @@ def feedback_marks():
                 record_name=this_record_name,
                 options_dict=cfg,
                 field_dict=field_dict,
+                crit_dict=crit_dict,
             ))
 
         f.weasy_pdf(this_record)
