@@ -30,8 +30,6 @@ def feedback_marks():
     crit_df = f.filter_row('fields', 'field', 'crit_')
     crit_dict = crit_df.to_dict(orient='index')
 
-    lvls_df = f.filter_row('crit_levels', 'rubric', 'show')
-    lvls_dict = lvls_df.to_dict(orient='index')
 
     field_df = f.delete_duplicates('fields', crit_df)
     field_dict = field_df.to_dict(orient='index')
