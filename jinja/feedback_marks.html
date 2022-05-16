@@ -6,6 +6,10 @@
 {% block content %}
     <h1>Feedback for {{ record.name|replace("_", " ") }} ({{ record.user }})</h1>
 
+<!--    {% if options_dict[''] %}-->
+<!--        <img src="../charts/{{ record.user|replace("_", " ") }}.png" alt=""/>-->
+<!--    {% endif %}-->
+
     {% for field_item in field_dict.items() %}
         {% for field in field_item %}
         <h3>{{ field.label }}</h3>
@@ -16,7 +20,9 @@
         {% endfor %}
     {% endfor %}
 
-
+    {% if options_dict[''] %}
+        <h2>Rubric</h2>
+    {% endif %}
 
 
 {% endblock %}

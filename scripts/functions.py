@@ -289,6 +289,7 @@ def delete_duplicates(df1, df2):
     df0 = load_tsv(df1)
     df = pd.concat([df0, df2])
     df.drop_duplicates(keep=False)
+    df.reset_index(drop=True, inplace=True)
     df.replace(pd.np.nan, '', regex=True, inplace=True)
     return df
 
