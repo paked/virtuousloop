@@ -20,24 +20,22 @@
         {% endfor %}
     {% endfor %}
 
-        <h2>Rubric</h2>
+        <h1>Rubric</h1>
         <table>
             <tr>
                 <th>Criteria</th>
-                {% for level in levels_dict %}
-                <th>Crit level {{ level['text'] }}</th>
+                {% for k, level in levels_dict.items() %}
+                <th>{{ level['text'] }}</th>
                 {% endfor %}
             </tr>
             {% for k, crit in crit_dict.items() %}
             <tr>
-                {{ crit }}
                 <th>{{ crit['label'] }}<br />({{ crit['weight'] }})</th>
-                {% for level in levels_dict %}
-                <td>Here</td>
+                {% for k, level in levels_dict.items() %}
+                <td>{{ level['text']}}</td>
                 {% endfor %}
             </tr>
             {% endfor %}
-
         </table>
 
 
