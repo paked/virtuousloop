@@ -30,8 +30,8 @@ def feedback_marks():
     crit_df = f.filter_row('fields', 'field', 'crit_')
     crit_dict = crit_df.to_dict(orient='index')
 
-    lvls_df = f.filter_row('crit_levels', 'rubric', 'show')
-    lvls_dict = lvls_df.to_dict(orient='index')
+    levels_df = f.filter_row('crit_levels', 'rubric', 'show')
+    levels_dict = levels_df.to_dict(orient='index')
 
     field_df = f.delete_duplicates('fields', crit_df)
     field_dict = field_df.to_dict(orient='index')
@@ -47,7 +47,7 @@ def feedback_marks():
 
     print(cfg)
     print(crit_dict)
-    print(lvls_dict)
+    print(levels_dict)
 
     # iterate through the marks file
     for record in marks_dict.values():
@@ -68,7 +68,7 @@ def feedback_marks():
                 options_dict=cfg,
                 field_dict=field_dict,
                 crit_dict=crit_dict,
-                lvls_dict=lvls_dict,
+                levels_dict=levels_dict,
             ))
 
         f.weasy_pdf(this_record)

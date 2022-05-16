@@ -21,7 +21,7 @@
     {% endfor %}
 
     {% block rubric %}
-    {% if options_dict['crit_display']['rubric'] == "True" %}
+<!--    {% if options_dict['crit_display']['rubric'] == "True" %}-->
         <h2>Rubric</h2>
         <table>
             <tr>
@@ -30,8 +30,17 @@
                 <th>{{ level.text }}</th>
                 {% endfor %}
             </tr>
+            {% for crit in crit_dict.items() %}
+                <th>{{ crit.label }}<br />({{ crit.weight }})</th>
+                {% for level in levels_dict %}
+                <td>Here</td>
+                {% endfor %}
+            {% endfor %}
+            <td>
+
+            </td>
         </table>
-    {% endif %}
+<!--    {% endif %}-->
     {% endblock %}
 
 
