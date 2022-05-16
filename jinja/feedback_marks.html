@@ -21,6 +21,7 @@
     {% endfor %}
         {% for k, level in levels_dict.items() %}
             {{ level['index'] }} {{ level['class1'] }} {{ level['class2'] }}
+        {% endfor %}
         {% if rubric_new_page == "True" %}
             <hr class="new-page" />
         {% endif %}
