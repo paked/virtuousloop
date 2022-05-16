@@ -154,7 +154,7 @@ html {
     color: black;
     font-weight: 600; }
   html body h2 {
-    /*break-before: always;*/
+    break-before: always;
     font-size: 14pt;
   }
   html body h3 {
