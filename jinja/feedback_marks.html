@@ -32,7 +32,8 @@
             <tr>
                 <th>{{ crit['label'] }}<br />({{ crit['weight'] }})</th>
                 {% for k, level in levels_dict.items() %}
-                <td>{{ level['text']}}</td>
+                {% set this_field = ~ crit['field'] + "_desc" %}
+                <td>{{ this_field }}</td>
                 {% endfor %}
             </tr>
             {% endfor %}
