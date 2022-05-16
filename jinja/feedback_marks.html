@@ -35,7 +35,7 @@
                 <th>{{ crit['label'] }}<br />({{ crit['weight'] }})</th>
                 {% for k, level in levels_dict.items() %}
                     {% set this_level = level['index'] %}
-                    {% if this_level = this_record_level %}
+                    {% if this_level == this_record_level %}
                     {% if this_level == level['class1'] and this_level == level['class2'] %}
                         {set class = "flag100"}
                     {% elif this_level == level['class1'] or this_level == level['class2'] %}
