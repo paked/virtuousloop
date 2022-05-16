@@ -28,7 +28,7 @@
                 <th>Crit level {{ level['text'] }}</th>
                 {% endfor %}
             </tr>
-            {% for crit in crit_dict.items() %}
+            {% for k, crit in crit_dict.items() %}
             <tr>
                 {{ crit }}
                 <th>{{ crit['label'] }}<br />({{ crit['weight'] }})</th>
