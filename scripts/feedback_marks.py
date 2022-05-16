@@ -30,6 +30,7 @@ def feedback_marks():
     crit_df = f.filter_row('fields', 'field', 'crit_')
 
     field_df = f.delete_duplicates('fields', crit_df)
+    print(field_df)
     field_dict = field_df.to_dict(orient='index')
 
     f.pnt_info(c.msg["console_creating_feedback_files"])

@@ -5,7 +5,6 @@
 {% block assignment_title %}{% endblock %}"/>
 {% block content %}
     <h1>Feedback for {{ record.name|replace("_", " ") }} ({{ record.user }})</h1>
-    <img src="../charts/{{ record.user|replace("_", " ") }}.png" alt=""/>
 
     {% for field_item in field_dict.items() %}
         {% for field in field_item %}
