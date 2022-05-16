@@ -20,7 +20,8 @@
         {% endfor %}
     {% endfor %}
 
-<!--    {% if options_dict['crit_display']['rubric'] == "True" %}-->
+    {{ levels_dict }}
+
         <h2>Rubric</h2>
         <table>
             <tr>
@@ -39,7 +40,7 @@
 
             </td>
         </table>
-<!--    {% endif %}-->
+
 
 
 {% endblock %}
