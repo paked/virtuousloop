@@ -22,7 +22,7 @@
         {% for k, level in levels_dict.items() %}
             {{ level['index'] }} {{ level['class1'] }} {{ level['class2'] }}
         {% endfor %}
-        {% if rubric_new_page == "True" %}
+        {% if options_dict['rubric_display']['rubric_new_page'] == "True" %}
             <hr class="new-page" />
         {% endif %}
         <h2>{{ options_dict['pdf_messages']['rubric_title'] }}</h2>
@@ -44,9 +44,9 @@
                 {% for k, level in levels_dict.items() %}
                     {% set this_level = level['index'] %}
                     {% if this_level == this_record_level %}
-                    {% if this_level == level['class1'] and this_level == level['class2'] %}
+                    {% if this_record_level == level['class1'] and this_record_level == level['class2'] %}
                         {% set class = "flag100" %}
-                    {% elif this_level == level['class1'] or this_level == level['class2'] %}
+                    {% elif this_record_level == level['class1'] or this_record_level == level['class2'] %}
                         {% set class = "flag50" %}
                     {% else %}
                         {% set class = "flag0" %}
