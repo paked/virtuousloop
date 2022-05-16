@@ -42,7 +42,7 @@ def feedback_marks():
     ## need to figure out display of the rubric if applicable - probably html->pdf here
 
     print(cfg)
-    
+
     # iterate through the marks file
     for record in marks_dict.values():
 
