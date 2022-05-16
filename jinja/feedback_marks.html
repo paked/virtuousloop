@@ -19,8 +19,11 @@
             {{ record[field.field]}}
         {% endfor %}
     {% endfor %}
-        <hr class="new-page" />
-        <h1>Rubric</h1>
+        {% if rubric_new_page == "True" %}
+            <hr class="new-page" />
+        {% endif %}
+        <h2>{{ options_dict['pdf_messages']['rubric_title']</h2>
+        <em>{{ options_dict['pdf_messages']['rubric_note']</em>
         <table class="rubric">
             <tr>
                 <th>Criteria</th>
