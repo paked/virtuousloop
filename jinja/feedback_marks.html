@@ -25,7 +25,12 @@
             <tr>
                 <th>Criteria</th>
                 {% for k, level in levels_dict.items() %}
-                <th>{{ level['text'] }}</th>
+                    {% if level['rubric'] == "show" %}
+                        {% comment %}
+                            loop through the labels in crit_levels
+                        {% endcomment %}
+                            <th>{{ level['text'] }}</th>
+                    {% endif %}
                 {% endfor %}
             </tr>
             {% for k, crit in crit_dict.items() %}
