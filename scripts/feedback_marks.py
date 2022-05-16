@@ -52,7 +52,6 @@ def feedback_marks():
 
     ## iterate through the marks file
     for record in marks_dict.values():
-        f.pnt_info(record)
         # evaluate whether to use the list_team or list_name field
         if cfg['feedback_type']['group']:
             this_record = record['list_team']
@@ -61,6 +60,8 @@ def feedback_marks():
             this_record = record['user']
             this_record_name = record['list_name']
 
+        print(this_record)
+            
         template = env.get_template("feedback_marks.html")
         with open(c.d['html'] + this_record + '.html', 'w') as out:
             out.write(template.render(
