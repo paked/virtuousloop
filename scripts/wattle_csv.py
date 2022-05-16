@@ -75,9 +75,6 @@ def wattle_csv():
             file_from = c.d['pdf'] + user + ".pdf"
             file_to = c.d['upload'] + secret_file
 
-            print(os.listdir(c.d['pdf']))
-            print(os.listdir(c.d['upload']))
-
             copyfile(file_from, file_to)
         marks_out = c.df['marks'][['user', 'grade_final', 'secret']]
         wattle_out = marks_out.merge(c.df['students'], on='user', how='left')[['user', 'grade_final', 'secret']]
