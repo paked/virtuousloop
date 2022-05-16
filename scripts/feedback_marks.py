@@ -51,7 +51,7 @@ def feedback_marks():
 
     # iterate through the marks file
     for record in marks_dict.values():
-
+        print(record)
         # evaluate whether to use the list_team or list_name field
         if cfg['feedback_type']['group']:
             this_record = record['list_team']
