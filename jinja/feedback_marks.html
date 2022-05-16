@@ -28,14 +28,16 @@
                 <th>Crit level {{ level['text'] }}</th>
                 {% endfor %}
             </tr>
-            <tr>
             {% for crit in crit_dict.items() %}
+            <tr>
+                {{ crit }}
                 <th>{{ crit['label'] }}<br />({{ crit['weight'] }})</th>
                 {% for level in levels_dict %}
                 <td>Here</td>
                 {% endfor %}
-            {% endfor %}
             </tr>
+            {% endfor %}
+
         </table>
 
 
