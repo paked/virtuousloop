@@ -28,7 +28,7 @@ def feedback_marks():
 
     # create a df of just the crit for manipulation
     crit_df = f.filter_row('fields', 'field', 'crit_')
-    crit_dict = crit_df.set_index["field"].to_dict("index")
+    crit_dict = crit_df.to_dict("index")
 
     levels_df = f.load_tsv('crit_levels')
     print(levels_df)
