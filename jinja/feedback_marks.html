@@ -44,9 +44,10 @@
                             {% set this_class = "flag50" %}  
                         {% endif %}
                         <td class="{{this_class}}">
-                            {{ level_key[record[crit['field']]] }}
-                            {{ level_val['class1'] }}
-                            {{ level_val[this_field] }}
+                            record {{ record[crit['field']] }}
+                            level key {{ level_key[record[crit['field']]] }}
+                            level val {{ level_val['class1'] }}
+                            this_field {{ level_val[this_field] }}
                         </td>
                     {% endif %}
                 {% endfor %}
