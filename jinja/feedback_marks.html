@@ -38,7 +38,7 @@
                 {% set this_record_level = record[crit['field']] + "" %}
                 {% set this_class1 = levels_dict[this_record_level] %}
                 {{ this_class1 }}
-                {% set this_class2 = levels_dict[this_record_level]['class2'] %}
+                {% set this_class2 = levels_dict[this_record_level] %}
                 {{ this_class2 }}
             <tr>
                 <th>{{ crit['label'] }}<br />({{ crit['weight'] }})</th>
