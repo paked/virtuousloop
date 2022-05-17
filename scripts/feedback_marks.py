@@ -32,7 +32,7 @@ def feedback_marks():
 
     levels_df = f.load_tsv('crit_levels')
     print(levels_df)
-    levels_dict = levels_df.to_dict(orient='index')
+    levels_dict = levels_df.set_index("index").to_dict("index")
 
     field_df = f.delete_duplicates('fields', crit_df)
     field_dict = field_df.set_index("index").to_dict("index")
