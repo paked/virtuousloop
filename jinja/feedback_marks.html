@@ -19,9 +19,10 @@
             {{ record[field.field]}}
         {% endfor %}
     {% endfor %}
-        {% if options_dict['rubric_display']['rubric_new_page'] == "True" %}
+        {% if options_dict['rubric_display']['rubric_new_page'] %}
             <hr class="new-page" />
         {% endif %}
+        {% if options_dict['crit_display']['rubric'] %}
         <h2>{{ options_dict['pdf_messages']['rubric_title'] }}</h2>
         <em>{{ options_dict['pdf_messages']['rubric_note'] }}</em>
         <table class="rubric">
@@ -55,4 +56,5 @@
             </tr>
             {% endfor %}
         </table>
+        {% endif %}
 {% endblock %}
