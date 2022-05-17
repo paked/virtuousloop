@@ -35,7 +35,7 @@ def feedback_marks():
     levels_dict = levels_df.to_dict(orient='index')
 
     field_df = f.delete_duplicates('fields', crit_df)
-    field_df.set_index('index')
+    field_df = field_df.set_index('index')
     field_dict = field_df.to_dict(orient='index')
 
     f.pnt_info(c.msg["console_creating_feedback_files"])
