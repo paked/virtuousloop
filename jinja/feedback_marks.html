@@ -35,7 +35,7 @@
             </tr>
             {% for k, crit in crit_dict.items() %}
                 {% set this_field = crit['field'] + "_desc" %}
-                {% set this_record_level = record['index']] %}
+                {% set this_record_level = record['index'] %}
             <tr>
                 <th>{{ crit['label'] }}<br />({{ crit['weight'] }})</th>
                 {% for k, level in levels_dict.items() %}
