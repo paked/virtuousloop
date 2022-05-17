@@ -41,7 +41,7 @@
                 {% for level_key, level_val in levels_dict.items() %}
                     {% if level_val['rubric'] == "show" %}
                         {% if level_key[record[crit['field']]]['class'] == level_val['class1'] or level_key[record[crit['field']]]['class'] == level_val['class2'] %}
-                            {{ set class = "flag50" }}                    
+                            {% set class = "flag50" %}  
                         {% endif %}
                         <td>
                             {{ level[this_field] }}
