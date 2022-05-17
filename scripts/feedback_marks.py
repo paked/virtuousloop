@@ -31,7 +31,6 @@ def feedback_marks():
     crit_dict = crit_df.to_dict("index")
 
     levels_df = f.load_tsv('crit_levels')
-    print(levels_df)
     levels_dict = levels_df.set_index("index").to_dict("index")
 
     field_df = f.delete_duplicates('fields', crit_df)
@@ -43,12 +42,6 @@ def feedback_marks():
     if cfg['crit_display']['graph']:
         stats = f.make_crit_list(crit_df, marks_df)
         f.make_crit_chart(crit_df, stats, "na")
-
-    ## need to figure out display of the rubric if applicable - probably html->pdf here
-
-    print(cfg)
-    print(crit_dict)
-    print(levels_dict)
 
     ## iterate through the marks file
     for record in marks_dict.values():
