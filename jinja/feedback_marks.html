@@ -38,20 +38,15 @@
                 {% set this_record_level = record['index'] %}
             <tr>
                 <th>{{ crit['label'] }}<br />({{ crit['weight'] }})</th>
-                {% for k, level in levels_dict.items() %}
-                    {% if level['rubric'] == "show" %}
-                        {% if record[crit['field']] == level['index'] or record[crit['field']] == level['rubric'] %}
-                            {% if level['class1'] == level['class2'] %}
-                            
-                            {% else %}
-                                
-                            {% endif %}            
+                {% for level_key, level_val in levels_dict.items() %}
+                    {% if level_val['rubric'] == "show" %}
+                        {% if level_key[record[crit['field']]]['class'] == level_val['class1'] or level_key[record[crit['field']]]['class'] == level_val['class2'] %}
+                            {{ set class = "flag50" }}                    
                         {% endif %}
                         <td>
                             {{ level[this_field] }}
                         </td>
                     {% endif %}
-                
                 {% endfor %}
             </tr>
             {% endfor %}
