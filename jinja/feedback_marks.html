@@ -42,13 +42,13 @@
                 <th>{{ crit['label'] }}<br />({{ crit['weight'] }})</th>
                 {% for level_key, level_val in levels_dict.items() %}
                     {% if level_val['rubric'] == "show" %}
-                        {% if this_class1 == level_val['class1'] or this_class2 == level_val['class2'] %}
-                            {% set this_class = "flag50" %}
-                        {% elif this_class1 == level_val['class1'] and this_class2 == level_val['class2'] %}
+                        {% if this_class1 == level_val['class1'] and this_class2 == level_val['class2'] %}
                             {% set this_class = "flag100" %}
+                        {% elif this_class1 == level_val['class1'] or this_class2 == level_val['class2'] %}
+                            {% set this_class = "flag50" %}
                         {% endif %}
                         <td class="{{this_class}}">
-                            {{ level_val['this_desc'] }}
+                            {{ level_val[this_desc] }}
                         </td>
                     {% endif %}
                 {% endfor %}
