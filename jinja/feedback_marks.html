@@ -34,25 +34,21 @@
                 {% endfor %}
             </tr>
             {% for k, crit in crit_dict.items() %}
-                {% set this_field = crit['field'] + "_desc" %}
-                {% set this_record_level = record[crit['field']] + "" %}
-                {% set this_class1 = levels_dict[this_record_level] %}
-                {{ this_class1 }}
-                {% set this_class2 = levels_dict[this_record_level] %}
-                {{ this_class2 }}
+                {% set this_desc = crit['field'] + "_desc" %}
+                {% set this_record_level = record[crit['field']] %}
+                {% set this_class1 = levels_dict[this_record_level]['class1'] %}
+                {% set this_class2 = levels_dict[this_record_level]['class2'] %}
             <tr>
                 <th>{{ crit['label'] }}<br />({{ crit['weight'] }})</th>
                 {% for level_key, level_val in levels_dict.items() %}
                     {% if level_val['rubric'] == "show" %}
                         {% if this_class1 == level_val['class1'] or this_class2 == level_val['class2'] %}
-                            {% set this_class = "flag50" %}  
+                            {% set this_class = "flag50" %}
+                        {% elif this_class1 == level_val['class1'] and this_class2 == level_val['class2'] %}
+                            {% set this_class = "flag100" %}
                         {% endif %}
                         <td class="{{this_class}}">
-                            record {{ record[crit['field']] }}
-                            level key {{ levels_dict[this_record_level] }}
-                            level val {{ levels_dict[this_record_level]['class1'] }}
-                            this_field {{ level_val[this_field] }}
-                            this_class1 {{ this_class1 }}
+                            {{ level_val['this_desc'] }}
                         </td>
                     {% endif %}
                 {% endfor %}
