@@ -9,7 +9,7 @@
     {% else %}
         {% set header = record.list_name|replace("_", " ") + " " + record.user %}
     {% endif %}
-    <h1>Feedback for {{ header }})</h1>
+    <h1>Feedback for {{ header }}</h1>
 
     {% if options_dict['crit_display']['graph'] == "True" %}
         <img src="../charts/{{ record.user|replace("_", " ") }}.png" alt=""/>
