@@ -51,7 +51,7 @@ def feedback_marks():
         else:
             out = record['user']
 
-        print(this_record)
+        print(out)
             
         template = env.get_template("feedback_marks.html")
         with open(c.d['html'] + out + '.html', 'w') as out:
