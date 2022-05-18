@@ -47,14 +47,14 @@ def feedback_marks():
     for record in marks_dict.values():
         # evaluate whether to use the list_team or list_name field
         if cfg['feedback_type']['group']:
-            out_name = str(record['list_team'])
+            out = str(record['list_team'])
         else:
-            out_name = str(record['user'])
+            out = str(record['user'])
 
-        print(this_out)
+        print(out)
             
         template = env.get_template("feedback_marks.html")
-        with open(c.d['html'] + out + '.html', 'w') as out:
+        with open(c.d['html'] + out + '.html', 'w') as f:
             out.write(template.render(
                 record=record,
                 options_dict=cfg,
@@ -63,7 +63,7 @@ def feedback_marks():
                 levels_dict=levels_dict,
             ))
 
-        f.weasy_pdf(out_name)
+        f.weasy_pdf(out)
 
     ## print message to console - complete!
     f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))
