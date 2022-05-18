@@ -47,9 +47,9 @@ def feedback_marks():
     for record in marks_dict.values():
         # evaluate whether to use the list_team or list_name field
         if cfg['feedback_type']['group']:
-            out = record['list_team']
+            out = str(record['list_team'])
         else:
-            out = record['user']
+            out = str(record['user'])
 
         print(out)
             
@@ -63,7 +63,7 @@ def feedback_marks():
                 levels_dict=levels_dict,
             ))
 
-        f.weasy_pdf(str(out))
+        f.weasy_pdf(out)
 
     ## print message to console - complete!
     f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))
