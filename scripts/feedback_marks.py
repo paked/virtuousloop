@@ -63,7 +63,7 @@ def feedback_marks():
                 levels_dict=levels_dict,
             ))
 
-        f.weasy_pdf(out)
+        f.weasy_pdf(str(out))
 
     ## print message to console - complete!
     f.pnt_notice(c.msg['console_complete'], os.path.basename(__file__))
