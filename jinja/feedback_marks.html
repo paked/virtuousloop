@@ -4,7 +4,12 @@
 {% block date %}{% endblock %}"/>
 {% block assignment_title %}{% endblock %}"/>
 {% block content %}
-    <h1>Feedback for {{ record.name|replace("_", " ") }} ({{ record.user }})</h1>
+    {% if options_dict['feedback_type']['group'] %}
+        {% set header = record.list_team %}
+    {% else %}
+        {% set header = record.list_name|replace("_", " ") + " " + record.user %}
+    {% endif %}
+    <h1>Feedback for {{ header }})</h1>
 
     {% if options_dict['crit_display']['graph'] == "True" %}
         <img src="../charts/{{ record.user|replace("_", " ") }}.png" alt=""/>
