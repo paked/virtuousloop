@@ -665,7 +665,7 @@ def analysis_many_eyes():
         this_user = row['user']
         secret = hashlib.sha1(row['user'].encode('utf-8')).hexdigest()
         secret_file = this_user + "-" + secret + ".pdf"
-        comment = "<a href=\"" + cfg['assignment']['feedback_url'] + "reviews/" + this_user + "-" + secret + ".pdf\">PDF Feedback on your Reviews</a>"
+        comment = "<a href=\"" + cfg['assignment']['feedback_url'] + "/reviews/" + this_user + "-" + secret + ".pdf\">PDF Feedback on your Reviews</a>"
         
         # update the df
         students.loc[i,'secret'] = comment
