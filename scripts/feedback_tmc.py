@@ -42,12 +42,15 @@ def feedback_tmc():
 
     f.pnt_info(c.msg["console_tmc"])
     
+    print('this is the data_tmc')
     print(data_tmc)
 
     for team in teams: 
         print(team)
 
         this_data=f.filter_row('data_tmc', 'list_team', team)
+
+        print('this is the data for the team')
         print(this_data)
 
         team_header=this_data[tm_cols_id].values.tolist()[0]
