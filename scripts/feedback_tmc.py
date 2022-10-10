@@ -41,6 +41,8 @@ def feedback_tmc():
     tm_cols_id = [w.replace('contribution', 'id') for w in tm_cols_tmc]
 
     f.pnt_info(c.msg["console_tmc"])
+    
+    print(data_tmc)
 
     for team in teams: 
         print(team)
