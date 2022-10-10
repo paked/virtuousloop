@@ -48,7 +48,7 @@ def feedback_tmc():
     for team in teams: 
         print(team)
 
-        this_data=f.filter_row('data_tmc', 'list_team', team)
+        this_data=f.filter_row_strict('data_tmc', 'list_team', team)
 
         print('this is the data for the team')
         print(this_data)
