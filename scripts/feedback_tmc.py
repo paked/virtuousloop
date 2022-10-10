@@ -46,7 +46,6 @@ def feedback_tmc():
 
     for team in teams: 
         print(team)
-        print(tm_cols_id)
 
         this_data=f.filter_row('data_tmc', 'list_team', team)
         print(this_data)
