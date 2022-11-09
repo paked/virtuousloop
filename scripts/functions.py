@@ -83,7 +83,7 @@ def pnt_console(text):
 
 def load_csv(file):
     try:
-        test = open(c.f[file], encoding='utf-8', errors='ignore')
+        test = open(c.f[file], encoding='windows-1252', errors='ignore')
     except IOError:
         pnt_fail("Can't locate" + c.f[file] + c.msg['fail_warn'])
     else:
@@ -101,7 +101,7 @@ def load_csv(file):
 
 def load_tsv(file):
     try:
-        test = open(c.t[file], encoding='utf-8', errors='ignore')
+        test = open(c.t[file], encoding='windows-1252', errors='ignore')
     except IOError:
         pnt_fail("Can't locate" + c.t[file] + "\n" + c.msg['fail_warn'])
     else:
